@@ -80,7 +80,9 @@ namespace Zenware.Common.UtilsNet
 					m_ExcelWorkSheet = (Worksheet)m_ExcelWorkSheets.get_Item((object)i);
 					if (m_ExcelWorkSheet.Name.Equals(WorkSheetName))
 					{
-						m_ExcelWorkSheet.Activate();
+						// Get method interface
+						_Worksheet _sheet = (_Worksheet)m_ExcelWorkSheet;
+						_sheet.Activate();
 						bSheetFound = true;
 						break;
 					}
