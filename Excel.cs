@@ -12,12 +12,29 @@ namespace Zenware.Common.UtilsNet
 		private _Workbook m_ExcelWorkBook = null;
 		private Sheets m_ExcelWorkSheets = null;
 		private Worksheet m_ExcelWorkSheet = null;
+		private string m_FileName = string.Empty;
 		private string m_Version = string.Empty;
+		private uint m_ColumnCount = 0;
+
+		public uint ColumnCount
+		{
+			get { return m_ColumnCount; }
+			set { m_ColumnCount = value; }
+		}
+
+		public string FileName
+		{
+			get { return m_FileName; }
+			set { m_FileName = value; }
+		}
 
 		public Excel()
 		{
 			m_ExcelApplication = new ApplicationClass();
 			m_Version = m_ExcelApplication.Version;
+
+			m_ExcelApplication.DisplayAlerts = false;
+
 		}
 
 		~Excel()
@@ -25,26 +42,62 @@ namespace Zenware.Common.UtilsNet
 			m_ExcelApplication.Quit();
 		}
 
+		public string OpenFile()
+		{
+			try
+			{
+				if (!string.IsNullOrEmpty(m_FileName))
+				{
+					m_ExcelWorkBook = m_ExcelApplication.Workbooks.Open(
+						m_FileName,
+						0,
+						true,
+						1,
+						true,
+						System.Reflection.Missing.Value,
+						System.Reflection.Missing.Value,
+						true,
+						System.Reflection.Missing.Value,
+						true,
+						System.Reflection.Missing.Value,
+						false,
+						System.Reflection.Missing.Value,
+						false,
+						false);
+				}
+			}
+			catch (Exception e)
+			{
+				this.CloseFile();
+				return e.Message;
+			}
+			return "OK";
+		}
+
 		public string OpenFile(string FileName)
 		{
 			try
 			{
-				m_ExcelWorkBook = m_ExcelApplication.Workbooks.Open(
-					FileName,
-					0,
-					true,
-					1,
-					true,
-					System.Reflection.Missing.Value,
-					System.Reflection.Missing.Value,
-					true,
-					System.Reflection.Missing.Value,
-					true,
-					System.Reflection.Missing.Value,
-					false,
-					System.Reflection.Missing.Value,
-					false,
-					false);
+				if (!string.IsNullOrEmpty(FileName))
+				{
+					m_FileName = FileName;
+					m_ExcelWorkBook = m_ExcelApplication.Workbooks.Open(
+						FileName,
+						0,
+						false,
+						1,
+						true,
+						System.Reflection.Missing.Value,
+						System.Reflection.Missing.Value,
+						true,
+						System.Reflection.Missing.Value,
+						true,
+						System.Reflection.Missing.Value,
+						false,
+						System.Reflection.Missing.Value,
+						false,
+						false);
+				}
 			}
 			catch (Exception e)
 			{
@@ -103,11 +156,26 @@ namespace Zenware.Common.UtilsNet
 
 		public string[] GetRow(int idRow)
 		{
-			string[] Row = new string[34];
-			string Range = "A" + idRow + ":DA" + idRow;
+			string[] Row = new string[m_ColumnCount];
+			string Range = "A" + idRow + ":FM" + idRow;
 
 			Row = GetRange(Range);
 			return Row;
+		}
+
+		public void Save()
+		{
+			//m_ExcelWorkBook.Save();
+			m_ExcelWorkBook.SaveAs(m_FileName, System.Reflection.Missing.Value,
+				null, null, false, false, XlSaveAsAccessMode.xlExclusive,
+				XlSaveAsAccessMode.xlExclusive,
+				System.Reflection.Missing.Value, System.Reflection.Missing.Value,
+				System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+		}
+
+		public void SetCell(uint Row, uint Column, string Value)
+		{
+			m_ExcelWorkSheet.Cells[Row+2, Column] = Value;
 		}
 
 		private string[] ConvertToStringArray(System.Array values)
