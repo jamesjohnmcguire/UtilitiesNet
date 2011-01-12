@@ -1,4 +1,16 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+// $Id: Excel.cs $
+//
+// Represents a Excel object.
+//
+// Copyright @2010 by James John McGuire (DigitalZenWorks)
+// All rights reserved.
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+// Namespace includes
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,13 +20,13 @@ namespace Zenware.Common.UtilsNet
 {
 	public class Excel
 	{
+		private uint m_ColumnCount = 0;
 		private _Application m_ExcelApplication = null;
 		private _Workbook m_ExcelWorkBook = null;
-		private Sheets m_ExcelWorkSheets = null;
 		private Worksheet m_ExcelWorkSheet = null;
+		private Sheets m_ExcelWorkSheets = null;
 		private string m_FileName = string.Empty;
 		private string m_Version = string.Empty;
-		private uint m_ColumnCount = 0;
 
 		public uint ColumnCount
 		{
@@ -40,6 +52,11 @@ namespace Zenware.Common.UtilsNet
 		~Excel()
 		{
 			m_ExcelApplication.Quit();
+		}
+
+		public void CloseFile()
+		{
+			m_ExcelWorkBook.Close(false, null, false);
 		}
 
 		public string OpenFile()
@@ -107,11 +124,6 @@ namespace Zenware.Common.UtilsNet
 			return "OK";
 		}
 
-		public void CloseFile()
-		{
-			m_ExcelWorkBook.Close(false, null, false);
-		}
-
 		public void GetExcelSheets()
 		{
 			if (m_ExcelWorkBook != null)
@@ -157,7 +169,7 @@ namespace Zenware.Common.UtilsNet
 		public string[] GetRow(int idRow)
 		{
 			string[] Row = new string[m_ColumnCount];
-			string Range = "A" + idRow + ":FM" + idRow;
+			string Range = "A" + idRow + ":IM" + idRow;
 
 			Row = GetRange(Range);
 			return Row;
@@ -175,7 +187,7 @@ namespace Zenware.Common.UtilsNet
 
 		public void SetCell(uint Row, uint Column, string Value)
 		{
-			m_ExcelWorkSheet.Cells[Row+2, Column] = Value;
+			m_ExcelWorkSheet.Cells[Row+2, Column+1] = Value;
 		}
 
 		private string[] ConvertToStringArray(System.Array values)
