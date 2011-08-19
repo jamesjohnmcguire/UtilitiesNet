@@ -16,270 +16,266 @@ using System.Text.RegularExpressions;
 
 namespace Zenware.Common.UtilsNet
 {
-	/////////////////////////////////////////////////////////////////////////
-	/// <summary>
-	/// Represents a FileUtils object
-	/// </summary>
-	/////////////////////////////////////////////////////////////////////////
-	public class FileUtils
-	{
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Reads a text file contents into a string
-		/// </summary>
-		/// <param name="PathOfFileToRead"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		public string GetFileContents(
-			string PathOfFileToRead)
-		{
-			string FileContents = null;
+    /////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Represents a FileUtils object
+    /// </summary>
+    /////////////////////////////////////////////////////////////////////////
+    public class FileUtils
+    {
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Reads a text file contents into a string
+        /// </summary>
+        /// <param name="PathOfFileToRead"></param>
+        /// <returns></returns>
+        /////////////////////////////////////////////////////////////////////
+        public static string GetFileContents(
+            string PathOfFileToRead)
+        {
+            string FileContents = null;
 
-			if (File.Exists(PathOfFileToRead))
-			{
-				StreamReader StreamReaderObject = new StreamReader(PathOfFileToRead);
+            if (File.Exists(PathOfFileToRead))
+            {
+                StreamReader StreamReaderObject = new StreamReader(PathOfFileToRead);
 
-				if (null != StreamReaderObject)
-				{
-					FileContents = StreamReaderObject.ReadToEnd();
-					StreamReaderObject.Close();
-				}
-			}
+                if (null != StreamReaderObject)
+                {
+                    FileContents = StreamReaderObject.ReadToEnd();
+                    StreamReaderObject.Close();
+                }
+            }
 
-			return FileContents;
-		}
+            return FileContents;
+        }
 
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Returns a writable stream object.
-		/// </summary>
-		/// <param name="FilePath"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		public StreamWriter GetWriteStreamObject(
-			string FilePath)
-		{
-			StreamWriter StreamWriterObject = null;
-			if (File.Exists(FilePath))
-			{
-				//set up a filestream
-				FileStream FileStreamObject = new FileStream(FilePath,
-															FileMode.Open,
-															FileAccess.ReadWrite);
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Returns a writable stream object.
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
+        /////////////////////////////////////////////////////////////////////
+        public StreamWriter GetWriteStreamObject(
+            string FilePath)
+        {
+            StreamWriter StreamWriterObject = null;
+            if (File.Exists(FilePath))
+            {
+                //set up a filestream
+                FileStream FileStreamObject = new FileStream(FilePath,
+                                                            FileMode.Open,
+                                                            FileAccess.ReadWrite);
 
-				if (null != FileStreamObject)
-				{
-					//set up a streamwriter for adding text
-					StreamWriterObject = new StreamWriter(FileStreamObject);
-				}
-			}
+                if (null != FileStreamObject)
+                {
+                    //set up a streamwriter for adding text
+                    StreamWriterObject = new StreamWriter(FileStreamObject);
+                }
+            }
 
-			return StreamWriterObject;
-		}
+            return StreamWriterObject;
+        }
 
-		public void RecursiveRemove(
-			string InitialPath,
-			string[] PathsToRemove)
-		{
-			try
-			{
-				foreach (string d in Directory.GetDirectories(InitialPath))
-				{
-					foreach(string Path in PathsToRemove)
-					{
-						if (d.EndsWith("\\" + Path))
-						{
-							if (!File.Exists("DevClean.active"))
-							{
-								Console.WriteLine("Deleting: " + Path);
-								Directory.Delete(d, true);
-							}
-						}
-						else
-						{
-							RecursiveRemove(d, PathsToRemove);
-						}
-					}
-				}
-			}
-			catch (System.Exception excpt)
-			{
-				Console.WriteLine(excpt.Message);
-			}
-		}
+        public void RecursiveRemove(
+            string InitialPath,
+            string[] PathsToRemove)
+        {
+            try
+            {
+                foreach (string d in Directory.GetDirectories(InitialPath))
+                {
+                    foreach (string Path in PathsToRemove)
+                    {
+                        if (d.EndsWith("\\" + Path))
+                        {
+                            if (!File.Exists("DevClean.active"))
+                            {
+                                Console.WriteLine("Deleting: " + Path);
+                                Directory.Delete(d, true);
+                            }
+                        }
+                        else
+                        {
+                            RecursiveRemove(d, PathsToRemove);
+                        }
+                    }
+                }
+            }
+            catch (System.Exception excpt)
+            {
+                Console.WriteLine(excpt.Message);
+            }
+        }
 
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// RecursiveUtf8WinFiles
+        /// </summary>
+        /// <param name="InitialPath"></param>
+        /////////////////////////////////////////////////////////////////////
+        public void RecursiveUtf8WinFiles(
+            string InitialPath)
+        {
+            try
+            {
+                foreach (string d in Directory.GetDirectories(InitialPath))
+                {
+                    RecursiveUtf8WinFiles(d);
 
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// RecursiveUtf8WinFiles
-		/// </summary>
-		/// <param name="InitialPath"></param>
-		/////////////////////////////////////////////////////////////////////
-		public void RecursiveUtf8WinFiles(
-			string InitialPath)
-		{
-			try
-			{
-				foreach (string d in Directory.GetDirectories(InitialPath))
-				{
-					RecursiveUtf8WinFiles(d);
+                    foreach (string f in Directory.GetFiles(d, "*.php"))
+                    {
+                        Console.WriteLine("Checking File: " + f);
+                        UpdateFileUnixToCRLF(f);
+                    }
+                }
+                foreach (string f in Directory.GetFiles(InitialPath, "*.php"))
+                {
+                    Console.WriteLine("Checking File: " + f);
+                    UpdateFileUnixToCRLF(f);
+                }
+            }
+            catch (System.Exception excpt)
+            {
+                Console.WriteLine(excpt.Message);
+            }
+        }
 
-					foreach (string f in Directory.GetFiles(d, "*.php"))
-					{
-						Console.WriteLine("Checking File: " + f);
-						UpdateFileUnixToCRLF(f);
-					}
-				}
-				foreach (string f in Directory.GetFiles(InitialPath, "*.php"))
-				{
-					Console.WriteLine("Checking File: " + f);
-					UpdateFileUnixToCRLF(f);
-				}
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// RegexStringInFile
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <param name="OldString"></param>
+        /// <param name="NewString"></param>
+        /////////////////////////////////////////////////////////////////////
+        public void RegexStringInFile(
+            string FilePath,
+            string OldString,
+            string NewString)
+        {
+            string Contents;
 
-			}
-			catch (System.Exception excpt)
-			{
-				Console.WriteLine(excpt.Message);
-			}
-		}
+            if (File.Exists(FilePath))
+            {
+                StreamReader sr = new StreamReader(FilePath);
 
+                if (sr != null)
+                {
+                    Contents = sr.ReadToEnd();
+                    sr.Close();
 
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// RegexStringInFile
-		/// </summary>
-		/// <param name="FilePath"></param>
-		/// <param name="OldString"></param>
-		/// <param name="NewString"></param>
-		/////////////////////////////////////////////////////////////////////
-		public void RegexStringInFile(
-			string FilePath,
-			string OldString,
-			string NewString)
-		{
-			string Contents;
+                    FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite);
 
-			if (File.Exists(FilePath))
-			{
-				StreamReader sr = new StreamReader(FilePath);
+                    StreamWriter sw = new StreamWriter(fs);
 
-				if (sr != null)
-				{
-					Contents = sr.ReadToEnd();
-					sr.Close();
+                    Contents = Regex.Replace(Contents, OldString, NewString);
 
-					FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite);
+                    sw.Write(Contents);
 
-					StreamWriter sw = new StreamWriter(fs);
+                    sw.Close();
+                    fs.Close();
+                }
+            }
+        }
 
-					Contents = Regex.Replace(Contents, OldString, NewString);
+        public void ReplaceStringInFile(string sFilePath, string sOldString, string sNewString)
+        {
+            string sContents;
+            string sNewContents;
 
-					sw.Write(Contents);
+            if (File.Exists(sFilePath))
+            {
+                StreamReader sr = new StreamReader(sFilePath);
 
-					sw.Close();
-					fs.Close();
-				}
-			}
-		}
+                if (sr != null)
+                {
+                    sContents = sr.ReadToEnd();
+                    sr.Close();
 
-		public void ReplaceStringInFile(string sFilePath, string sOldString, string sNewString)
-		{
-			string sContents;
-			string sNewContents;
+                    FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.ReadWrite);
 
-			if (File.Exists(sFilePath))
-			{
-				StreamReader sr = new StreamReader(sFilePath);
+                    //set up a streamwriter for adding text
+                    StreamWriter sw = new StreamWriter(fs);
 
-				if (sr != null)
-				{
-					sContents = sr.ReadToEnd();
-					sr.Close();
+                    sNewContents = sContents.Replace(sOldString, sNewString);
 
-					FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.ReadWrite);
+                    sw.Write(sNewContents);
 
-					//set up a streamwriter for adding text
-					StreamWriter sw = new StreamWriter(fs);
+                    // close file
+                    sw.Close();
+                    fs.Close();
+                }
+            }
+        }
 
-					sNewContents = sContents.Replace(sOldString, sNewString);
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Saves the file.
+        /// </summary>
+        /// <param name="FileContents"></param>
+        /// <param name="FilePathName"></param>
+        /// <returns></returns>
+        /////////////////////////////////////////////////////////////////////
+        public bool SaveFile(
+            string FileContents,
+            string FilePathName)
+        {
+            FileStream FileStreamObject = new FileStream(FilePathName,
+                                                        FileMode.Create,
+                                                        FileAccess.ReadWrite);
 
-					sw.Write(sNewContents);
+            StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
+            StreamWriterObject.Write(FileContents);
+            StreamWriterObject.Close();
+            FileStreamObject.Close();
 
-					// close file
-					sw.Close();
-					fs.Close();
-				}
-			}
-		}
+            return true;
+        }
 
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Saves the file.
-		/// </summary>
-		/// <param name="FileContents"></param>
-		/// <param name="FilePathName"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		public bool SaveFile(
-			string FileContents,
-			string FilePathName)
-		{
-			FileStream FileStreamObject = new FileStream(FilePathName,
-														FileMode.Create,
-														FileAccess.ReadWrite);
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Saves the file.
+        /// </summary>
+        /// <param name="FileContents"></param>
+        /// <param name="FilePathName"></param>
+        /// <returns></returns>
+        /////////////////////////////////////////////////////////////////////
+        public bool SaveFileWin(
+            string FileContents,
+            string FilePathName)
+        {
+            FileStream FileStreamObject = new FileStream(FilePathName,
+                                                        FileMode.Create,
+                                                        FileAccess.ReadWrite);
 
-			StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
-			StreamWriterObject.Write(FileContents);
-			StreamWriterObject.Close();
-			FileStreamObject.Close();
+            FileContents = FileContents.Replace("\n", Environment.NewLine);
+            StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
+            StreamWriterObject.Write(FileContents);
+            StreamWriterObject.Close();
+            FileStreamObject.Close();
 
-			return true;
-		}
+            return true;
+        }
 
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Saves the file.
-		/// </summary>
-		/// <param name="FileContents"></param>
-		/// <param name="FilePathName"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		public bool SaveFileWin(
-			string FileContents,
-			string FilePathName)
-		{
-			FileStream FileStreamObject = new FileStream(FilePathName,
-														FileMode.Create,
-														FileAccess.ReadWrite);
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Update the given file so that all lines end with CRLF
+        /// </summary>
+        /////////////////////////////////////////////////////////////////////
+        public void UpdateFileMacToCRLF(string sFilePath)
+        {
+            RegexStringInFile(sFilePath, "\r\n|\r|\n", "\r\n");
+        }
 
-			FileContents = FileContents.Replace("\n", Environment.NewLine);
-			StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
-			StreamWriterObject.Write(FileContents);
-			StreamWriterObject.Close();
-			FileStreamObject.Close();
-
-			return true;
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Update the given file so that all lines end with CRLF
-		/// </summary>
-		/////////////////////////////////////////////////////////////////////
-		public void UpdateFileMacToCRLF(string sFilePath)
-		{
-			RegexStringInFile(sFilePath, "\r\n|\r|\n", "\r\n");
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Update the given file so that all lines end with CRLF
-		/// </summary>
-		/////////////////////////////////////////////////////////////////////
-		public void UpdateFileUnixToCRLF(string sFilePath)
-		{
-			RegexStringInFile(sFilePath, "\r\n|\r|\n", "\r\n");
-		}
-
-	} // End Class
+        /////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Update the given file so that all lines end with CRLF
+        /// </summary>
+        /////////////////////////////////////////////////////////////////////
+        public void UpdateFileUnixToCRLF(string sFilePath)
+        {
+            RegexStringInFile(sFilePath, "\r\n|\r|\n", "\r\n");
+        }
+    } // End Class
 } // End Namespace
