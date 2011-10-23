@@ -11,8 +11,6 @@
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Microsoft.Office.Interop.Excel;
 
@@ -21,7 +19,7 @@ namespace Zenware.Common.UtilsNet
 	public class Excel
 	{
 		private uint m_ColumnCount = 0;
-		private _Application m_ExcelApplication = null;
+		private Microsoft.Office.Interop.Excel.Application excelApplication = null;
 		private _Workbook m_ExcelWorkBook = null;
 		private Worksheet m_ExcelWorkSheet = null;
 		private Sheets m_ExcelWorkSheets = null;
@@ -42,16 +40,15 @@ namespace Zenware.Common.UtilsNet
 
 		public Excel()
 		{
-			m_ExcelApplication = new ApplicationClass();
-			m_Version = m_ExcelApplication.Version;
+			excelApplication = new Microsoft.Office.Interop.Excel.Application();
+			m_Version = excelApplication.Version;
 
-			m_ExcelApplication.DisplayAlerts = false;
-
+			excelApplication.DisplayAlerts = false;
 		}
 
 		~Excel()
 		{
-			m_ExcelApplication.Quit();
+			excelApplication.Quit();
 		}
 
 		public void CloseFile()
@@ -65,7 +62,7 @@ namespace Zenware.Common.UtilsNet
 			{
 				if (!string.IsNullOrEmpty(m_FileName))
 				{
-					m_ExcelWorkBook = m_ExcelApplication.Workbooks.Open(
+					m_ExcelWorkBook = excelApplication.Workbooks.Open(
 						m_FileName,
 						0,
 						true,
@@ -98,7 +95,7 @@ namespace Zenware.Common.UtilsNet
 				if (!string.IsNullOrEmpty(FileName))
 				{
 					m_FileName = FileName;
-					m_ExcelWorkBook = m_ExcelApplication.Workbooks.Open(
+					m_ExcelWorkBook = excelApplication.Workbooks.Open(
 						FileName,
 						0,
 						false,
@@ -187,7 +184,7 @@ namespace Zenware.Common.UtilsNet
 
 		public void SetCell(uint Row, uint Column, string Value)
 		{
-			m_ExcelWorkSheet.Cells[Row+2, Column+1] = Value;
+			m_ExcelWorkSheet.Cells[Row + 2, Column + 1] = Value;
 		}
 
 		private string[] ConvertToStringArray(System.Array values)

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Zenware.Common.UtilsNet
 {
-	public class Utils
+	public static class Utils
 	{
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
@@ -12,7 +12,7 @@ namespace Zenware.Common.UtilsNet
 		/// <param name="PathOfFileToRead"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public string GetFileContents(
+		public static string GetFileContents(
 			string PathOfFileToRead)
 		{
 			string FileContents = null;
@@ -38,7 +38,7 @@ namespace Zenware.Common.UtilsNet
 		/// <param name="FilePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public StreamWriter GetWriteStreamObject(
+		public static StreamWriter GetWriteStreamObject(
 			string FilePath)
 		{
 			StreamWriter StreamWriterObject = null;
@@ -84,13 +84,30 @@ namespace Zenware.Common.UtilsNet
 			return IsValid;
 		}
 
+		public static bool IsDate(Object obj)
+		{
+			string strDate = obj.ToString();
+			try
+			{
+				DateTime dt;
+				DateTime.TryParse(strDate, out dt);
+				if (dt != DateTime.MinValue && dt != DateTime.MaxValue)
+					return true;
+				return false;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
 		/// <param name="FileContents"></param>
 		/// <param name="FilePathName"></param>
 		/// <returns></returns>
-		public bool SaveFile(
+		public static bool SaveFile(
 			string FileContents,
 			string FilePathName)
 		{
@@ -106,7 +123,7 @@ namespace Zenware.Common.UtilsNet
 			return true;
 		}
 
-		public string ToProperCase(
+		public static string ToProperCase(
 			string UnformattedString)
 		{
 			string formattedText = null;
@@ -118,6 +135,5 @@ namespace Zenware.Common.UtilsNet
 
 			return formattedText;
 		}
-
 	} // End Class
 } // End Namespace

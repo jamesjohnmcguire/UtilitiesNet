@@ -39,34 +39,23 @@ namespace Zenware.Common.UtilsNet
 			}
 			else
 			{
-				FileStream fs1 = new FileStream(path1, FileMode.Open);
-				FileStream fs2 = new FileStream(path2, FileMode.Open);
-
-				if (fs1.Length != fs2.Length)
+				byte[] file1 = File.ReadAllBytes(path1);
+				byte[] file2 = File.ReadAllBytes(path2);
+				if (file1.Length == file2.Length)
 				{
-					fs1.Close();
-					fs2.Close();
-				}
-				else
-				{
-					byte[] file1 = File.ReadAllBytes(path1);
-					byte[] file2 = File.ReadAllBytes(path2);
-					if (file1.Length == file2.Length)
+					bool stillSame = true;
+					for (int i = 0; i < file1.Length; i++)
 					{
-						bool stillSame = true;
-						for (int i = 0; i < file1.Length; i++)
+						if (file1[i] != file2[i])
 						{
-							if (file1[i] != file2[i])
-							{
-								stillSame = false;
-								break;
-							}
+							stillSame = false;
+							break;
 						}
+					}
 
-						if (true == stillSame)
-						{
-							filesSame = true;
-						}
+					if (true == stillSame)
+					{
+						filesSame = true;
 					}
 				}
 			}
