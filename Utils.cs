@@ -1,10 +1,26 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Zenware.Common.UtilsNet
 {
 	public static class Utils
 	{
+		public static DateTime DateFromString(string stringDate)
+		{
+			DateTime date = DateTime.MinValue;
+
+			try
+			{
+				DateTime.TryParse(stringDate, out date);
+			}
+			catch
+			{
+			}
+
+			return date;
+		}
+
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Reads a text file contents into a string
@@ -60,6 +76,40 @@ namespace Zenware.Common.UtilsNet
 		}
 
 		/////////////////////////////////////////////////////////////////////
+		/// IsValidEmailAddress
+		/////////////////////////////////////////////////////////////////////
+		public static bool IsValidEmailAddress(string EmailAddress)
+		{
+			bool ValidEmailAddress = false;
+
+			//ValidEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
+			//ValidEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
+			//ValidEmailRegEx	= "/^[\w]+(\.[\w]+)*@([\w\-]+\.)+[a-zA-Z]{2,7}$/";
+			//ValidEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\.\\+=_-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
+
+			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i";
+			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/";
+			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/";
+			string ValidEmailRegEx =
+			@"^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@"
+	 + @"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])\."
+	 + @"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+	 + @"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
+
+			// checks proper syntax
+			Match Match = Regex.Match(EmailAddress, ValidEmailRegEx);
+
+			if (true == Match.Success)
+			{
+				ValidEmailAddress = true;
+			}
+
+			return ValidEmailAddress;
+		}
+
+		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Validates command line parameters
 		/// </summary>
@@ -84,6 +134,12 @@ namespace Zenware.Common.UtilsNet
 			return IsValid;
 		}
 
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		/////////////////////////////////////////////////////////////////////
 		public static bool IsDate(Object obj)
 		{
 			string strDate = obj.ToString();
@@ -92,7 +148,10 @@ namespace Zenware.Common.UtilsNet
 				DateTime dt;
 				DateTime.TryParse(strDate, out dt);
 				if (dt != DateTime.MinValue && dt != DateTime.MaxValue)
+				{
 					return true;
+				}
+
 				return false;
 			}
 			catch
