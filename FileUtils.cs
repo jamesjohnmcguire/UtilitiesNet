@@ -1,9 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id: $
+// $Id:$
 //
-// Represents a set of file utilities
-//
-// Copyright (c) 2007-2010 by James John McGuire
+// Copyright (c) 2006-2012 by James John McGuire
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 
@@ -13,6 +11,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Common.Logging;
 
 namespace Zenware.Common.UtilsNet
 {
@@ -219,7 +218,8 @@ namespace Zenware.Common.UtilsNet
 			}
 		}
 
-		public static void ReplaceStringInFile(string sFilePath, string sOldString, string sNewString)
+		public static void ReplaceStringInFile(
+			string sFilePath, string sOldString, string sNewString)
 		{
 			string sContents;
 			string sNewContents;

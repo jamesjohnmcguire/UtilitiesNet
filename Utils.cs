@@ -1,6 +1,13 @@
+/////////////////////////////////////////////////////////////////////////////
+// $Id:$
+//
+// Copyright (c) 2006-2012 by James John McGuire
+// All rights reserved.
+/////////////////////////////////////////////////////////////////////////////
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Common.Logging;
 
 namespace Zenware.Common.UtilsNet
 {
@@ -160,24 +167,38 @@ namespace Zenware.Common.UtilsNet
 			}
 		}
 
+		/////////////////////////////////////////////////////////////////////
+		/// SaveFile
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
 		/// <param name="FileContents"></param>
 		/// <param name="FilePathName"></param>
 		/// <returns></returns>
+		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFile(
-			string FileContents,
-			string FilePathName)
+			string fileContents,
+			string filePathName)
 		{
-			FileStream FileStreamObject = new FileStream(FilePathName,
-														FileMode.Create,
-														FileAccess.ReadWrite);
+			FileStream fileStreamObject = null;
+			try
+			{
+				fileStreamObject = new FileStream(filePathName,
+														 FileMode.Create,
+														 FileAccess.ReadWrite);
 
-			StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
-			StreamWriterObject.Write(FileContents);
-			StreamWriterObject.Close();
-			FileStreamObject.Close();
+				StreamWriter streamWriterObject = 
+					new StreamWriter(fileStreamObject);
+				streamWriterObject.Write(fileContents);
+				streamWriterObject.Close();
+			}
+			catch (Exception ex)
+			{
+			}
+			finally
+			{
+				fileStreamObject.Close();
+			}
 
 			return true;
 		}

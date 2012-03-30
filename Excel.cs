@@ -1,9 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id: Excel.cs $
+// $Id:$
 //
-// Represents a Excel object.
-//
-// Copyright @2010 by James John McGuire (DigitalZenWorks)
+// Copyright (c) 2006-2012 by James John McGuire
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 
@@ -11,11 +9,12 @@
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
 using System;
-
+using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 
 namespace Zenware.Common.UtilsNet
 {
+	// Represents a Excel object.
 	public class Excel
 	{
 		private uint m_ColumnCount = 0;
@@ -24,6 +23,7 @@ namespace Zenware.Common.UtilsNet
 		private Worksheet m_ExcelWorkSheet = null;
 		private Sheets m_ExcelWorkSheets = null;
 		private string m_FileName = string.Empty;
+		private ILog log = null;
 		private string m_Version = string.Empty;
 
 		public uint ColumnCount
