@@ -13,7 +13,7 @@ namespace Zenware.Common.UtilsNet
 {
 	public static class Utils
 	{
-		public static DateTime DateFromString(string stringDate)
+	public static DateTime DateFromString(string stringDate)
 		{
 			DateTime date = DateTime.MinValue;
 
@@ -201,19 +201,6 @@ namespace Zenware.Common.UtilsNet
 			}
 
 			return true;
-		}
-
-		public static string ToProperCase(
-			string UnformattedString)
-		{
-			string formattedText = null;
-
-			if (null != UnformattedString)
-			{
-				formattedText = new System.Globalization.CultureInfo("en").TextInfo.ToTitleCase(UnformattedString.ToLower());
-			}
-
-			return formattedText;
 		}
 	} // End Class
 } // End Namespace
