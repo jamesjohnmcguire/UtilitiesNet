@@ -5,6 +5,7 @@
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using Common.Logging;
@@ -13,7 +14,9 @@ namespace Zenware.Common.UtilsNet
 {
 	public static class Utils
 	{
-	public static DateTime DateFromString(string stringDate)
+		private static ILog log = LogManager.GetLogger(typeof(Utils));
+
+		public static DateTime DateFromString(string stringDate)
 		{
 			DateTime date = DateTime.MinValue;
 
@@ -194,6 +197,7 @@ namespace Zenware.Common.UtilsNet
 			}
 			catch (Exception ex)
 			{
+				log.Debug(CultureInfo.InvariantCulture, m => m("Error: {0}", ex.Message));
 			}
 			finally
 			{
