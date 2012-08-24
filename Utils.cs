@@ -5,8 +5,10 @@
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Common.Logging;
 
@@ -14,7 +16,16 @@ namespace Zenware.Common.UtilsNet
 {
 	public static class Utils
 	{
-		private static ILog log = LogManager.GetLogger(typeof(Utils));
+		private static readonly ILog log = LogManager.GetLogger
+			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public static string CallingMethod()
+		{
+			StackFrame stackFrame = new StackFrame();
+			MethodBase methodBase = stackFrame.GetMethod();
+
+			return methodBase.Name;
+		}
 
 		public static DateTime DateFromString(string stringDate)
 		{
@@ -197,7 +208,7 @@ namespace Zenware.Common.UtilsNet
 			}
 			catch (Exception ex)
 			{
-				log.Debug(CultureInfo.InvariantCulture, m => m("Error: {0}", ex.Message));
+				log.Error(CultureInfo.InvariantCulture, m => m("Error: {0}", ex.Message));
 			}
 			finally
 			{
