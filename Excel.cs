@@ -9,6 +9,7 @@
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Globalization;
 using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 
@@ -23,9 +24,11 @@ namespace Zenware.Common.UtilsNet
 		private Worksheet m_ExcelWorkSheet = null;
 		private Sheets m_ExcelWorkSheets = null;
 		private string m_FileName = string.Empty;
-		private ILog log = null;
+		private static readonly ILog log = LogManager.GetLogger
+			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private string m_Version = string.Empty;
 
+		[CLSCompliantAttribute(false)]
 		public uint ColumnCount
 		{
 			get { return m_ColumnCount; }
@@ -121,6 +124,28 @@ namespace Zenware.Common.UtilsNet
 			return "OK";
 		}
 
+		public void Delete(int rowId, int columnId)
+		{
+			string Range = columnId.ToString() + rowId.ToString();
+
+			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
+
+			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
+		}
+
+		public void DeleteRow(int rowId)
+		{
+			string Range = "A" + rowId + ":IM" + rowId;
+
+			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
+
+			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
+			string[] arrayS = this.ConvertToStringArray(array);
+			Console.WriteLine(arrayS[2]);
+
+			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
+		}
+
 		public void GetExcelSheets()
 		{
 			if (m_ExcelWorkBook != null)
@@ -182,6 +207,7 @@ namespace Zenware.Common.UtilsNet
 				System.Reflection.Missing.Value, System.Reflection.Missing.Value);
 		}
 
+		[CLSCompliantAttribute(false)]
 		public void SetCell(uint Row, uint Column, string Value)
 		{
 			m_ExcelWorkSheet.Cells[Row + 2, Column + 1] = Value;

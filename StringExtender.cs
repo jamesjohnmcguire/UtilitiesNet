@@ -5,6 +5,7 @@
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Text.RegularExpressions;
 
 namespace Zenware.Common.UtilsNet
 {
@@ -24,6 +25,12 @@ namespace Zenware.Common.UtilsNet
 			}
 
 			return false;
+		}
+
+		public static string ToDigitsOnly(this string input)
+		{
+			Regex digitsOnly = new Regex(@"[^\d]");
+			return digitsOnly.Replace(input, "");
 		}
 
 		public static string ToProperCase(

@@ -21,10 +21,13 @@ namespace Zenware.Common.UtilsNet
 
 		public static string CallingMethod()
 		{
-			StackFrame stackFrame = new StackFrame();
+			StackFrame stackFrame = new StackFrame(1);
 			MethodBase methodBase = stackFrame.GetMethod();
+			string methodName = methodBase.Name.Substring(1);
+			int index = methodName.IndexOf('>');
+			methodName = methodName.Substring(0, index);
 
-			return methodBase.Name;
+			return methodName;
 		}
 
 		public static DateTime DateFromString(string stringDate)
