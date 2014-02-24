@@ -16,9 +16,9 @@ using Microsoft.Office.Interop.Excel;
 namespace Zenware.Common.UtilsNet
 {
 	// Represents a Excel object.
-	public class Excel
+	public class ExcelWrapper
 	{
-		private uint m_ColumnCount = 0;
+		private uint columnCount = 0;
 		private Microsoft.Office.Interop.Excel.Application excelApplication = null;
 		private _Workbook m_ExcelWorkBook = null;
 		private Worksheet m_ExcelWorkSheet = null;
@@ -31,8 +31,8 @@ namespace Zenware.Common.UtilsNet
 		[CLSCompliantAttribute(false)]
 		public uint ColumnCount
 		{
-			get { return m_ColumnCount; }
-			set { m_ColumnCount = value; }
+			get { return columnCount; }
+			set { columnCount = value; }
 		}
 
 		public string FileName
@@ -41,7 +41,7 @@ namespace Zenware.Common.UtilsNet
 			set { m_FileName = value; }
 		}
 
-		public Excel()
+		public ExcelWrapper()
 		{
 			excelApplication = new Microsoft.Office.Interop.Excel.Application();
 			m_Version = excelApplication.Version;
@@ -49,7 +49,7 @@ namespace Zenware.Common.UtilsNet
 			excelApplication.DisplayAlerts = false;
 		}
 
-		~Excel()
+		~ExcelWrapper()
 		{
 			excelApplication.Quit();
 		}
@@ -190,7 +190,7 @@ namespace Zenware.Common.UtilsNet
 
 		public string[] GetRow(int idRow)
 		{
-			string[] Row = new string[m_ColumnCount];
+			string[] Row = new string[columnCount];
 			string Range = "A" + idRow + ":IM" + idRow;
 
 			Row = GetRange(Range);
