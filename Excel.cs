@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // $Id:$
 //
-// Copyright (c) 2006-2012 by James John McGuire
+// Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +26,7 @@ namespace Zenware.Common.UtilsNet
 		private string m_FileName = string.Empty;
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private string m_Version = string.Empty;
+		//private string m_Version = string.Empty;
 
 		[CLSCompliantAttribute(false)]
 		public uint ColumnCount
@@ -44,7 +44,7 @@ namespace Zenware.Common.UtilsNet
 		public ExcelWrapper()
 		{
 			excelApplication = new Microsoft.Office.Interop.Excel.Application();
-			m_Version = excelApplication.Version;
+			//m_Version = excelApplication.Version;
 
 			excelApplication.DisplayAlerts = false;
 		}
@@ -59,6 +59,7 @@ namespace Zenware.Common.UtilsNet
 			m_ExcelWorkBook.Close(false, null, false);
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
 		public string OpenFile()
 		{
 			try
@@ -91,15 +92,15 @@ namespace Zenware.Common.UtilsNet
 			return "OK";
 		}
 
-		public string OpenFile(string FileName)
+		public string OpenFile(string fileName)
 		{
 			try
 			{
-				if (!string.IsNullOrEmpty(FileName))
+				if (!string.IsNullOrEmpty(fileName))
 				{
-					m_FileName = FileName;
+					m_FileName = fileName;
 					m_ExcelWorkBook = excelApplication.Workbooks.Open(
-						FileName,
+						fileName,
 						0,
 						false,
 						1,
@@ -126,7 +127,8 @@ namespace Zenware.Common.UtilsNet
 
 		public void Delete(int rowId, int columnId)
 		{
-			string Range = columnId.ToString() + rowId.ToString();
+			string Range = columnId.ToString(CultureInfo.CurrentCulture) + 
+				rowId.ToString(CultureInfo.CurrentCulture);
 
 			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
 
@@ -140,8 +142,9 @@ namespace Zenware.Common.UtilsNet
 			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
-			string[] arrayS = this.ConvertToStringArray(array);
-			Console.WriteLine(arrayS[2]);
+			string[] arrayS = ConvertToStringArray(array);
+			log.Info(CultureInfo.InvariantCulture, m =>
+				m("Range: {0}", arrayS[2]));
 
 			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
 		}
@@ -154,7 +157,7 @@ namespace Zenware.Common.UtilsNet
 			}
 		}
 
-		public bool FindExcelWorksheet(string WorkSheetName)
+		public bool FindExcelWorksheet(string worksheetName)
 		{
 			bool bSheetFound = false;
 
@@ -165,7 +168,7 @@ namespace Zenware.Common.UtilsNet
 				for (int i = 1; i <= m_ExcelWorkSheets.Count; i++)
 				{
 					m_ExcelWorkSheet = (Worksheet)m_ExcelWorkSheets.get_Item((object)i);
-					if (m_ExcelWorkSheet.Name.Equals(WorkSheetName))
+					if (m_ExcelWorkSheet.Name.Equals(worksheetName))
 					{
 						// Get method interface
 						_Worksheet _sheet = (_Worksheet)m_ExcelWorkSheet;
@@ -178,12 +181,12 @@ namespace Zenware.Common.UtilsNet
 			return bSheetFound;
 		}
 
-		public string[] GetRange(string Range)
+		public string[] GetRange(string range)
 		{
-			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
+			Range workingRangeCells = m_ExcelWorkSheet.get_Range(range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
-			string[] arrayS = this.ConvertToStringArray(array);
+			string[] arrayS = ConvertToStringArray(array);
 
 			return arrayS;
 		}
@@ -208,12 +211,12 @@ namespace Zenware.Common.UtilsNet
 		}
 
 		[CLSCompliantAttribute(false)]
-		public void SetCell(uint Row, uint Column, string Value)
+		public void SetCell(uint row, uint column, string value)
 		{
-			m_ExcelWorkSheet.Cells[Row + 2, Column + 1] = Value;
+			m_ExcelWorkSheet.Cells[row + 2, column + 1] = value;
 		}
 
-		private string[] ConvertToStringArray(System.Array values)
+		private static string[] ConvertToStringArray(System.Array values)
 		{
 			string[] newArray = new string[values.Length];
 

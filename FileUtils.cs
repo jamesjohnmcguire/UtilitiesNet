@@ -1,17 +1,19 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // $Id:$
 //
-// Copyright (c) 2006-2012 by James John McGuire
+// Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
+using Common.Logging;
+
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using Common.Logging;
 
 namespace Zenware.Common.UtilsNet
 {
@@ -22,6 +24,9 @@ namespace Zenware.Common.UtilsNet
 	/////////////////////////////////////////////////////////////////////////
 	public static class FileUtils
 	{
+		private static readonly ILog log = LogManager.GetLogger
+			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Compares two files to see if they are they same
@@ -70,13 +75,13 @@ namespace Zenware.Common.UtilsNet
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		public static string GetFileContents(
-			string PathOfFileToRead)
+			string pathOfFileToRead)
 		{
 			string FileContents = null;
 
-			if (File.Exists(PathOfFileToRead))
+			if (File.Exists(pathOfFileToRead))
 			{
-				StreamReader StreamReaderObject = new StreamReader(PathOfFileToRead);
+				StreamReader StreamReaderObject = new StreamReader(pathOfFileToRead);
 
 				if (null != StreamReaderObject)
 				{
@@ -96,13 +101,13 @@ namespace Zenware.Common.UtilsNet
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		public static StreamWriter GetWriteStreamObject(
-			string FilePath)
+			string filePath)
 		{
 			StreamWriter StreamWriterObject = null;
-			if (File.Exists(FilePath))
+			if (File.Exists(filePath))
 			{
 				//set up a filestream
-				FileStream FileStreamObject = new FileStream(FilePath,
+				FileStream FileStreamObject = new FileStream(filePath,
 															FileMode.Open,
 															FileAccess.ReadWrite);
 
@@ -116,34 +121,40 @@ namespace Zenware.Common.UtilsNet
 			return StreamWriterObject;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static void RecursiveRemove(
-			string InitialPath,
-			string[] PathsToRemove)
+			string initialPath,
+			string[] pathsToRemove)
 		{
 			try
 			{
-				foreach (string d in Directory.GetDirectories(InitialPath))
+				foreach (string d in Directory.GetDirectories(initialPath))
 				{
-					foreach (string Path in PathsToRemove)
+					if ((pathsToRemove != null) && (pathsToRemove.Length > 0))
 					{
-						if (d.EndsWith("\\" + Path))
+						foreach (string Path in pathsToRemove)
 						{
-							if (!File.Exists("DevClean.active"))
+							if (d.EndsWith("\\" + Path,
+								StringComparison.Ordinal))
 							{
-								Console.WriteLine("Deleting: " + Path);
-								Directory.Delete(d, true);
+								if (!File.Exists("DevClean.active"))
+								{
+									log.Info(CultureInfo.InvariantCulture, m => m(
+										"Deleting: " + Path));
+									Directory.Delete(d, true);
+								}
 							}
-						}
-						else
-						{
-							RecursiveRemove(d, PathsToRemove);
+							else
+							{
+								RecursiveRemove(d, pathsToRemove);
+							}
 						}
 					}
 				}
 			}
-			catch (System.Exception excpt)
+			catch (System.Exception ex)
 			{
-				Console.WriteLine(excpt.Message);
+				log.Info(CultureInfo.InvariantCulture, m => m(ex.Message));
 			}
 		}
 
@@ -151,27 +162,29 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// RecursiveUtf8WinFiles
 		/// </summary>
-		/// <param name="InitialPath"></param>
+		/// <param name="initialPath"></param>
 		/////////////////////////////////////////////////////////////////////
 		public static void RecursiveUtf8WinFiles(
-			string InitialPath)
+			string initialPath)
 		{
 			try
 			{
-				foreach (string d in Directory.GetDirectories(InitialPath))
+				foreach (string d in Directory.GetDirectories(initialPath))
 				{
 					RecursiveUtf8WinFiles(d);
 
 					foreach (string f in Directory.GetFiles(d, "*.php"))
 					{
-						Console.WriteLine("Checking File: " + f);
-						UpdateFileUnixToCRLF(f);
+						log.Info(CultureInfo.InvariantCulture, m => m(
+							"Checking File: " + f));
+						UpdateFileUnixToCrlf(f);
 					}
 				}
-				foreach (string f in Directory.GetFiles(InitialPath, "*.php"))
+				foreach (string f in Directory.GetFiles(initialPath, "*.php"))
 				{
-					Console.WriteLine("Checking File: " + f);
-					UpdateFileUnixToCRLF(f);
+					log.Info(CultureInfo.InvariantCulture, m => m(
+						"Checking Directory: " + f));
+					UpdateFileUnixToCrlf(f);
 				}
 			}
 			catch (System.Exception excpt)
@@ -184,31 +197,30 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// RegexStringInFile
 		/// </summary>
-		/// <param name="FilePath"></param>
-		/// <param name="OldString"></param>
-		/// <param name="NewString"></param>
+		/// <param name="filePath"></param>
+		/// <param name="oldString"></param>
+		/// <param name="newString"></param>
 		/////////////////////////////////////////////////////////////////////
-		public static void RegexStringInFile(
-			string FilePath,
-			string OldString,
-			string NewString)
+		public static void RegexStringInFile(string filePath, string oldValue,
+			string newValue)
 		{
 			string Contents;
 
-			if (File.Exists(FilePath))
+			if (File.Exists(filePath))
 			{
-				StreamReader sr = new StreamReader(FilePath);
+				StreamReader sr = new StreamReader(filePath);
 
 				if (sr != null)
 				{
 					Contents = sr.ReadToEnd();
 					sr.Close();
 
-					FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite);
+					FileStream fs = new FileStream(filePath, FileMode.Open,
+						FileAccess.ReadWrite);
 
 					StreamWriter sw = new StreamWriter(fs);
 
-					Contents = Regex.Replace(Contents, OldString, NewString);
+					Contents = Regex.Replace(Contents, oldValue, newValue);
 
 					sw.Write(Contents);
 
@@ -218,29 +230,30 @@ namespace Zenware.Common.UtilsNet
 			}
 		}
 
-		public static void ReplaceStringInFile(
-			string sFilePath, string sOldString, string sNewString)
+		public static void ReplaceStringInFile(string filePath,
+			string oldValue, string newValue)
 		{
-			string sContents;
-			string sNewContents;
+			string contents;
+			string newContents;
 
-			if (File.Exists(sFilePath))
+			if (File.Exists(filePath))
 			{
-				StreamReader sr = new StreamReader(sFilePath);
+				StreamReader sr = new StreamReader(filePath);
 
 				if (sr != null)
 				{
-					sContents = sr.ReadToEnd();
+					contents = sr.ReadToEnd();
 					sr.Close();
 
-					FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.ReadWrite);
+					FileStream fs = new FileStream(filePath, FileMode.Open,
+						FileAccess.ReadWrite);
 
 					//set up a streamwriter for adding text
 					StreamWriter sw = new StreamWriter(fs);
 
-					sNewContents = sContents.Replace(sOldString, sNewString);
+					newContents = contents.Replace(oldValue, newValue);
 
-					sw.Write(sNewContents);
+					sw.Write(newContents);
 
 					// close file
 					sw.Close();
@@ -258,17 +271,17 @@ namespace Zenware.Common.UtilsNet
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFile(
-			string FileContents,
-			string FilePathName)
+			string fileContents,
+			string filePathName)
 		{
-			FileStream FileStreamObject = new FileStream(FilePathName,
+			FileStream fileStreamObject = new FileStream(filePathName,
 														FileMode.Create,
 														FileAccess.ReadWrite);
 
-			StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
-			StreamWriterObject.Write(FileContents);
-			StreamWriterObject.Close();
-			FileStreamObject.Close();
+			StreamWriter streamWriterObject = new StreamWriter(fileStreamObject);
+			streamWriterObject.Write(fileContents);
+			streamWriterObject.Close();
+			fileStreamObject.Close();
 
 			return true;
 		}
@@ -277,25 +290,31 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
-		/// <param name="FileContents"></param>
-		/// <param name="FilePathName"></param>
+		/// <param name="fileContents"></param>
+		/// <param name="filePathName"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFileWin(
-			string FileContents,
-			string FilePathName)
+			string fileContents,
+			string filePathName)
 		{
-			FileStream FileStreamObject = new FileStream(FilePathName,
-														FileMode.Create,
-														FileAccess.ReadWrite);
+			bool successCode = false;
+			if (!string.IsNullOrEmpty(fileContents))
+			{
+				FileStream fileStreamObject = new FileStream(filePathName,
+															FileMode.Create,
+															FileAccess.ReadWrite);
 
-			FileContents = FileContents.Replace("\n", Environment.NewLine);
-			StreamWriter StreamWriterObject = new StreamWriter(FileStreamObject);
-			StreamWriterObject.Write(FileContents);
-			StreamWriterObject.Close();
-			FileStreamObject.Close();
+				fileContents = fileContents.Replace("\n", Environment.NewLine);
+				StreamWriter streamWriterObject = new StreamWriter(fileStreamObject);
+				streamWriterObject.Write(fileContents);
+				streamWriterObject.Close();
+				fileStreamObject.Close();
 
-			return true;
+				successCode = true;
+			}
+
+			return successCode;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -303,9 +322,9 @@ namespace Zenware.Common.UtilsNet
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
 		/////////////////////////////////////////////////////////////////////
-		public static void UpdateFileMacToCRLF(string sFilePath)
+		public static void UpdateFileMacToCrlf(string filePath)
 		{
-			RegexStringInFile(sFilePath, "\r\n|\r|\n", "\r\n");
+			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -313,9 +332,9 @@ namespace Zenware.Common.UtilsNet
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
 		/////////////////////////////////////////////////////////////////////
-		public static void UpdateFileUnixToCRLF(string sFilePath)
+		public static void UpdateFileUnixToCrlf(string filePath)
 		{
-			RegexStringInFile(sFilePath, "\r\n|\r|\n", "\r\n");
+			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 	} // End Class
 } // End Namespace

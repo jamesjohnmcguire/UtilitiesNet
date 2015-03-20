@@ -1,16 +1,17 @@
 /////////////////////////////////////////////////////////////////////////////
 // $Id:$
 //
-// Copyright (c) 2006-2012 by James John McGuire
+// Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
+
+using Common.Logging;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Common.Logging;
 
 namespace Zenware.Common.UtilsNet
 {
@@ -30,13 +31,14 @@ namespace Zenware.Common.UtilsNet
 			return methodName;
 		}
 
-		public static DateTime DateFromString(string stringDate)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+		public static DateTime DateFromString(string dateText)
 		{
 			DateTime date = DateTime.MinValue;
 
 			try
 			{
-				DateTime.TryParse(stringDate, out date);
+				DateTime.TryParse(dateText, out date);
 			}
 			catch
 			{
@@ -49,54 +51,53 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// Reads a text file contents into a string
 		/// </summary>
-		/// <param name="PathOfFileToRead"></param>
+		/// <param name="filePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static string GetFileContents(
-			string PathOfFileToRead)
+		public static string GetFileContents(string filePath)
 		{
-			string FileContents = null;
+			string contents = null;
 
-			if (File.Exists(PathOfFileToRead))
+			if (File.Exists(filePath))
 			{
-				StreamReader StreamReaderObject = new StreamReader(PathOfFileToRead);
+				StreamReader StreamReaderObject = new StreamReader(filePath);
 
 				if (null != StreamReaderObject)
 				{
-					FileContents = StreamReaderObject.ReadToEnd();
+					contents = StreamReaderObject.ReadToEnd();
 					StreamReaderObject.Close();
 				}
 			}
 
-			return FileContents;
+			return contents;
 		}
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns a writable stream object.
 		/// </summary>
-		/// <param name="FilePath"></param>
+		/// <param name="filePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		public static StreamWriter GetWriteStreamObject(
-			string FilePath)
+			string filePath)
 		{
-			StreamWriter StreamWriterObject = null;
-			if (File.Exists(FilePath))
+			StreamWriter streamWriterObject = null;
+			if (File.Exists(filePath))
 			{
 				//set up a filestream
-				FileStream FileStreamObject = new FileStream(FilePath,
+				FileStream fileStreamObject = new FileStream(filePath,
 															FileMode.Open,
 															FileAccess.ReadWrite);
 
-				if (null != FileStreamObject)
+				if (null != fileStreamObject)
 				{
 					//set up a streamwriter for adding text
-					StreamWriterObject = new StreamWriter(FileStreamObject);
+					streamWriterObject = new StreamWriter(fileStreamObject);
 				}
 			}
 
-			return StreamWriterObject;
+			return streamWriterObject;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -115,12 +116,12 @@ namespace Zenware.Common.UtilsNet
 			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/";
 			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/";
 			string ValidEmailRegEx =
-			@"^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@"
-	 + @"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
-				[0-9]{1,2}|25[0-5]|2[0-4][0-9])\."
-	 + @"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
-				[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
-	 + @"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
+			@"^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@" +
+				@"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])\." +
+				@"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|" +
+				@"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
 
 			// checks proper syntax
 			Match Match = Regex.Match(EmailAddress, ValidEmailRegEx);
@@ -148,7 +149,7 @@ namespace Zenware.Common.UtilsNet
 			// Ensure we have a valid file name
 			if (Parameters.Length < 1)
 			{
-				Console.WriteLine("usage: ");
+				//Console.WriteLine("usage: ");
 			}
 			else
 			{
@@ -164,24 +165,32 @@ namespace Zenware.Common.UtilsNet
 		/// <param name="obj"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static bool IsDate(Object obj)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public static bool IsDate(Object value)
 		{
-			string strDate = obj.ToString();
+			bool successCode = false;
+
 			try
 			{
-				DateTime dt;
-				DateTime.TryParse(strDate, out dt);
-				if (dt != DateTime.MinValue && dt != DateTime.MaxValue)
+				if (value != null)
 				{
-					return true;
+					DateTime dt;
+					string strDate = value.ToString();
+					DateTime.TryParse(strDate, out dt);
+					if (dt != DateTime.MinValue && dt != DateTime.MaxValue)
+					{
+						successCode = true;
+					}
 				}
-
-				return false;
 			}
-			catch
+			catch (Exception ex)
 			{
-				return false;
+				log.Error(CultureInfo.InvariantCulture, m =>
+					m("Error: {0}", ex.Message));
 			}
+
+			return successCode;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -193,6 +202,7 @@ namespace Zenware.Common.UtilsNet
 		/// <param name="FilePathName"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static bool SaveFile(
 			string fileContents,
 			string filePathName)
@@ -204,14 +214,15 @@ namespace Zenware.Common.UtilsNet
 														 FileMode.Create,
 														 FileAccess.ReadWrite);
 
-				StreamWriter streamWriterObject = 
+				StreamWriter streamWriterObject =
 					new StreamWriter(fileStreamObject);
 				streamWriterObject.Write(fileContents);
 				streamWriterObject.Close();
 			}
 			catch (Exception ex)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m("Error: {0}", ex.Message));
+				log.Error(CultureInfo.InvariantCulture, m =>
+					m("Error: {0}", ex.Message));
 			}
 			finally
 			{

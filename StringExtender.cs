@@ -1,10 +1,11 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // $Id:$
 //
-// Copyright (c) 2006-2012 by James John McGuire
+// Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Zenware.Common.UtilsNet
@@ -16,11 +17,14 @@ namespace Zenware.Common.UtilsNet
 			StringComparison compareType,
 			params string[] compareValues)
 		{
-			foreach (string s in compareValues)
+			if ((compareValues != null) && (!string.IsNullOrEmpty(data)))
 			{
-				if (data.Equals(s, compareType))
+				foreach (string s in compareValues)
 				{
-					return true;
+					if (data.Equals(s, compareType))
+					{
+						return true;
+					}
 				}
 			}
 
@@ -34,13 +38,15 @@ namespace Zenware.Common.UtilsNet
 		}
 
 		public static string ToProperCase(
-			string UnformattedString)
+			string unformattedText)
 		{
 			string formattedText = null;
 
-			if (null != UnformattedString)
+			if (null != unformattedText)
 			{
-				formattedText = new System.Globalization.CultureInfo("en").TextInfo.ToTitleCase(UnformattedString.ToLower());
+				formattedText = new CultureInfo("en").TextInfo.
+					ToTitleCase(unformattedText.ToLower(
+					CultureInfo.CurrentCulture));
 			}
 
 			return formattedText;
