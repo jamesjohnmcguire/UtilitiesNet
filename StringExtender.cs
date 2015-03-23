@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Zenware.Common.UtilsNet
+namespace Zenware.Common.UtilsNet.Extensions
 {
 	public static class StringExtender
 	{
@@ -19,13 +19,13 @@ namespace Zenware.Common.UtilsNet
 		{
 			if ((compareValues != null) && (!string.IsNullOrEmpty(data)))
 			{
-				foreach (string s in compareValues)
+			foreach (string s in compareValues)
+			{
+				if (data.Equals(s, compareType))
 				{
-					if (data.Equals(s, compareType))
-					{
-						return true;
-					}
+					return true;
 				}
+			}
 			}
 
 			return false;
