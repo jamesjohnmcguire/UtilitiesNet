@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id:$
+// $Id: $
 //
 // Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
@@ -9,7 +9,9 @@
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
 using System;
+using System.Drawing;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 
@@ -19,11 +21,12 @@ namespace Zenware.Common.UtilsNet
 	public class ExcelWrapper
 	{
 		private uint columnCount = 0;
-		private Microsoft.Office.Interop.Excel.Application excelApplication = null;
-		private _Workbook m_ExcelWorkBook = null;
-		private Worksheet m_ExcelWorkSheet = null;
-		private Sheets m_ExcelWorkSheets = null;
-		private string m_FileName = string.Empty;
+		private Microsoft.Office.Interop.Excel.Application excelApplication =
+			null;
+		private _Workbook workBook = null;
+		private Worksheet workSheet = null;
+		private Sheets workSheets = null;
+		private string filename = string.Empty;
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		//private string m_Version = string.Empty;
@@ -37,8 +40,8 @@ namespace Zenware.Common.UtilsNet
 
 		public string FileName
 		{
-			get { return m_FileName; }
-			set { m_FileName = value; }
+			get { return filename; }
+			set { filename = value; }
 		}
 
 		public ExcelWrapper()
@@ -51,44 +54,58 @@ namespace Zenware.Common.UtilsNet
 
 		~ExcelWrapper()
 		{
-			excelApplication.Quit();
+			if (excelApplication != null)
+			{
+				excelApplication.Quit();
+				Marshal.ReleaseComObject(excelApplication);
+				excelApplication = null;
+			}
 		}
 
 		public void CloseFile()
 		{
-			m_ExcelWorkBook.Close(false, null, false);
+			if (workSheet != null)
+			{
+				Marshal.ReleaseComObject(workSheet);
+				workSheet = null;
+			}
+			if (workSheets != null)
+			{
+				Marshal.ReleaseComObject(workSheets);
+				workSheets = null;
+			}
+			if (workBook != null)
+			{
+				workBook.Close(false, null, false);
+				Marshal.ReleaseComObject(workBook);
+				workBook = null;
+			}
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", 
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public string OpenFile()
 		{
 			try
 			{
-				if (!string.IsNullOrEmpty(m_FileName))
+				if (!string.IsNullOrEmpty(filename))
 				{
-					m_ExcelWorkBook = excelApplication.Workbooks.Open(
-						m_FileName,
-						0,
-						true,
-						1,
-						true,
-						System.Reflection.Missing.Value,
-						System.Reflection.Missing.Value,
-						true,
-						System.Reflection.Missing.Value,
-						true,
-						System.Reflection.Missing.Value,
-						false,
-						System.Reflection.Missing.Value,
-						false,
-						false);
+					workBook = excelApplication.Workbooks.Open(filename, 0,
+						true, 1, true, System.Reflection.Missing.Value,
+ 						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, false,
+						System.Reflection.Missing.Value, false, false);
 				}
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
 				this.CloseFile();
-				return e.Message;
-			}
+				log.Error(CultureInfo.InvariantCulture,
+					m => m("Initialization Error: {0}", ex.Message));
+				return ex.Message;
+
+				}
 			return "OK";
 		}
 
@@ -98,95 +115,101 @@ namespace Zenware.Common.UtilsNet
 			{
 				if (!string.IsNullOrEmpty(fileName))
 				{
-					m_FileName = fileName;
-					m_ExcelWorkBook = excelApplication.Workbooks.Open(
-						fileName,
-						0,
-						false,
-						1,
-						true,
-						System.Reflection.Missing.Value,
-						System.Reflection.Missing.Value,
-						true,
-						System.Reflection.Missing.Value,
-						true,
-						System.Reflection.Missing.Value,
-						false,
-						System.Reflection.Missing.Value,
-						false,
-						false);
+					filename = fileName;
+					workBook = excelApplication.Workbooks.Open(fileName, 0,
+						false, 1, true, System.Reflection.Missing.Value,
+						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, false,
+						System.Reflection.Missing.Value, false, false);
 				}
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
 				this.CloseFile();
-				return e.Message;
+				log.Error(CultureInfo.InvariantCulture,
+					m => m("Initialization Error: {0}", ex.Message));
+				return ex.Message;
 			}
 			return "OK";
 		}
 
 		public void Delete(int rowId, int columnId)
 		{
-			string Range = columnId.ToString(CultureInfo.CurrentCulture) + 
-				rowId.ToString(CultureInfo.CurrentCulture);
+			string Range = columnId.ToString() +
+				rowId.ToString(CultureInfo.InvariantCulture);
 
-			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
+			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
 
 			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
+			Marshal.ReleaseComObject(workingRangeCells);
 		}
 
 		public void DeleteRow(int rowId)
 		{
 			string Range = "A" + rowId + ":IM" + rowId;
 
-			Range workingRangeCells = m_ExcelWorkSheet.get_Range(Range, Type.Missing);
+			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
 			string[] arrayS = ConvertToStringArray(array);
 			log.Info(CultureInfo.InvariantCulture, m =>
 				m("Range: {0}", arrayS[2]));
+			log.Info(CultureInfo.InvariantCulture,
+				m => m("field2: {0}", arrayS[2]));
 
 			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
+			Marshal.ReleaseComObject(workingRangeCells);
 		}
 
-		public void GetExcelSheets()
+		public bool FindExcelWorksheet(string workSheetName)
 		{
-			if (m_ExcelWorkBook != null)
-			{
-				m_ExcelWorkSheets = m_ExcelWorkBook.Worksheets;
-			}
-		}
+			bool sheetFound = false;
 
-		public bool FindExcelWorksheet(string worksheetName)
-		{
-			bool bSheetFound = false;
-
-			if (m_ExcelWorkSheets != null)
+			if (workSheets != null)
 			{
 				// Step thru the worksheet collection and see if the sheet is
 				// available. If found return true;
-				for (int i = 1; i <= m_ExcelWorkSheets.Count; i++)
+				for (int index = 1; index <= workSheets.Count; index++)
 				{
-					m_ExcelWorkSheet = (Worksheet)m_ExcelWorkSheets.get_Item((object)i);
-					if (m_ExcelWorkSheet.Name.Equals(worksheetName))
+					workSheet = (Worksheet)workSheets.get_Item((object)index);
+					if (workSheet.Name.Equals(workSheetName))
 					{
 						// Get method interface
-						_Worksheet _sheet = (_Worksheet)m_ExcelWorkSheet;
+						_Worksheet _sheet = (_Worksheet)workSheet;
 						_sheet.Activate();
-						bSheetFound = true;
+						sheetFound = true;
 						break;
 					}
 				}
 			}
-			return bSheetFound;
+
+			return sheetFound;
 		}
 
-		public string[] GetRange(string range)
+		public void GetExcelSheets()
+		{
+			if (workBook != null)
+			{
+				workSheets = workBook.Worksheets;
+			}
+		}
+
+		public Range GetRangeObject(string Range)
+		{
+			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
+
+			return workingRangeCells;
+		}
+
+		public string[] GetRange(string Range)
 		{
 			Range workingRangeCells = m_ExcelWorkSheet.get_Range(range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
 			string[] arrayS = ConvertToStringArray(array);
+
+			Marshal.ReleaseComObject(workingRangeCells);
 
 			return arrayS;
 		}
@@ -202,8 +225,8 @@ namespace Zenware.Common.UtilsNet
 
 		public void Save()
 		{
-			//m_ExcelWorkBook.Save();
-			m_ExcelWorkBook.SaveAs(m_FileName, System.Reflection.Missing.Value,
+			//workBook.Save();
+			workBook.SaveAs(filename, System.Reflection.Missing.Value,
 				null, null, false, false, XlSaveAsAccessMode.xlExclusive,
 				XlSaveAsAccessMode.xlExclusive,
 				System.Reflection.Missing.Value, System.Reflection.Missing.Value,
@@ -211,12 +234,36 @@ namespace Zenware.Common.UtilsNet
 		}
 
 		[CLSCompliantAttribute(false)]
-		public void SetCell(uint row, uint column, string value)
+		public void SetBackgroundColor(uint row, uint column, Color color)
 		{
-			m_ExcelWorkSheet.Cells[row + 2, column + 1] = value;
+			string rangeQuery = column + row + ":" + column + row;
+
+			Range range = GetRangeObject(rangeQuery);
+			range.Interior.Color = System.Drawing.ColorTranslator.ToOle(color);
+			Save();
+
+			Marshal.ReleaseComObject(range);
 		}
 
-		private static string[] ConvertToStringArray(System.Array values)
+		[CLSCompliantAttribute(false)]
+		public void SetCell(uint row, uint column, string value)
+		{
+			workSheet.Cells[row + 2, column + 1] = value;
+		}
+
+		[CLSCompliantAttribute(false)]
+		public void SetFontColor(uint row, uint column, Color color)
+		{
+			string rangeQuery = column + row + ":" + column + row;
+
+			Range range = GetRangeObject(rangeQuery);
+			range.Font.Color = System.Drawing.ColorTranslator.ToOle(color);
+			Save();
+
+			Marshal.ReleaseComObject(range);
+		}
+
+		private string[] ConvertToStringArray(System.Array values)
 		{
 			string[] newArray = new string[values.Length];
 
