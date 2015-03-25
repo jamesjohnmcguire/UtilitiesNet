@@ -1,4 +1,10 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+// $Id: $
+//
+// Copyright (c) 2008-2015 by James John McGuire
+// All rights reserved.
+/////////////////////////////////////////////////////////////////////////////
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -11,7 +17,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UtilsNet")]
-[assembly: AssemblyCopyright("Copyright © 2008-2011")]
+[assembly: AssemblyCopyright("Copyright © 2008-2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
