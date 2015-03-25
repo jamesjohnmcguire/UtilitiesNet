@@ -92,7 +92,7 @@ namespace Zenware.Common.UtilsNet
 				{
 					workBook = excelApplication.Workbooks.Open(filename, 0,
 						true, 1, true, System.Reflection.Missing.Value,
- 						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, true,
 						System.Reflection.Missing.Value, true,
 						System.Reflection.Missing.Value, false,
 						System.Reflection.Missing.Value, false, false);
@@ -202,9 +202,9 @@ namespace Zenware.Common.UtilsNet
 			return workingRangeCells;
 		}
 
-		public string[] GetRange(string Range)
+		public string[] GetRange(string range)
 		{
-			Range workingRangeCells = m_ExcelWorkSheet.get_Range(range, Type.Missing);
+			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
 			string[] arrayS = ConvertToStringArray(array);
