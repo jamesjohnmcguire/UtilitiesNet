@@ -74,19 +74,19 @@ namespace Zenware.Common.UtilsNet
 		/// <param name="PathOfFileToRead"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static string GetFileContents(
-			string pathOfFileToRead)
+		public static string GetFileContents(string pathOfFileToRead)
 		{
 			string FileContents = null;
 
 			if (File.Exists(pathOfFileToRead))
 			{
-				StreamReader StreamReaderObject = new StreamReader(pathOfFileToRead);
-
-				if (null != StreamReaderObject)
+				using (StreamReader StreamReaderObject = new
+					StreamReader(pathOfFileToRead))
 				{
-					FileContents = StreamReaderObject.ReadToEnd();
-					StreamReaderObject.Close();
+					if (null != StreamReaderObject)
+					{
+						FileContents = StreamReaderObject.ReadToEnd();
+					}
 				}
 			}
 
@@ -177,14 +177,14 @@ namespace Zenware.Common.UtilsNet
 					{
 						log.Info(CultureInfo.InvariantCulture, m => m(
 							"Checking File: " + f));
-						UpdateFileUnixToCrlf(f);
+						UpdateFileLineEndingUnixToWindows(f);
 					}
 				}
 				foreach (string f in Directory.GetFiles(initialPath, "*.php"))
 				{
 					log.Info(CultureInfo.InvariantCulture, m => m(
 						"Checking Directory: " + f));
-					UpdateFileUnixToCrlf(f);
+					UpdateFileLineEndingUnixToWindows(f);
 				}
 			}
 			catch (System.Exception excpt)
@@ -208,24 +208,24 @@ namespace Zenware.Common.UtilsNet
 
 			if (File.Exists(filePath))
 			{
-				StreamReader sr = new StreamReader(filePath);
-
-				if (sr != null)
+				using (StreamReader sr = new StreamReader(filePath))
 				{
-					Contents = sr.ReadToEnd();
-					sr.Close();
+					if (sr != null)
+					{
+						Contents = sr.ReadToEnd();
 
-					FileStream fs = new FileStream(filePath, FileMode.Open,
-						FileAccess.ReadWrite);
+						using (FileStream fs = new FileStream(filePath, 
+							FileMode.Open, FileAccess.ReadWrite))
+						{
+							StreamWriter sw = new StreamWriter(fs);
 
-					StreamWriter sw = new StreamWriter(fs);
+							Contents = Regex.Replace(Contents, oldValue, newValue);
 
-					Contents = Regex.Replace(Contents, oldValue, newValue);
+							sw.Write(Contents);
 
-					sw.Write(Contents);
-
-					sw.Close();
-					fs.Close();
+							//sw.Close();
+						}
+					}
 				}
 			}
 		}
@@ -238,26 +238,26 @@ namespace Zenware.Common.UtilsNet
 
 			if (File.Exists(filePath))
 			{
-				StreamReader sr = new StreamReader(filePath);
-
-				if (sr != null)
+				using (StreamReader sr = new StreamReader(filePath))
 				{
-					contents = sr.ReadToEnd();
-					sr.Close();
+					if (sr != null)
+					{
+						contents = sr.ReadToEnd();
 
-					FileStream fs = new FileStream(filePath, FileMode.Open,
-						FileAccess.ReadWrite);
+						using (FileStream fs = new FileStream(filePath,
+							FileMode.Open, FileAccess.ReadWrite))
+						{
+							//set up a streamwriter for adding text
+							StreamWriter sw = new StreamWriter(fs);
 
-					//set up a streamwriter for adding text
-					StreamWriter sw = new StreamWriter(fs);
+							newContents = contents.Replace(oldValue, newValue);
 
-					newContents = contents.Replace(oldValue, newValue);
+							sw.Write(newContents);
 
-					sw.Write(newContents);
-
-					// close file
-					sw.Close();
-					fs.Close();
+							// close file
+							//sw.Close();
+						}
+					}
 				}
 			}
 		}
@@ -274,16 +274,26 @@ namespace Zenware.Common.UtilsNet
 			string fileContents,
 			string filePathName)
 		{
-			FileStream fileStreamObject = new FileStream(filePathName,
-														FileMode.Create,
-														FileAccess.ReadWrite);
+			bool successCode = false;
+			try
+			{
+				using (FileStream fileStreamObject = new FileStream(filePathName,
+					FileMode.Create, FileAccess.ReadWrite))
+				{
+					StreamWriter streamWriterObject = new StreamWriter(fileStreamObject);
+					streamWriterObject.Write(fileContents);
+					streamWriterObject.Close();
+					fileStreamObject.Close();
+				}
+				
+				successCode = true;
+			}
+			catch(Exception ex)
+			{
+				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
+			}
 
-			StreamWriter streamWriterObject = new StreamWriter(fileStreamObject);
-			streamWriterObject.Write(fileContents);
-			streamWriterObject.Close();
-			fileStreamObject.Close();
-
-			return true;
+			return successCode;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -322,7 +332,7 @@ namespace Zenware.Common.UtilsNet
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
 		/////////////////////////////////////////////////////////////////////
-		public static void UpdateFileMacToCrlf(string filePath)
+		public static void UpdateFileMacToWindows(string filePath)
 		{
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
@@ -332,7 +342,7 @@ namespace Zenware.Common.UtilsNet
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
 		/////////////////////////////////////////////////////////////////////
-		public static void UpdateFileUnixToCrlf(string filePath)
+		public static void UpdateFileLineEndingUnixToWindows(string filePath)
 		{
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}

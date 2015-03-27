@@ -136,7 +136,7 @@ namespace Zenware.Common.UtilsNet
 
 		public void Delete(int rowId, int columnId)
 		{
-			string Range = columnId.ToString() +
+			string Range = columnId.ToString(CultureInfo.InvariantCulture) +
 				rowId.ToString(CultureInfo.InvariantCulture);
 
 			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
@@ -162,7 +162,7 @@ namespace Zenware.Common.UtilsNet
 			Marshal.ReleaseComObject(workingRangeCells);
 		}
 
-		public bool FindExcelWorksheet(string workSheetName)
+		public bool FindExcelWorksheet(string worksheetName)
 		{
 			bool sheetFound = false;
 
@@ -173,7 +173,7 @@ namespace Zenware.Common.UtilsNet
 				for (int index = 1; index <= workSheets.Count; index++)
 				{
 					workSheet = (Worksheet)workSheets.get_Item((object)index);
-					if (workSheet.Name.Equals(workSheetName))
+					if (workSheet.Name.Equals(worksheetName))
 					{
 						// Get method interface
 						_Worksheet _sheet = (_Worksheet)workSheet;
@@ -195,9 +195,9 @@ namespace Zenware.Common.UtilsNet
 			}
 		}
 
-		public Range GetRangeObject(string Range)
+		public Range GetRangeObject(string range)
 		{
-			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
+			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
 			return workingRangeCells;
 		}
@@ -263,7 +263,7 @@ namespace Zenware.Common.UtilsNet
 			Marshal.ReleaseComObject(range);
 		}
 
-		private string[] ConvertToStringArray(System.Array values)
+		private static string[] ConvertToStringArray(System.Array values)
 		{
 			string[] newArray = new string[values.Length];
 

@@ -36,13 +36,11 @@ namespace Zenware.Common.UtilsNet
 		public static DateTime DateFromString(string dateText)
 		{
 			DateTime date = DateTime.MinValue;
+			DateTime testDate = DateTime.MinValue;
 
-			try
+			if (DateTime.TryParse(dateText, out testDate))
 			{
-				DateTime.TryParse(dateText, out date);
-			}
-			catch
-			{
+				date = testDate;
 			}
 
 			return date;
@@ -104,7 +102,7 @@ namespace Zenware.Common.UtilsNet
 		/////////////////////////////////////////////////////////////////////
 		/// IsValidEmailAddress
 		/////////////////////////////////////////////////////////////////////
-		public static bool IsValidEmailAddress(string EmailAddress)
+		public static bool IsValidEmailAddress(string emailAddress)
 		{
 			bool ValidEmailAddress = false;
 
@@ -125,7 +123,7 @@ namespace Zenware.Common.UtilsNet
 				@"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
 
 			// checks proper syntax
-			Match Match = Regex.Match(EmailAddress, ValidEmailRegEx);
+			Match Match = Regex.Match(emailAddress, ValidEmailRegEx);
 
 			if (true == Match.Success)
 			{
@@ -142,13 +140,12 @@ namespace Zenware.Common.UtilsNet
 		/// <param name="FilePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		private static bool CheckCommandLineParameters(
-			string[] Parameters)
+		public static bool CheckCommandLineParameters(	string[] parameters)
 		{
 			bool IsValid = false;
 
 			// Ensure we have a valid file name
-			if (Parameters.Length < 1)
+			if (parameters.Length < 1)
 			{
 				//Console.WriteLine("usage: ");
 			}
@@ -176,12 +173,23 @@ namespace Zenware.Common.UtilsNet
 			{
 				if (value != null)
 				{
-					DateTime dt;
+					DateTime date;
 					string strDate = value.ToString();
-					DateTime.TryParse(strDate, out dt);
-					if (dt != DateTime.MinValue && dt != DateTime.MaxValue)
+
+					try
 					{
-						successCode = true;
+						DateTime.TryParse(strDate, out date);
+
+						if (date != DateTime.MinValue && date != DateTime.MaxValue)
+						{
+							successCode = true;
+						}
+					}
+					catch
+					{
+					}
+					finally
+					{
 					}
 				}
 			}
