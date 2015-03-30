@@ -37,8 +37,7 @@ namespace Zenware.Common.UtilsNet.Extensions
 			return digitsOnly.Replace(input, "");
 		}
 
-		public static string ToProperCase(
-			string unformattedText)
+		public static string ToProperCase(this string unformattedText)
 		{
 			string formattedText = null;
 
