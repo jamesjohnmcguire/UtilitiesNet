@@ -44,12 +44,13 @@ namespace Zenware.Common.UtilsNet.Extensions
 				StringSplitOptions.RemoveEmptyEntries);
 
 			// Combine the words.
-			string result = words[0].ToLower();
+			string result = words[0].Substring(0, 1).ToLower() +
+				 words[0].Substring(1);
+
 			for (int i = 1; i < words.Length; i++)
 			{
 				result +=
-					words[i].Substring(0, 1).ToUpper() +
-					words[i].Substring(1);
+					words[i].Substring(0, 1).ToUpper() + words[i].Substring(1);
 			}
 
 			return result;
