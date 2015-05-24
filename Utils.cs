@@ -145,7 +145,7 @@ namespace Zenware.Common.UtilsNet
 			bool IsValid = false;
 
 			// Ensure we have a valid file name
-			if (parameters.Length < 1)
+			if ((null != parameters) && (parameters.Length < 1))
 			{
 				//Console.WriteLine("usage: ");
 			}
@@ -178,11 +178,12 @@ namespace Zenware.Common.UtilsNet
 
 					try
 					{
-						DateTime.TryParse(strDate, out date);
-
-						if (date != DateTime.MinValue && date != DateTime.MaxValue)
+						if (DateTime.TryParse(strDate, out date))
 						{
-							successCode = true;
+							if (date != DateTime.MinValue && date != DateTime.MaxValue)
+							{
+								successCode = true;
+							}
 						}
 					}
 					catch

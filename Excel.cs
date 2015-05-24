@@ -248,7 +248,23 @@ namespace Zenware.Common.UtilsNet
 		[CLSCompliantAttribute(false)]
 		public void SetCell(uint row, uint column, string value)
 		{
-			workSheet.Cells[row + 2, column + 1] = value;
+			if ((row < (uint.MaxValue -1)) && (column < uint.MaxValue))
+			{
+				workSheet.Cells[row + 2, column + 1] = value;
+			}
+			else
+			{
+				if (row >= (uint.MaxValue - 1))
+				{
+					throw new ArgumentOutOfRangeException("row",
+					"row greater than Uint32.MaxValue");
+				}
+				if (column >= uint.MaxValue)
+				{
+					throw new ArgumentOutOfRangeException("column",
+					"column greater than Uint32.MaxValue");
+				}
+			}
 		}
 
 		[CLSCompliantAttribute(false)]

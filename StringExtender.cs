@@ -32,25 +32,26 @@ namespace Zenware.Common.UtilsNet.Extensions
 		}
 
 		// Convert the string to camel case.
-		public static string ToCamelCase(this string the_string)
+		public static string ToCamelCase(this string input)
 		{
 			// If there are 0 or 1 characters, just return the string.
-			if (the_string == null || the_string.Length < 2)
-				return the_string;
+			if (input == null || input.Length < 2)
+				return input;
 
 			// Split the string into words.
-			string[] words = the_string.Split(
+			string[] words = input.Split(
 				new char[] { },
 				StringSplitOptions.RemoveEmptyEntries);
 
 			// Combine the words.
-			string result = words[0].Substring(0, 1).ToLower() +
-				 words[0].Substring(1);
+			string result = words[0].Substring(0, 1).ToLower(
+				CultureInfo.CurrentCulture) + words[0].Substring(1);
 
 			for (int i = 1; i < words.Length; i++)
 			{
 				result +=
-					words[i].Substring(0, 1).ToUpper() + words[i].Substring(1);
+					words[i].Substring(0, 1).ToUpper(
+					CultureInfo.CurrentCulture) + words[i].Substring(1);
 			}
 
 			return result;
@@ -63,14 +64,17 @@ namespace Zenware.Common.UtilsNet.Extensions
 		}
 
 		// Convert the string to Pascal case.
-		public static string ToPascalCase(this string the_string)
+		public static string ToPascalCase(this string input)
 		{
 			// If there are 0 or 1 characters, just return the string.
-			if (the_string == null) return the_string;
-			if (the_string.Length < 2) return the_string.ToUpper();
+			if (input == null) return input;
+			if (input.Length < 2)
+			{
+				return input.ToUpper(CultureInfo.CurrentCulture);
+			}
 
 			// Split the string into words.
-			string[] words = the_string.Split(
+			string[] words = input.Split(
 				new char[] { },
 				StringSplitOptions.RemoveEmptyEntries);
 
@@ -79,7 +83,7 @@ namespace Zenware.Common.UtilsNet.Extensions
 			foreach (string word in words)
 			{
 				result +=
-					word.Substring(0, 1).ToUpper() +
+					word.Substring(0, 1).ToUpper(CultureInfo.CurrentCulture) +
 					word.Substring(1);
 			}
 
