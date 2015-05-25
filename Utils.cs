@@ -47,59 +47,6 @@ namespace Zenware.Common.UtilsNet
 		}
 
 		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Reads a text file contents into a string
-		/// </summary>
-		/// <param name="filePath"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		public static string GetFileContents(string filePath)
-		{
-			string contents = null;
-
-			if (File.Exists(filePath))
-			{
-				StreamReader StreamReaderObject = new StreamReader(filePath);
-
-				if (null != StreamReaderObject)
-				{
-					contents = StreamReaderObject.ReadToEnd();
-					StreamReaderObject.Close();
-				}
-			}
-
-			return contents;
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Returns a writable stream object.
-		/// </summary>
-		/// <param name="filePath"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		public static StreamWriter GetWriteStreamObject(
-			string filePath)
-		{
-			StreamWriter streamWriterObject = null;
-			if (File.Exists(filePath))
-			{
-				//set up a filestream
-				FileStream fileStreamObject = new FileStream(filePath,
-															FileMode.Open,
-															FileAccess.ReadWrite);
-
-				if (null != fileStreamObject)
-				{
-					//set up a streamwriter for adding text
-					streamWriterObject = new StreamWriter(fileStreamObject);
-				}
-			}
-
-			return streamWriterObject;
-		}
-
-		/////////////////////////////////////////////////////////////////////
 		/// IsValidEmailAddress
 		/////////////////////////////////////////////////////////////////////
 		public static bool IsValidEmailAddress(string emailAddress)
@@ -201,45 +148,6 @@ namespace Zenware.Common.UtilsNet
 			}
 
 			return successCode;
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// SaveFile
-		/// <summary>
-		/// Saves the file.
-		/// </summary>
-		/// <param name="FileContents"></param>
-		/// <param name="FilePathName"></param>
-		/// <returns></returns>
-		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static bool SaveFile(
-			string fileContents,
-			string filePathName)
-		{
-			FileStream fileStreamObject = null;
-			try
-			{
-				fileStreamObject = new FileStream(filePathName,
-														 FileMode.Create,
-														 FileAccess.ReadWrite);
-
-				StreamWriter streamWriterObject =
-					new StreamWriter(fileStreamObject);
-				streamWriterObject.Write(fileContents);
-				streamWriterObject.Close();
-			}
-			catch (Exception ex)
-			{
-				log.Error(CultureInfo.InvariantCulture, m =>
-					m("Error: {0}", ex.Message));
-			}
-			finally
-			{
-				fileStreamObject.Close();
-			}
-
-			return true;
 		}
 	} // End Class
 } // End Namespace

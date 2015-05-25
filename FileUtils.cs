@@ -31,7 +31,8 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// Compares two files to see if they are they same
 		/// </summary>
-		/// <param name="PathOfFileToRead"></param>
+		/// <param name="path1"></param>
+		/// <param name="path2"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool FileEquals(string path1, string path2)
@@ -71,57 +72,73 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// Reads a text file contents into a string
 		/// </summary>
-		/// <param name="PathOfFileToRead"></param>
+		/// <param name="filePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static string GetFileContents(string pathOfFileToRead)
+		public static string GetFileContents(string filePath)
 		{
-			string FileContents = null;
+			string fileContents = null;
 
-			if (File.Exists(pathOfFileToRead))
+			if (File.Exists(filePath))
 			{
 				using (StreamReader StreamReaderObject = new
-					StreamReader(pathOfFileToRead))
+					StreamReader(filePath))
 				{
 					if (null != StreamReaderObject)
 					{
-						FileContents = StreamReaderObject.ReadToEnd();
+						fileContents = StreamReaderObject.ReadToEnd();
 					}
 				}
 			}
 
-			return FileContents;
+			return fileContents;
 		}
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns a writable stream object.
 		/// </summary>
-		/// <param name="FilePath"></param>
+		/// <param name="filePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static StreamWriter GetWriteStreamObject(
-			string filePath)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public static StreamWriter GetWriteStreamObject(string filePath)
 		{
-			StreamWriter StreamWriterObject = null;
-			if (File.Exists(filePath))
-			{
-				//set up a filestream
-				FileStream FileStreamObject = new FileStream(filePath,
-															FileMode.Open,
-															FileAccess.ReadWrite);
+			StreamWriter streamWriter = null;
+			FileStream fileStream = null;
 
-				if (null != FileStreamObject)
+			try
+			{
+				if (File.Exists(filePath))
 				{
-					//set up a streamwriter for adding text
-					StreamWriterObject = new StreamWriter(FileStreamObject);
+					fileStream = new FileStream(filePath, FileMode.Open,
+						FileAccess.ReadWrite);
+
+					if (null != fileStream)
+					{
+						//set up a streamwriter for adding text
+						streamWriter = new StreamWriter(fileStream);
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
+			}
+			finally
+			{
+				if (null != fileStream)
+				{
+					fileStream.Close();
 				}
 			}
 
-			return StreamWriterObject;
+			return streamWriter;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static void RecursiveRemove(
 			string initialPath,
 			string[] pathsToRemove)
@@ -154,7 +171,7 @@ namespace Zenware.Common.UtilsNet
 			}
 			catch (System.Exception ex)
 			{
-				log.Info(CultureInfo.InvariantCulture, m => m(ex.Message));
+				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
 			}
 		}
 
@@ -266,33 +283,57 @@ namespace Zenware.Common.UtilsNet
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
-		/// <param name="FileContents"></param>
-		/// <param name="FilePathName"></param>
+		/// <param name="fileContents"></param>
+		/// <param name="filePathName"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static bool SaveFile(
-			string fileContents,
-			string filePathName)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1026:DefaultParametersShouldNotBeUsed"),
+		System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+			"CA2202:Do not dispose objects multiple times"),
+		System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public static bool SaveFile(string fileContents, string filePathName,
+			bool insureWindowsLineEndings = false)
 		{
 			bool successCode = false;
-			try
-			{
-				using (FileStream fileStreamObject = new FileStream(filePathName,
-					FileMode.Create, FileAccess.ReadWrite))
-				{
-					StreamWriter streamWriterObject = new StreamWriter(fileStreamObject);
-					streamWriterObject.Write(fileContents);
-					streamWriterObject.Close();
-					fileStreamObject.Close();
-				}
-				
-				successCode = true;
-			}
-			catch(Exception ex)
-			{
-				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
-			}
 
+			if (!string.IsNullOrWhiteSpace(fileContents))
+			{
+				FileStream fileStream = null;
+				StreamWriter streamWriter = null;
+				try
+				{
+					fileStream = new FileStream(filePathName,
+						FileMode.Create, FileAccess.ReadWrite);
+
+					if (true == insureWindowsLineEndings)
+					{
+						fileContents = fileContents.Replace("\n",
+							Environment.NewLine);
+					}
+
+					streamWriter = new StreamWriter(fileStream);
+					streamWriter.Write(fileContents);
+				
+					successCode = true;
+				}
+				catch(Exception ex)
+				{
+					log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
+				}
+				finally
+				{
+					if (streamWriter != null)
+					{
+						streamWriter.Close();
+					}
+					if (fileStream != null)
+					{
+						fileStream.Close();
+					}
+				}
+			} 
 			return successCode;
 		}
 
@@ -308,23 +349,7 @@ namespace Zenware.Common.UtilsNet
 			string fileContents,
 			string filePathName)
 		{
-			bool successCode = false;
-			if (!string.IsNullOrEmpty(fileContents))
-			{
-				FileStream fileStreamObject = new FileStream(filePathName,
-															FileMode.Create,
-															FileAccess.ReadWrite);
-
-				fileContents = fileContents.Replace("\n", Environment.NewLine);
-				StreamWriter streamWriterObject = new StreamWriter(fileStreamObject);
-				streamWriterObject.Write(fileContents);
-				streamWriterObject.Close();
-				fileStreamObject.Close();
-
-				successCode = true;
-			}
-
-			return successCode;
+			return SaveFile(fileContents, filePathName, true);
 		}
 
 		/////////////////////////////////////////////////////////////////////
