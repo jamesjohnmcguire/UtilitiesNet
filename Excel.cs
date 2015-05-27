@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id: $
+// $Id: TestForm.cs 26 2015-03-25 12:59:31Z JamesMc $
 //
 // Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
@@ -23,13 +23,13 @@ namespace Zenware.Common.UtilsNet
 		private uint columnCount = 0;
 		private Microsoft.Office.Interop.Excel.Application excelApplication =
 			null;
-		private _Workbook workBook = null;
-		private Worksheet workSheet = null;
-		private Sheets workSheets = null;
 		private string filename = string.Empty;
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		//private string m_Version = string.Empty;
+		private _Workbook workBook = null;
+		private Worksheet workSheet = null;
+		private Sheets workSheets = null;
+		//private string version = string.Empty;
 
 		[CLSCompliantAttribute(false)]
 		public uint ColumnCount
@@ -47,7 +47,7 @@ namespace Zenware.Common.UtilsNet
 		public ExcelWrapper()
 		{
 			excelApplication = new Microsoft.Office.Interop.Excel.Application();
-			//m_Version = excelApplication.Version;
+			//version = excelApplication.Version;
 
 			excelApplication.DisplayAlerts = false;
 		}
@@ -136,10 +136,10 @@ namespace Zenware.Common.UtilsNet
 
 		public void Delete(int rowId, int columnId)
 		{
-			string Range = columnId.ToString(CultureInfo.InvariantCulture) +
+			string range = columnId.ToString(CultureInfo.InvariantCulture) +
 				rowId.ToString(CultureInfo.InvariantCulture);
 
-			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
+			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
 			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
 			Marshal.ReleaseComObject(workingRangeCells);
@@ -147,16 +147,16 @@ namespace Zenware.Common.UtilsNet
 
 		public void DeleteRow(int rowId)
 		{
-			string Range = "A" + rowId + ":IM" + rowId;
+			string range = "A" + rowId + ":IM" + rowId;
 
-			Range workingRangeCells = workSheet.get_Range(Range, Type.Missing);
+			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
-			string[] arrayS = ConvertToStringArray(array);
+			string[] stringArray = ConvertToStringArray(array);
 			log.Info(CultureInfo.InvariantCulture, m =>
-				m("Range: {0}", arrayS[2]));
+				m("Range: {0}", stringArray[2]));
 			log.Info(CultureInfo.InvariantCulture,
-				m => m("field2: {0}", arrayS[2]));
+				m => m("field2: {0}", stringArray[2]));
 
 			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
 			Marshal.ReleaseComObject(workingRangeCells);
@@ -207,17 +207,17 @@ namespace Zenware.Common.UtilsNet
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
 			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
-			string[] arrayS = ConvertToStringArray(array);
+			string[] stringArray = ConvertToStringArray(array);
 
 			Marshal.ReleaseComObject(workingRangeCells);
 
-			return arrayS;
+			return stringArray;
 		}
 
-		public string[] GetRow(int idRow)
+		public string[] GetRow(int rowId)
 		{
 			string[] Row = new string[columnCount];
-			string Range = "A" + idRow + ":IM" + idRow;
+			string Range = "A" + rowId + ":IM" + rowId;
 
 			Row = GetRange(Range);
 			return Row;
@@ -229,8 +229,10 @@ namespace Zenware.Common.UtilsNet
 			workBook.SaveAs(filename, System.Reflection.Missing.Value,
 				null, null, false, false, XlSaveAsAccessMode.xlExclusive,
 				XlSaveAsAccessMode.xlExclusive,
-				System.Reflection.Missing.Value, System.Reflection.Missing.Value,
-				System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+				System.Reflection.Missing.Value,
+				System.Reflection.Missing.Value,
+				System.Reflection.Missing.Value,
+				System.Reflection.Missing.Value);
 		}
 
 		[CLSCompliantAttribute(false)]
@@ -284,9 +286,11 @@ namespace Zenware.Common.UtilsNet
 			string[] newArray = new string[values.Length];
 
 			int index = 0;
-			for (int i = values.GetLowerBound(0); i <= values.GetUpperBound(0); i++)
+			for (int i = values.GetLowerBound(0);
+				i <= values.GetUpperBound(0); i++)
 			{
-				for (int j = values.GetLowerBound(1); j <= values.GetUpperBound(1); j++)
+				for (int j = values.GetLowerBound(1);
+					j <= values.GetUpperBound(1); j++)
 				{
 					if (values.GetValue(i, j) == null)
 					{
@@ -294,7 +298,8 @@ namespace Zenware.Common.UtilsNet
 					}
 					else
 					{
-						newArray[index] = (string)values.GetValue(i, j).ToString();
+						newArray[index] =
+							(string)values.GetValue(i, j).ToString();
 					}
 					index++;
 				}

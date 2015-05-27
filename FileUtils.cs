@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id: $
+// $Id: TestForm.cs 26 2015-03-25 12:59:31Z JamesMc $
 //
 // Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
@@ -215,8 +215,8 @@ namespace Zenware.Common.UtilsNet
 		/// RegexStringInFile
 		/// </summary>
 		/// <param name="filePath"></param>
-		/// <param name="oldString"></param>
-		/// <param name="newString"></param>
+		/// <param name="oldValue"></param>
+		/// <param name="newValue"></param>
 		/////////////////////////////////////////////////////////////////////
 		public static void RegexStringInFile(string filePath, string oldValue,
 			string newValue)
@@ -236,7 +236,8 @@ namespace Zenware.Common.UtilsNet
 						{
 							StreamWriter sw = new StreamWriter(fs);
 
-							Contents = Regex.Replace(Contents, oldValue, newValue);
+							Contents = Regex.Replace(Contents, oldValue,
+								newValue);
 
 							sw.Write(Contents);
 
@@ -320,7 +321,8 @@ namespace Zenware.Common.UtilsNet
 				}
 				catch(Exception ex)
 				{
-					log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
+					log.Error(CultureInfo.InvariantCulture,
+						m => m(ex.Message));
 				}
 				finally
 				{
