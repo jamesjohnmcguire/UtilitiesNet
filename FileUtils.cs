@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id: TestForm.cs 26 2015-03-25 12:59:31Z JamesMc $
+// $Id$
 //
 // Copyright (c) 2006-2015 by James John McGuire
 // All rights reserved.
