@@ -12,11 +12,11 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Zenware.Common.UtilsNet.Extensions;
+using DigitalZenWorks.Common.Utils.Extensions;
 
-namespace Zenware.Common.UtilsNet
+namespace DigitalZenWorks.Common.Utils
 {
-	public static class Utils
+	public static class General
 	{
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -32,7 +32,8 @@ namespace Zenware.Common.UtilsNet
 			return methodName;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static DateTime DateFromString(string dateText)
 		{
 			DateTime date = DateTime.MinValue;

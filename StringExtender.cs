@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Zenware.Common.UtilsNet.Extensions
+namespace DigitalZenWorks.Common.Utils.Extensions
 {
 	public static class StringExtender
 	{

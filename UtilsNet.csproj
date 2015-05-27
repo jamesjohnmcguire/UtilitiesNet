@@ -8,8 +8,8 @@
     <ProjectGuid>{3663DA63-BB91-4B03-B4F7-23DD8EEF9D61}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zenware.Common.Utils</RootNamespace>
-    <AssemblyName>Zenware.Common.Utils</AssemblyName>
+    <RootNamespace>DigitalZenWorks.Common.Utils</RootNamespace>
+    <AssemblyName>DigitalZenWorks.Common.Utils</AssemblyName>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

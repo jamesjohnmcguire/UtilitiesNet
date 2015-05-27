@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 
-namespace Zenware.Common.UtilsNet
+namespace DigitalZenWorks.Common.Utils
 {
 	// Represents a Excel object.
 	public class ExcelWrapper
@@ -109,6 +109,8 @@ namespace Zenware.Common.UtilsNet
 			return "OK";
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public string OpenFile(string fileName)
 		{
 			try

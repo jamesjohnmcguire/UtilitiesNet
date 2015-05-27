@@ -15,7 +15,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Zenware.Common.UtilsNet
+namespace DigitalZenWorks.Common.Utils
 {
 	/////////////////////////////////////////////////////////////////////////
 	/// <summary>
@@ -181,6 +181,8 @@ namespace Zenware.Common.UtilsNet
 		/// </summary>
 		/// <param name="initialPath"></param>
 		/////////////////////////////////////////////////////////////////////
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static void RecursiveUtf8WinFiles(
 			string initialPath)
 		{
