@@ -9,10 +9,8 @@ using Common.Logging;
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using DigitalZenWorks.Common.Utils.Extensions;
 
 namespace DigitalZenWorks.Common.Utils
 {
@@ -32,63 +30,14 @@ namespace DigitalZenWorks.Common.Utils
 			return methodName;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static DateTime DateFromString(string dateText)
-		{
-			DateTime date = DateTime.MinValue;
-			DateTime testDate = DateTime.MinValue;
-
-			if (DateTime.TryParse(dateText, out testDate))
-			{
-				date = testDate;
-			}
-
-			return date;
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// IsValidEmailAddress
-		/////////////////////////////////////////////////////////////////////
-		public static bool IsValidEmailAddress(string emailAddress)
-		{
-			bool ValidEmailAddress = false;
-
-			//ValidEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
-			//ValidEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
-			//ValidEmailRegEx	= "/^[\w]+(\.[\w]+)*@([\w\-]+\.)+[a-zA-Z]{2,7}$/";
-			//ValidEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\.\\+=_-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
-
-			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i";
-			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/";
-			//string ValidEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/";
-			string ValidEmailRegEx =
-			@"^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@" +
-				@"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
-				[0-9]{1,2}|25[0-5]|2[0-4][0-9])\." +
-				@"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
-				[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|" +
-				@"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
-
-			// checks proper syntax
-			Match Match = Regex.Match(emailAddress, ValidEmailRegEx);
-
-			if (true == Match.Success)
-			{
-				ValidEmailAddress = true;
-			}
-
-			return ValidEmailAddress;
-		}
-
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Validates command line parameters
 		/// </summary>
-		/// <param name="FilePath"></param>
+		/// <param name="parameters"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		public static bool CheckCommandLineParameters(	string[] parameters)
+		public static bool CheckCommandLineParameters(string[] parameters)
 		{
 			bool IsValid = false;
 
@@ -105,10 +54,26 @@ namespace DigitalZenWorks.Common.Utils
 			return IsValid;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public static DateTime DateFromString(string dateText)
+		{
+			DateTime date = DateTime.MinValue;
+			DateTime testDate = DateTime.MinValue;
+
+			if (DateTime.TryParse(dateText, out testDate))
+			{
+				date = testDate;
+			}
+
+			return date;
+		}
+
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
+		/// Is object a date
 		/// </summary>
-		/// <param name="obj"></param>
+		/// <param name="value"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
@@ -149,6 +114,38 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return successCode;
+		}
+
+		/////////////////////////////////////////////////////////////////////
+		/// IsValidEmailAddress
+		/////////////////////////////////////////////////////////////////////
+		public static bool IsValidEmailAddress(string emailAddress)
+		{
+			bool valid = false;
+
+			//validEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])" +
+			// "*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
+
+			//string validEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])" +
+			// "*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))" +
+			// "+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i";
+			string validEmailRegEx =
+			@"^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@" +
+				@"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])\." +
+				@"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?
+				[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|" +
+				@"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
+
+			// checks proper syntax
+			Match Match = Regex.Match(emailAddress, validEmailRegEx);
+
+			if (true == Match.Success)
+			{
+				valid = true;
+			}
+
+			return valid;
 		}
 	} // End Class
 } // End Namespace

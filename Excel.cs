@@ -8,12 +8,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
+using Common.Logging;
+using Microsoft.Office.Interop.Excel;
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using Common.Logging;
-using Microsoft.Office.Interop.Excel;
 
 namespace DigitalZenWorks.Common.Utils
 {
@@ -21,11 +21,15 @@ namespace DigitalZenWorks.Common.Utils
 	public class ExcelWrapper
 	{
 		private uint columnCount = 0;
+
 		private Microsoft.Office.Interop.Excel.Application excelApplication =
 			null;
+
 		private string filename = string.Empty;
+
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private _Workbook workBook = null;
 		private Worksheet workSheet = null;
 		private Sheets workSheets = null;
@@ -82,7 +86,7 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public string OpenFile()
 		{
@@ -104,8 +108,7 @@ namespace DigitalZenWorks.Common.Utils
 				log.Error(CultureInfo.InvariantCulture,
 					m => m("Initialization Error: {0}", ex.Message));
 				return ex.Message;
-
-				}
+			}
 			return "OK";
 		}
 
@@ -252,7 +255,7 @@ namespace DigitalZenWorks.Common.Utils
 		[CLSCompliantAttribute(false)]
 		public void SetCell(uint row, uint column, string value)
 		{
-			if ((row < (uint.MaxValue -1)) && (column < uint.MaxValue))
+			if ((row < (uint.MaxValue - 1)) && (column < uint.MaxValue))
 			{
 				workSheet.Cells[row + 2, column + 1] = value;
 			}

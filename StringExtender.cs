@@ -19,13 +19,13 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 		{
 			if ((compareValues != null) && (!string.IsNullOrEmpty(data)))
 			{
-			foreach (string s in compareValues)
-			{
-				if (data.Equals(s, compareType))
+				foreach (string s in compareValues)
 				{
-					return true;
+					if (data.Equals(s, compareType))
+					{
+						return true;
+					}
 				}
-			}
 			}
 
 			return false;
@@ -56,7 +56,7 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 
 			return result;
 		}
-	
+
 		public static string ToDigitsOnly(this string input)
 		{
 			Regex digitsOnly = new Regex(@"[^\d]");
@@ -89,6 +89,7 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 
 			return result;
 		}
+
 		public static string ToProperCase(this string unformattedText)
 		{
 			string formattedText = null;

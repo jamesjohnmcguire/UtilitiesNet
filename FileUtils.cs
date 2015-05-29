@@ -9,7 +9,6 @@
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
 using Common.Logging;
-
 using System;
 using System.Globalization;
 using System.IO;
@@ -122,7 +121,7 @@ namespace DigitalZenWorks.Common.Utils
 					}
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
 			}
@@ -137,10 +136,17 @@ namespace DigitalZenWorks.Common.Utils
 			return streamWriter;
 		}
 
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Safe recursive removal. Directories with a "DevClean Active" file
+		/// not deleted.
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
+		/////////////////////////////////////////////////////////////////////
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static void RecursiveRemove(
-			string initialPath,
+		public static void RecursiveRemove(string initialPath,
 			string[] pathsToRemove)
 		{
 			try
@@ -156,8 +162,8 @@ namespace DigitalZenWorks.Common.Utils
 							{
 								if (!File.Exists("DevClean.active"))
 								{
-									log.Info(CultureInfo.InvariantCulture, m => m(
-										"Deleting: " + Path));
+									log.Info(CultureInfo.InvariantCulture,
+										m => m("Deleting: " + Path));
 									Directory.Delete(d, true);
 								}
 							}
@@ -183,8 +189,7 @@ namespace DigitalZenWorks.Common.Utils
 		/////////////////////////////////////////////////////////////////////
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static void RecursiveUtf8WinFiles(
-			string initialPath)
+		public static void RecursiveUtf8WinFiles(string initialPath)
 		{
 			try
 			{
@@ -223,7 +228,7 @@ namespace DigitalZenWorks.Common.Utils
 		public static void RegexStringInFile(string filePath, string oldValue,
 			string newValue)
 		{
-			string Contents;
+			string contents;
 
 			if (File.Exists(filePath))
 			{
@@ -231,17 +236,17 @@ namespace DigitalZenWorks.Common.Utils
 				{
 					if (sr != null)
 					{
-						Contents = sr.ReadToEnd();
+						contents = sr.ReadToEnd();
 
-						using (FileStream fs = new FileStream(filePath, 
+						using (FileStream fs = new FileStream(filePath,
 							FileMode.Open, FileAccess.ReadWrite))
 						{
 							StreamWriter sw = new StreamWriter(fs);
 
-							Contents = Regex.Replace(Contents, oldValue,
+							contents = Regex.Replace(contents, oldValue,
 								newValue);
 
-							sw.Write(Contents);
+							sw.Write(contents);
 
 							//sw.Close();
 						}
@@ -250,6 +255,14 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Replace a string in a file
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="oldValue"></param>
+		/// <param name="newValue"></param>
+		/////////////////////////////////////////////////////////////////////
 		public static void ReplaceStringInFile(string filePath,
 			string oldValue, string newValue)
 		{
@@ -267,7 +280,7 @@ namespace DigitalZenWorks.Common.Utils
 						using (FileStream fs = new FileStream(filePath,
 							FileMode.Open, FileAccess.ReadWrite))
 						{
-							//set up a streamwriter for adding text
+							//set up a stream writer for adding text
 							StreamWriter sw = new StreamWriter(fs);
 
 							newContents = contents.Replace(oldValue, newValue);
@@ -288,6 +301,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// </summary>
 		/// <param name="fileContents"></param>
 		/// <param name="filePathName"></param>
+		/// <param name="insureWindowsLineEndings"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
@@ -318,10 +332,10 @@ namespace DigitalZenWorks.Common.Utils
 
 					streamWriter = new StreamWriter(fileStream);
 					streamWriter.Write(fileContents);
-				
+
 					successCode = true;
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					log.Error(CultureInfo.InvariantCulture,
 						m => m(ex.Message));
@@ -337,7 +351,7 @@ namespace DigitalZenWorks.Common.Utils
 						fileStream.Close();
 					}
 				}
-			} 
+			}
 			return successCode;
 		}
 
