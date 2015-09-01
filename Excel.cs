@@ -207,6 +207,14 @@ namespace DigitalZenWorks.Common.Utils
 			return workingRangeCells;
 		}
 
+		public int GetLastRowUsed()
+		{
+			Range last = workSheet.Cells.SpecialCells(
+				XlCellType.xlCellTypeLastCell, Type.Missing);
+
+			int lastUsedRow = last.Row;
+			return lastUsedRow;
+		}
 		public string[] GetRange(string range)
 		{
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
