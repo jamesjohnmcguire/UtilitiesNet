@@ -152,16 +152,12 @@ namespace DigitalZenWorks.Common.Utils
 
 		public void DeleteRow(int rowId)
 		{
-			string range = "A" + rowId + ":IM" + rowId;
+			int lastUsedColumn = GetLastColumnUsed();
+			string lastColumn = GetExcelColumnName(lastUsedColumn);
+
+			string range = "A" + rowId + ":" + lastColumn + rowId;
 
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
-
-			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
-			string[] stringArray = ConvertToStringArray(array);
-			log.Info(CultureInfo.InvariantCulture, m =>
-				m("Range: {0}", stringArray[2]));
-			log.Info(CultureInfo.InvariantCulture,
-				m => m("field2: {0}", stringArray[2]));
 
 			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
 			Marshal.ReleaseComObject(workingRangeCells);
@@ -192,6 +188,23 @@ namespace DigitalZenWorks.Common.Utils
 			return sheetFound;
 		}
 
+		public static string GetExcelColumnName(int columnNumber)
+		{
+			int dividend = columnNumber;
+			string columnName = String.Empty;
+			int modulo;
+
+			while (dividend > 0)
+			{
+				modulo = (dividend - 1) % 26;
+				columnName =
+					Convert.ToChar(65 + modulo).ToString() + columnName;
+				dividend = (int)((dividend - modulo) / 26);
+			}
+
+			return columnName;
+		}
+
 		public void GetExcelSheets()
 		{
 			if (workBook != null)
@@ -207,6 +220,15 @@ namespace DigitalZenWorks.Common.Utils
 			return workingRangeCells;
 		}
 
+		public int GetLastColumnUsed()
+		{
+			Range last = workSheet.Cells.SpecialCells(
+				XlCellType.xlCellTypeLastCell, Type.Missing);
+
+			int lastUsedColumn = last.Column;
+			return lastUsedColumn;
+		}
+
 		public int GetLastRowUsed()
 		{
 			Range last = workSheet.Cells.SpecialCells(
@@ -215,6 +237,7 @@ namespace DigitalZenWorks.Common.Utils
 			int lastUsedRow = last.Row;
 			return lastUsedRow;
 		}
+
 		public string[] GetRange(string range)
 		{
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
@@ -229,11 +252,24 @@ namespace DigitalZenWorks.Common.Utils
 
 		public string[] GetRow(int rowId)
 		{
-			string[] Row = new string[columnCount];
-			string Range = "A" + rowId + ":IM" + rowId;
+			int lastUsedColumn = GetLastColumnUsed();
+			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
-			Row = GetRange(Range);
-			return Row;
+			string range = "A" + rowId + ":" + lastColumn + rowId;
+			string[] row = GetRange(range);
+
+			return row;
+		}
+
+		public Range GetRowRange(int rowId)
+		{
+			int lastUsedColumn = GetLastColumnUsed();
+			string lastColumn = GetExcelColumnName(lastUsedColumn);
+
+			string range = "A" + rowId + ":" + lastColumn + rowId;
+			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
+
+			return workingRangeCells;
 		}
 
 		public void Save()
