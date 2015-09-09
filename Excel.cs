@@ -56,7 +56,7 @@ namespace DigitalZenWorks.Common.Utils
 			excelApplication.DisplayAlerts = false;
 		}
 
-		~ExcelWrapper()
+		public void Close()
 		{
 			if (excelApplication != null)
 			{
