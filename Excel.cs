@@ -30,7 +30,7 @@ namespace DigitalZenWorks.Common.Utils
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private _Workbook workBook = null;
+		private Workbook workBook = null;
 		private Worksheet workSheet = null;
 		private Sheets workSheets = null;
 		//private string version = string.Empty;
@@ -46,6 +46,42 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			get { return filename; }
 			set { filename = value; }
+		}
+		public int LastColumnUsed
+		{
+			get
+			{
+				int lastUsedColumn = -1;
+
+				if (null != workSheet)
+				{
+					Range last = workSheet.Cells.SpecialCells(
+						XlCellType.xlCellTypeLastCell, Type.Missing);
+
+					lastUsedColumn = last.Column;
+
+				}
+
+				return lastUsedColumn;
+			}
+		}
+
+		public int LastRowUsed
+		{
+			get
+			{
+				int lastUsedRow = -1;
+
+				if (null != workSheet)
+				{
+					Range last = workSheet.Cells.SpecialCells(
+						XlCellType.xlCellTypeLastCell, Type.Missing);
+
+					lastUsedRow = last.Row;
+				}
+
+				return lastUsedRow;
+			}
 		}
 
 		public ExcelWrapper()
@@ -86,57 +122,14 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public string OpenFile()
+		public Workbook Create()
 		{
-			try
-			{
-				if (!string.IsNullOrEmpty(filename))
-				{
-					workBook = excelApplication.Workbooks.Open(filename, 0,
-						true, 1, true, System.Reflection.Missing.Value,
-						System.Reflection.Missing.Value, true,
-						System.Reflection.Missing.Value, true,
-						System.Reflection.Missing.Value, false,
-						System.Reflection.Missing.Value, false, false);
-				}
-			}
-			catch (Exception ex)
-			{
-				this.CloseFile();
-				log.Error(CultureInfo.InvariantCulture,
-					m => m("Initialization Error: {0}", ex.Message));
-				return ex.Message;
-			}
-			return "OK";
-		}
+			workBook = excelApplication.Workbooks.Add();
+			workSheets = workBook.Worksheets;
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public string OpenFile(string fileName)
-		{
-			try
-			{
-				if (!string.IsNullOrEmpty(fileName))
-				{
-					filename = fileName;
-					workBook = excelApplication.Workbooks.Open(fileName, 0,
-						false, 1, true, System.Reflection.Missing.Value,
-						System.Reflection.Missing.Value, true,
-						System.Reflection.Missing.Value, true,
-						System.Reflection.Missing.Value, false,
-						System.Reflection.Missing.Value, false, false);
-				}
-			}
-			catch (Exception ex)
-			{
-				this.CloseFile();
-				log.Error(CultureInfo.InvariantCulture,
-					m => m("Initialization Error: {0}", ex.Message));
-				return ex.Message;
-			}
-			return "OK";
+			workSheet = workSheets.Add();
+
+			return workBook;
 		}
 
 		public void Delete(int rowId, int columnId)
@@ -152,7 +145,7 @@ namespace DigitalZenWorks.Common.Utils
 
 		public void DeleteRow(int rowId)
 		{
-			int lastUsedColumn = GetLastColumnUsed();
+			int lastUsedColumn = LastColumnUsed;
 			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
 			string range = "A" + rowId + ":" + lastColumn + rowId;
@@ -169,8 +162,8 @@ namespace DigitalZenWorks.Common.Utils
 
 			if (workSheets != null)
 			{
-				// Step thru the worksheet collection and see if the sheet is
-				// available. If found return true;
+				// Step through the worksheet collection and see if the sheet
+				// is available. If found return true;
 				for (int index = 1; index <= workSheets.Count; index++)
 				{
 					workSheet = (Worksheet)workSheets.get_Item((object)index);
@@ -186,6 +179,16 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return sheetFound;
+		}
+
+		public string GetCell(uint row, uint column)
+		{
+			object rangeObject = workSheet.Cells[row, column];
+			Range range = (Range)rangeObject;
+			object rangeValue = range.Value2;
+			string cellValue = rangeValue.ToString();
+
+			return cellValue;
 		}
 
 		public static string GetExcelColumnName(int columnNumber)
@@ -220,24 +223,6 @@ namespace DigitalZenWorks.Common.Utils
 			return workingRangeCells;
 		}
 
-		public int GetLastColumnUsed()
-		{
-			Range last = workSheet.Cells.SpecialCells(
-				XlCellType.xlCellTypeLastCell, Type.Missing);
-
-			int lastUsedColumn = last.Column;
-			return lastUsedColumn;
-		}
-
-		public int GetLastRowUsed()
-		{
-			Range last = workSheet.Cells.SpecialCells(
-				XlCellType.xlCellTypeLastCell, Type.Missing);
-
-			int lastUsedRow = last.Row;
-			return lastUsedRow;
-		}
-
 		public string[] GetRange(string range)
 		{
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
@@ -252,7 +237,7 @@ namespace DigitalZenWorks.Common.Utils
 
 		public string[] GetRow(int rowId)
 		{
-			int lastUsedColumn = GetLastColumnUsed();
+			int lastUsedColumn = LastColumnUsed;
 			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
 			string range = "A" + rowId + ":" + lastColumn + rowId;
@@ -263,13 +248,61 @@ namespace DigitalZenWorks.Common.Utils
 
 		public Range GetRowRange(int rowId)
 		{
-			int lastUsedColumn = GetLastColumnUsed();
+			int lastUsedColumn = LastColumnUsed;
 			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
 			string range = "A" + rowId + ":" + lastColumn + rowId;
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
 			return workingRangeCells;
+		}
+
+		public bool IsCellEmpty(uint row, uint column)
+		{
+			bool empty = false;
+
+			string contents = GetCell(row, column);
+
+			if (string.IsNullOrWhiteSpace(contents))
+			{
+				empty = true;
+			}
+
+			return empty;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public string OpenFile()
+		{
+			return OpenFile(filename);
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public string OpenFile(string fileName)
+		{
+			try
+			{
+				if (!string.IsNullOrEmpty(fileName))
+				{
+					filename = fileName;
+					workBook = excelApplication.Workbooks.Open(fileName, 0,
+						false, 1, true, System.Reflection.Missing.Value,
+						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, true,
+						System.Reflection.Missing.Value, false,
+						System.Reflection.Missing.Value, false, false);
+				}
+			}
+			catch (Exception ex)
+			{
+				this.CloseFile();
+				log.Error(CultureInfo.InvariantCulture,
+					m => m("Initialization Error: {0}", ex.Message));
+				return ex.Message;
+			}
+			return "OK";
 		}
 
 		public void Save()
