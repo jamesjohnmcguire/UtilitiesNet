@@ -20,23 +20,19 @@ namespace DigitalZenWorks.Common.Utils
 	// Represents a Excel object.
 	public class ExcelWrapper
 	{
-		private uint columnCount = 0;
-
+		private int columnCount = 0;
 		private Microsoft.Office.Interop.Excel.Application excelApplication =
 			null;
-
 		private string filename = string.Empty;
-
+		private bool hasHeaderRow = false;
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private Workbook workBook = null;
 		private Worksheet workSheet = null;
 		private Sheets workSheets = null;
 		//private string version = string.Empty;
 
-		[CLSCompliantAttribute(false)]
-		public uint ColumnCount
+		public int ColumnCount
 		{
 			get { return columnCount; }
 			set { columnCount = value; }
@@ -47,6 +43,13 @@ namespace DigitalZenWorks.Common.Utils
 			get { return filename; }
 			set { filename = value; }
 		}
+
+		public bool HasHeaderRow
+		{
+			get { return hasHeaderRow; }
+			set { hasHeaderRow = value; }
+		}
+
 		public int LastColumnUsed
 		{
 			get
@@ -59,7 +62,6 @@ namespace DigitalZenWorks.Common.Utils
 						XlCellType.xlCellTypeLastCell, Type.Missing);
 
 					lastUsedColumn = last.Column;
-
 				}
 
 				return lastUsedColumn;
@@ -78,6 +80,14 @@ namespace DigitalZenWorks.Common.Utils
 						XlCellType.xlCellTypeLastCell, Type.Missing);
 
 					lastUsedRow = last.Row;
+
+					// Excel uses a 1 based index
+					lastUsedRow--;
+
+					if (true == hasHeaderRow)
+					{
+						lastUsedRow--;
+					}
 				}
 
 				return lastUsedRow;
@@ -94,6 +104,7 @@ namespace DigitalZenWorks.Common.Utils
 
 		public void Close()
 		{
+			CloseFile();
 			if (excelApplication != null)
 			{
 				excelApplication.Quit();
@@ -132,10 +143,11 @@ namespace DigitalZenWorks.Common.Utils
 			return workBook;
 		}
 
-		public void Delete(int rowId, int columnId)
+		public void Delete(int row, int column)
 		{
-			string range = columnId.ToString(CultureInfo.InvariantCulture) +
-				rowId.ToString(CultureInfo.InvariantCulture);
+			row = AdjustRow(row);
+
+			Range range = workSheet.Cells[row, column];
 
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
@@ -143,12 +155,14 @@ namespace DigitalZenWorks.Common.Utils
 			Marshal.ReleaseComObject(workingRangeCells);
 		}
 
-		public void DeleteRow(int rowId)
+		public void DeleteRow(int row)
 		{
+			row = AdjustRow(row);
+
 			int lastUsedColumn = LastColumnUsed;
 			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
-			string range = "A" + rowId + ":" + lastColumn + rowId;
+			string range = "A" + row + ":" + lastColumn + row;
 
 			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
 
@@ -181,10 +195,11 @@ namespace DigitalZenWorks.Common.Utils
 			return sheetFound;
 		}
 
-		public string GetCell(uint row, uint column)
+		public string GetCell(int row, int column)
 		{
-			object rangeObject = workSheet.Cells[row, column];
-			Range range = (Range)rangeObject;
+			row = AdjustRow(row);
+
+			Range range = workSheet.Cells[row, column];
 			object rangeValue = range.Value2;
 			string cellValue = rangeValue.ToString();
 
@@ -240,6 +255,7 @@ namespace DigitalZenWorks.Common.Utils
 			int lastUsedColumn = LastColumnUsed;
 			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
+			rowId = AdjustRow(rowId);
 			string range = "A" + rowId + ":" + lastColumn + rowId;
 			string[] row = GetRange(range);
 
@@ -257,7 +273,7 @@ namespace DigitalZenWorks.Common.Utils
 			return workingRangeCells;
 		}
 
-		public bool IsCellEmpty(uint row, uint column)
+		public bool IsCellEmpty(int row, int column)
 		{
 			bool empty = false;
 
@@ -271,8 +287,6 @@ namespace DigitalZenWorks.Common.Utils
 			return empty;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public string OpenFile()
 		{
 			return OpenFile(filename);
@@ -317,8 +331,7 @@ namespace DigitalZenWorks.Common.Utils
 				System.Reflection.Missing.Value);
 		}
 
-		[CLSCompliantAttribute(false)]
-		public void SetBackgroundColor(uint row, uint column, Color color)
+		public void SetBackgroundColor(int row, int column, Color color)
 		{
 			string rangeQuery = column + row + ":" + column + row;
 
@@ -329,21 +342,22 @@ namespace DigitalZenWorks.Common.Utils
 			Marshal.ReleaseComObject(range);
 		}
 
-		[CLSCompliantAttribute(false)]
-		public void SetCell(uint row, uint column, string value)
+		public void SetCell(int row, int column, string value)
 		{
-			if ((row < (uint.MaxValue - 1)) && (column < uint.MaxValue))
+			row = AdjustRow(row);
+
+			if ((row <= int.MaxValue) && (column < int.MaxValue))
 			{
-				workSheet.Cells[row + 2, column + 1] = value;
+				workSheet.Cells[row, column + 1] = value;
 			}
 			else
 			{
-				if (row >= (uint.MaxValue - 1))
+				if (row >= (int.MaxValue - 1))
 				{
 					throw new ArgumentOutOfRangeException("row",
 					"row greater than Uint32.MaxValue");
 				}
-				if (column >= uint.MaxValue)
+				if (column >= int.MaxValue)
 				{
 					throw new ArgumentOutOfRangeException("column",
 					"column greater than Uint32.MaxValue");
@@ -351,8 +365,7 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
-		[CLSCompliantAttribute(false)]
-		public void SetFontColor(uint row, uint column, Color color)
+		public void SetFontColor(int row, int column, Color color)
 		{
 			string rangeQuery = column + row + ":" + column + row;
 
@@ -361,6 +374,40 @@ namespace DigitalZenWorks.Common.Utils
 			Save();
 
 			Marshal.ReleaseComObject(range);
+		}
+
+		public void SetTextFormat(int row, int column)
+		{
+			row = AdjustRow(row);
+			if (column < int.MaxValue - 1)
+			{
+				column++;
+			}
+			string columnName = GetExcelColumnName((int)column);
+			string rangeQuery = columnName + row + ":" + columnName + row;
+
+			Range range = GetRangeObject(rangeQuery);
+			range.NumberFormat = "@";
+
+			Marshal.ReleaseComObject(range);
+		}
+
+		/// <summary>
+		/// Excel uses a 1 based index. Programs using this, use a 0 based
+		/// index, so need to adjust.  Also, compensate, if there is a header.
+		/// </summary>
+		/// <param name="row"></param>
+		/// <returns></returns>
+		private int AdjustRow(int row)
+		{
+			row++;
+
+			if (true == hasHeaderRow)
+			{
+				row++;
+			}
+
+			return row;
 		}
 
 		private static string[] ConvertToStringArray(System.Array values)
