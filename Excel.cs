@@ -83,11 +83,6 @@ namespace DigitalZenWorks.Common.Utils
 
 					// Excel uses a 1 based index
 					lastUsedRow--;
-
-					if (true == hasHeaderRow)
-					{
-						lastUsedRow--;
-					}
 				}
 
 				return lastUsedRow;
@@ -143,31 +138,21 @@ namespace DigitalZenWorks.Common.Utils
 			return workBook;
 		}
 
-		public void Delete(int row, int column)
+		public void Delete(int row, int column,
+			XlDeleteShiftDirection direction)
 		{
-			row = AdjustRow(row);
+			Range range = GetCell(row, column);
 
-			Range range = workSheet.Cells[row, column];
-
-			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
-
-			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
-			Marshal.ReleaseComObject(workingRangeCells);
+			range.Delete(direction);
+			Marshal.ReleaseComObject(range);
 		}
 
 		public void DeleteRow(int row)
 		{
-			row = AdjustRow(row);
+			Range range = GetRange(row, row, 0, LastColumnUsed);
 
-			int lastUsedColumn = LastColumnUsed;
-			string lastColumn = GetExcelColumnName(lastUsedColumn);
-
-			string range = "A" + row + ":" + lastColumn + row;
-
-			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
-
-			workingRangeCells.Delete(XlDeleteShiftDirection.xlShiftUp);
-			Marshal.ReleaseComObject(workingRangeCells);
+			range.Delete(XlDeleteShiftDirection.xlShiftUp);
+			Marshal.ReleaseComObject(range);
 		}
 
 		public bool FindExcelWorksheet(string worksheetName)
@@ -195,13 +180,65 @@ namespace DigitalZenWorks.Common.Utils
 			return sheetFound;
 		}
 
-		public string GetCell(int row, int column)
+		public Range GetCell(int row, int column)
 		{
 			row = AdjustRow(row);
+			if (column < int.MaxValue)
+			{
+				// excel is 1 based
+				column++;
+			}
 
 			Range range = workSheet.Cells[row, column];
-			object rangeValue = range.Value2;
-			string cellValue = rangeValue.ToString();
+
+			return range;
+		}
+
+		public double GetCellBackgroundColor(int row, int column)
+		{
+			Range range = GetCell(row, column);
+
+			double color = range.Interior.Color;
+
+			return color;
+		}
+
+		public int GetCellBackgroundColorIndex(int row, int column)
+		{
+			Range range = GetCell(row, column);
+
+			int color = range.Interior.ColorIndex;
+
+			return color;
+		}
+
+		public double GetCellFontColor(int row, int column)
+		{
+			Range range = GetCell(row, column);
+
+			double color = range.Font.Color;
+
+			return color;
+		}
+
+		public int GetCellFontColorIndex(int row, int column)
+		{
+			Range range = GetCell(row, column);
+
+			int color = range.Font.ColorIndex;
+
+			return color;
+		}
+
+		public string GetCellValue(int row, int column)
+		{
+			string cellValue = null;
+			Range cell = GetCell(row, column);
+
+			if (null != cell.Value2)
+			{
+				cellValue = cell.Value2.ToString();
+			}
 
 			return cellValue;
 		}
@@ -231,53 +268,74 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
-		public Range GetRangeObject(string range)
+		public Range GetRange(int rowBegin, int rowEnd, int columnBegin,
+			int columnEnd)
 		{
-			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
+			// excel is 1 based
+			rowBegin = AdjustRow(rowBegin);
+			rowEnd = AdjustRow(rowEnd);
+			if (columnBegin < int.MaxValue)
+			{
+				columnBegin++;
+			}
+			if (columnEnd < int.MaxValue)
+			{
+				columnEnd++;
+			}
 
-			return workingRangeCells;
+			string columnBeginName = GetExcelColumnName(columnBegin);
+			string columnEndName = GetExcelColumnName(columnEnd);
+
+			string rangeQuery =
+				columnBeginName + rowBegin + ":" + columnEndName + rowEnd;
+
+			Range range =
+				workSheet.get_Range(rangeQuery, Type.Missing);
+
+			return range;
 		}
 
-		public string[] GetRange(string range)
+		public string[] GetRangeValues(int rowBegin, int rowEnd,
+			int columnBegin, int columnEnd)
 		{
-			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
+			Range range = GetRange(rowBegin, rowEnd, columnBegin, columnEnd);
 
-			System.Array array = (System.Array)workingRangeCells.Cells.Value2;
-			string[] stringArray = ConvertToStringArray(array);
+			string[] stringArray =
+				GetStringArray(range.Cells.Value2);
 
-			Marshal.ReleaseComObject(workingRangeCells);
+			Marshal.ReleaseComObject(range);
 
 			return stringArray;
 		}
 
-		public string[] GetRow(int rowId)
+		public string[] GetRowValues(int rowId)
 		{
 			int lastUsedColumn = LastColumnUsed;
-			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
-			rowId = AdjustRow(rowId);
-			string range = "A" + rowId + ":" + lastColumn + rowId;
-			string[] row = GetRange(range);
+			Range range = GetRange(rowId, rowId, 0, lastUsedColumn);
+
+			string[][] rows = GetStringArray(range.Cells.Value2);
+			string[] row = rows[0];
+
+			Marshal.ReleaseComObject(range);
 
 			return row;
 		}
 
-		public Range GetRowRange(int rowId)
+		public Range GetRow(int rowId)
 		{
 			int lastUsedColumn = LastColumnUsed;
-			string lastColumn = GetExcelColumnName(lastUsedColumn);
 
-			string range = "A" + rowId + ":" + lastColumn + rowId;
-			Range workingRangeCells = workSheet.get_Range(range, Type.Missing);
+			Range range = GetRange(rowId, rowId, 0, lastUsedColumn);
 
-			return workingRangeCells;
+			return range;
 		}
 
 		public bool IsCellEmpty(int row, int column)
 		{
 			bool empty = false;
 
-			string contents = GetCell(row, column);
+			string contents = GetCellValue(row, column);
 
 			if (string.IsNullOrWhiteSpace(contents))
 			{
@@ -287,15 +345,17 @@ namespace DigitalZenWorks.Common.Utils
 			return empty;
 		}
 
-		public string OpenFile()
+		public bool OpenFile()
 		{
 			return OpenFile(filename);
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public string OpenFile(string fileName)
+		public bool OpenFile(string fileName)
 		{
+			bool result = false;
+
 			try
 			{
 				if (!string.IsNullOrEmpty(fileName))
@@ -307,6 +367,8 @@ namespace DigitalZenWorks.Common.Utils
 						System.Reflection.Missing.Value, true,
 						System.Reflection.Missing.Value, false,
 						System.Reflection.Missing.Value, false, false);
+
+					result = true;
 				}
 			}
 			catch (Exception ex)
@@ -314,79 +376,67 @@ namespace DigitalZenWorks.Common.Utils
 				this.CloseFile();
 				log.Error(CultureInfo.InvariantCulture,
 					m => m("Initialization Error: {0}", ex.Message));
-				return ex.Message;
 			}
-			return "OK";
+
+			return result;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public void Save()
 		{
-			//workBook.Save();
-			workBook.SaveAs(filename, System.Reflection.Missing.Value,
-				null, null, false, false, XlSaveAsAccessMode.xlExclusive,
-				XlSaveAsAccessMode.xlExclusive,
-				System.Reflection.Missing.Value,
-				System.Reflection.Missing.Value,
-				System.Reflection.Missing.Value,
-				System.Reflection.Missing.Value);
+			try
+			{
+				//workBook.Save();
+				workBook.SaveAs(filename, System.Reflection.Missing.Value,
+					null, null, false, false, XlSaveAsAccessMode.xlExclusive,
+					XlSaveAsAccessMode.xlExclusive,
+					System.Reflection.Missing.Value,
+					System.Reflection.Missing.Value,
+					System.Reflection.Missing.Value,
+					System.Reflection.Missing.Value);
+			}
+			catch (Exception ex)
+			{
+				this.CloseFile();
+				log.Error(CultureInfo.InvariantCulture,
+					m => m("Initialization Error: {0}", ex.Message));
+			}
 		}
 
-		public void SetBackgroundColor(int row, int column, Color color)
+		public void SetBackgroundColor(int row, int column, double color)
 		{
-			string rangeQuery = column + row + ":" + column + row;
-
-			Range range = GetRangeObject(rangeQuery);
-			range.Interior.Color = System.Drawing.ColorTranslator.ToOle(color);
-			Save();
+			Range range = GetCell(row, column);
+			range.Interior.Color = color;
 
 			Marshal.ReleaseComObject(range);
 		}
 
 		public void SetCell(int row, int column, string value)
 		{
-			row = AdjustRow(row);
+			Range cell = GetCell(row, column);
 
-			if ((row <= int.MaxValue) && (column < int.MaxValue))
-			{
-				workSheet.Cells[row, column + 1] = value;
-			}
-			else
-			{
-				if (row >= (int.MaxValue - 1))
-				{
-					throw new ArgumentOutOfRangeException("row",
-					"row greater than Uint32.MaxValue");
-				}
-				if (column >= int.MaxValue)
-				{
-					throw new ArgumentOutOfRangeException("column",
-					"column greater than Uint32.MaxValue");
-				}
-			}
+			cell.Value = value;
 		}
-
 		public void SetFontColor(int row, int column, Color color)
 		{
-			string rangeQuery = column + row + ":" + column + row;
-
-			Range range = GetRangeObject(rangeQuery);
+			Range range = GetCell(row, column);
 			range.Font.Color = System.Drawing.ColorTranslator.ToOle(color);
-			Save();
+
+			Marshal.ReleaseComObject(range);
+		}
+
+		public void SetFontColor(int row, int column, double color)
+		{
+			Range range = GetCell(row, column);
+			range.Font.Color = color;
 
 			Marshal.ReleaseComObject(range);
 		}
 
 		public void SetTextFormat(int row, int column)
 		{
-			row = AdjustRow(row);
-			if (column < int.MaxValue - 1)
-			{
-				column++;
-			}
-			string columnName = GetExcelColumnName((int)column);
-			string rangeQuery = columnName + row + ":" + columnName + row;
-
-			Range range = GetRangeObject(rangeQuery);
+			Range range = GetCell(row, column);
 			range.NumberFormat = "@";
 
 			Marshal.ReleaseComObject(range);
@@ -410,30 +460,41 @@ namespace DigitalZenWorks.Common.Utils
 			return row;
 		}
 
-		private static string[] ConvertToStringArray(System.Array values)
-		{
-			string[] newArray = new string[values.Length];
+static string[][] GetStringArray(Object rangeValues)
+{
+	string[][] stringArray = null;
 
-			int index = 0;
-			for (int i = values.GetLowerBound(0);
-				i <= values.GetUpperBound(0); i++)
+	Array array = rangeValues as Array;
+	if (null != array)
+	{
+		int rank = array.Rank;
+		if (rank > 1)
+		{
+			int rowCount = array.GetLength(0);
+			int columnCount = array.GetUpperBound(1);
+
+			stringArray = new string[rowCount][];
+
+			for (int index = 0; index < rowCount; index++)
 			{
-				for (int j = values.GetLowerBound(1);
-					j <= values.GetUpperBound(1); j++)
+				stringArray[index] = new string[columnCount-1];
+
+				for (int index2 = 0; index2 < columnCount; index2++)
 				{
-					if (values.GetValue(i, j) == null)
+					Object obj = array.GetValue(index + 1, index2 + 1);
+					if (null != obj)
 					{
-						newArray[index] = "";
+						string value = obj.ToString();
+
+						stringArray[index][index2] = value;
 					}
-					else
-					{
-						newArray[index] =
-							(string)values.GetValue(i, j).ToString();
-					}
-					index++;
 				}
 			}
-			return newArray;
 		}
+	}
+
+	return stringArray;
+}
+
 	}
 }
