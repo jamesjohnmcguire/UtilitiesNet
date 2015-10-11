@@ -243,6 +243,22 @@ namespace DigitalZenWorks.Common.Utils
 			return cellValue;
 		}
 
+		public Range GetColumnRange(int columnNumber)
+		{
+			Range range = GetRange(0, LastRowUsed, columnNumber, columnNumber);
+
+			range = range.EntireColumn;
+
+			return range;
+		}
+
+		public int GetCountNonEmptyCells(Range range)
+		{
+			double result = excelApplication.WorksheetFunction.CountA(range);
+
+			return Convert.ToInt32(result);
+		}
+
 		public static string GetExcelColumnName(int columnNumber)
 		{
 			int dividend = columnNumber;
@@ -277,10 +293,6 @@ namespace DigitalZenWorks.Common.Utils
 			if (columnBegin < int.MaxValue)
 			{
 				columnBegin++;
-			}
-			if (columnEnd < int.MaxValue)
-			{
-				columnEnd++;
 			}
 
 			string columnBeginName = GetExcelColumnName(columnBegin);
@@ -460,41 +472,41 @@ namespace DigitalZenWorks.Common.Utils
 			return row;
 		}
 
-static string[][] GetStringArray(Object rangeValues)
-{
-	string[][] stringArray = null;
-
-	Array array = rangeValues as Array;
-	if (null != array)
-	{
-		int rank = array.Rank;
-		if (rank > 1)
+		private static string[][] GetStringArray(Object rangeValues)
 		{
-			int rowCount = array.GetLength(0);
-			int columnCount = array.GetUpperBound(1);
+			string[][] stringArray = null;
 
-			stringArray = new string[rowCount][];
-
-			for (int index = 0; index < rowCount; index++)
+			Array array = rangeValues as Array;
+			if (null != array)
 			{
-				stringArray[index] = new string[columnCount-1];
-
-				for (int index2 = 0; index2 < columnCount; index2++)
+				int rank = array.Rank;
+				if (rank > 1)
 				{
-					Object obj = array.GetValue(index + 1, index2 + 1);
-					if (null != obj)
-					{
-						string value = obj.ToString();
+					int rowCount = array.GetLength(0);
+					int columnCount = array.GetUpperBound(1);
 
-						stringArray[index][index2] = value;
+					stringArray = new string[rowCount][];
+
+					for (int index = 0; index < rowCount; index++)
+					{
+						stringArray[index] = new string[columnCount];
+
+						for (int index2 = 0; index2 < columnCount; index2++)
+						{
+							Object obj = array.GetValue(index + 1, index2 + 1);
+							if (null != obj)
+							{
+								string value = obj.ToString();
+
+								stringArray[index][index2] = value;
+							}
+						}
 					}
 				}
 			}
-		}
-	}
 
-	return stringArray;
-}
+			return stringArray;
+		}
 
 	}
 }
