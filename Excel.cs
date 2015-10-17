@@ -252,7 +252,7 @@ namespace DigitalZenWorks.Common.Utils
 			return range;
 		}
 
-		public int GetCountNonEmptyCells(Range range)
+		public int GetCountNonemptyCells(Range range)
 		{
 			double result = excelApplication.WorksheetFunction.CountA(range);
 

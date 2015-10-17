@@ -3,10 +3,11 @@
 	<Words>
 		<Unrecognized>
 			<Word>cb</Word>
+			<Word>GotDotNet</Word>
 		</Unrecognized>
 		<Recognized>
+			<Word>ascii</Word>
 			<Word>stylesheet</Word>
-			<Word>GotDotNet</Word>
 			<Word>Utils</Word>
 			<Word>DigitalZenWorks</Word>
 		</Recognized>
