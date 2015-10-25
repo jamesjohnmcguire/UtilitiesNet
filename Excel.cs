@@ -399,14 +399,29 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			try
 			{
-				//workBook.Save();
-				workBook.SaveAs(filename, System.Reflection.Missing.Value,
+				workBook.SaveAs(filename, XlFileFormat.xlWorkbookDefault,
 					null, null, false, false, XlSaveAsAccessMode.xlExclusive,
 					XlSaveAsAccessMode.xlExclusive,
 					System.Reflection.Missing.Value,
 					System.Reflection.Missing.Value,
 					System.Reflection.Missing.Value,
 					System.Reflection.Missing.Value);
+			}
+			catch (Exception ex)
+			{
+				this.CloseFile();
+				log.Error(CultureInfo.InvariantCulture,
+					m => m("Initialization Error: {0}", ex.Message));
+			}
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
+		public void SaveAsCsv(string filename)
+		{
+			try
+			{
+				workBook.SaveAs(filename, XlFileFormat.xlCSVWindows);
 			}
 			catch (Exception ex)
 			{
