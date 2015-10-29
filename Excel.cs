@@ -17,6 +17,13 @@ using System.Runtime.InteropServices;
 
 namespace DigitalZenWorks.Common.Utils
 {
+	public enum Formats
+	{
+		Date,
+		General,
+		Text
+	}
+
 	// Represents a Excel object.
 	public class ExcelWrapper
 	{
@@ -445,6 +452,32 @@ namespace DigitalZenWorks.Common.Utils
 
 			cell.Value = value;
 		}
+
+		public void SetColumnFormat(int column, Formats format)
+		{
+			Range columnRange = GetColumnRange(column);
+
+			switch(format)
+			{
+				case Formats.Date:
+				{
+					columnRange.NumberFormat = "yyyy-mm-dd";
+					break;
+				}
+				case Formats.Text:
+				{
+					columnRange.NumberFormat = "@";
+					break;
+				}
+				default:
+				{
+					break;
+				}
+			}
+
+			Marshal.ReleaseComObject(columnRange);
+		}
+
 		public void SetFontColor(int row, int column, Color color)
 		{
 			Range range = GetCell(row, column);
