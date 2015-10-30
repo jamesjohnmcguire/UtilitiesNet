@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 
 namespace DigitalZenWorks.Common.Utils
 {
-	public enum Formats
+	public enum Format
 	{
 		Date,
 		General,
@@ -424,11 +424,11 @@ namespace DigitalZenWorks.Common.Utils
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public void SaveAsCsv(string filename)
+		public void SaveAsCsv(string filePath)
 		{
 			try
 			{
-				workBook.SaveAs(filename, XlFileFormat.xlCSVWindows);
+				workBook.SaveAs(filePath, XlFileFormat.xlCSVWindows);
 			}
 			catch (Exception ex)
 			{
@@ -453,18 +453,18 @@ namespace DigitalZenWorks.Common.Utils
 			cell.Value = value;
 		}
 
-		public void SetColumnFormat(int column, Formats format)
+		public void SetColumnFormat(int column, Format format)
 		{
 			Range columnRange = GetColumnRange(column);
 
 			switch(format)
 			{
-				case Formats.Date:
+				case Format.Date:
 				{
 					columnRange.NumberFormat = "yyyy-mm-dd";
 					break;
 				}
-				case Formats.Text:
+				case Format.Text:
 				{
 					columnRange.NumberFormat = "@";
 					break;
