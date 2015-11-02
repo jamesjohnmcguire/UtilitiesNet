@@ -494,6 +494,15 @@ namespace DigitalZenWorks.Common.Utils
 			Marshal.ReleaseComObject(range);
 		}
 
+		public void SetRow(int row, string[] data)
+		{
+			Range range = GetRange(row, row, 0, LastColumnUsed);
+
+			range.get_Resize(1, data.Length).Value2 = data;
+
+			Marshal.ReleaseComObject(range);
+		}
+
 		public void SetTextFormat(int row, int column)
 		{
 			Range range = GetCell(row, column);
