@@ -496,11 +496,14 @@ namespace DigitalZenWorks.Common.Utils
 
 		public void SetRow(int row, string[] data)
 		{
-			Range range = GetRange(row, row, 0, LastColumnUsed);
+			if ((null != data) && (data.Length > 0))
+			{
+				Range range = GetRange(row, row, 0, LastColumnUsed);
 
-			range.get_Resize(1, data.Length).Value2 = data;
+				range.get_Resize(1, data.Length).Value2 = data;
 
-			Marshal.ReleaseComObject(range);
+				Marshal.ReleaseComObject(range);
+			}
 		}
 
 		public void SetTextFormat(int row, int column)

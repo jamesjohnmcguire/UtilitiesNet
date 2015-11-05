@@ -56,8 +56,6 @@ namespace DigitalZenWorks.Common.Utils
 			return IsValid;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static DateTime DateFromString(string dateText)
 		{
 			DateTime date = DateTime.MinValue;
