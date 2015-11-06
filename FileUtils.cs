@@ -389,5 +389,14 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
+
+		public static void WriteExtractedFile(string filename, byte[] bytes)
+		{
+			using (BinaryWriter writer = new BinaryWriter(File.Open(
+				filename, FileMode.Create)))
+			{
+				writer.Write(bytes);
+			}
+		}
 	} // End Class
 } // End Namespace
