@@ -12,6 +12,7 @@ using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -115,23 +116,33 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public void CloseFile()
 		{
-			if (workSheet != null)
+			try
 			{
-				Marshal.ReleaseComObject(workSheet);
-				workSheet = null;
+				if (workSheet != null)
+				{
+					Marshal.ReleaseComObject(workSheet);
+					workSheet = null;
+				}
+				if (workSheets != null)
+				{
+					Marshal.ReleaseComObject(workSheets);
+					workSheets = null;
+				}
+				if (workBook != null)
+				{
+					workBook.Close(false, null, false);
+					Marshal.ReleaseComObject(workBook);
+					workBook = null;
+				}
 			}
-			if (workSheets != null)
+			catch(Exception exception)
 			{
-				Marshal.ReleaseComObject(workSheets);
-				workSheets = null;
-			}
-			if (workBook != null)
-			{
-				workBook.Close(false, null, false);
-				Marshal.ReleaseComObject(workBook);
-				workBook = null;
+				log.Error(CultureInfo.InvariantCulture,
+					m => m("Initialization Error: {0}", exception.Message));
 			}
 		}
 
@@ -377,7 +388,8 @@ namespace DigitalZenWorks.Common.Utils
 
 			try
 			{
-				if (!string.IsNullOrEmpty(fileName))
+				if ((!string.IsNullOrEmpty(fileName)) &&
+					(File.Exists(fileName)))
 				{
 					filename = fileName;
 					workBook = excelApplication.Workbooks.Open(fileName, 0,
