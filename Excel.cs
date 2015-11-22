@@ -473,7 +473,7 @@ namespace DigitalZenWorks.Common.Utils
 			{
 				case Format.Date:
 				{
-					columnRange.NumberFormat = "yyyy-mm-dd";
+					columnRange.NumberFormat = "yyyy-MM-dd";
 					break;
 				}
 				case Format.Text:
