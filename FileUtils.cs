@@ -390,12 +390,12 @@ namespace DigitalZenWorks.Common.Utils
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
-		public static void WriteExtractedFile(string filename, byte[] bytes)
+		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
-			using (BinaryWriter writer = new BinaryWriter(File.Open(
-				filename, FileMode.Create)))
+			using (BinaryWriter writer = new BinaryWriter(File.Open(fileName,
+				FileMode.Create)))
 			{
-				writer.Write(bytes);
+				writer.Write(contents);
 			}
 		}
 	} // End Class
