@@ -390,12 +390,17 @@ namespace DigitalZenWorks.Common.Utils
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+			"CA2202:Do not dispose objects multiple times")]
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
-			using (BinaryWriter writer = new BinaryWriter(File.Open(fileName,
-				FileMode.Create)))
+			using (FileStream fileStream =
+				File.Open(fileName, FileMode.Create))
 			{
-				writer.Write(contents);
+				using (BinaryWriter writer = new BinaryWriter(fileStream))
+				{
+					writer.Write(contents);
+				}
 			}
 		}
 	} // End Class

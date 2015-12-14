@@ -58,6 +58,20 @@ namespace DigitalZenWorks.Common.Utils
 			set { hasHeaderRow = value; }
 		}
 
+		public Range Header
+		{
+			get
+			{
+				// normally, we compensate for the header, here we don't
+				string columnName = GetExcelColumnName(LastColumnUsed);
+				string rangeQuery = "A1:" + columnName + "1";
+
+				Range range = workSheet.get_Range(rangeQuery, Type.Missing);
+
+				return range;
+			}
+		}
+
 		public int LastColumnUsed
 		{
 			get
@@ -146,12 +160,14 @@ namespace DigitalZenWorks.Common.Utils
 			}
 		}
 
-		public Workbook Create()
+		public Workbook Create(string sheetName)
 		{
 			workBook = excelApplication.Workbooks.Add();
 			workSheets = workBook.Worksheets;
 
-			workSheet = workSheets.Add();
+			workSheet = workSheets[1];
+
+			workSheet.Name = sheetName;
 
 			return workBook;
 		}
@@ -294,14 +310,6 @@ namespace DigitalZenWorks.Common.Utils
 			return columnName;
 		}
 
-		public void GetExcelSheets()
-		{
-			if (workBook != null)
-			{
-				workSheets = workBook.Worksheets;
-			}
-		}
-
 		public Range GetRange(int rowBegin, int rowEnd, int columnBegin,
 			int columnEnd)
 		{
@@ -319,19 +327,17 @@ namespace DigitalZenWorks.Common.Utils
 			string rangeQuery =
 				columnBeginName + rowBegin + ":" + columnEndName + rowEnd;
 
-			Range range =
-				workSheet.get_Range(rangeQuery, Type.Missing);
+			Range range = workSheet.get_Range(rangeQuery, Type.Missing);
 
 			return range;
 		}
 
-		public string[] GetRangeValues(int rowBegin, int rowEnd,
+		public string[][] GetRangeValues(int rowBegin, int rowEnd,
 			int columnBegin, int columnEnd)
 		{
 			Range range = GetRange(rowBegin, rowEnd, columnBegin, columnEnd);
 
-			string[] stringArray =
-				GetStringArray(range.Cells.Value2);
+			string[][] stringArray = GetStringArray(range.Cells.Value2);
 
 			Marshal.ReleaseComObject(range);
 
@@ -340,14 +346,8 @@ namespace DigitalZenWorks.Common.Utils
 
 		public string[] GetRowValues(int rowId)
 		{
-			int lastUsedColumn = LastColumnUsed;
-
-			Range range = GetRange(rowId, rowId, 0, lastUsedColumn);
-
-			string[][] rows = GetStringArray(range.Cells.Value2);
+			string[][] rows = GetRangeValues(rowId, rowId, 0, LastColumnUsed);
 			string[] row = rows[0];
-
-			Marshal.ReleaseComObject(range);
 
 			return row;
 		}
@@ -398,6 +398,11 @@ namespace DigitalZenWorks.Common.Utils
 						System.Reflection.Missing.Value, true,
 						System.Reflection.Missing.Value, false,
 						System.Reflection.Missing.Value, false, false);
+
+					if (workBook != null)
+					{
+						workSheets = workBook.Worksheets;
+					}
 
 					result = true;
 				}
