@@ -199,12 +199,13 @@ namespace DigitalZenWorks.Common.Utils
 				// is available. If found return true;
 				for (int index = 1; index <= workSheets.Count; index++)
 				{
-					workSheet = (Worksheet)workSheets.get_Item((object)index);
-					if (workSheet.Name.Equals(worksheetName))
+					Worksheet testSheet = (Worksheet)workSheets.get_Item((object)index);
+					if (testSheet.Name.Equals(worksheetName))
 					{
 						// Get method interface
-						_Worksheet _sheet = (_Worksheet)workSheet;
+						_Worksheet _sheet = (_Worksheet)testSheet;
 						_sheet.Activate();
+						workSheet = testSheet;
 						sheetFound = true;
 						break;
 					}
@@ -445,7 +446,11 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			try
 			{
-				workBook.SaveAs(filePath, XlFileFormat.xlCSVWindows);
+				workBook.SaveAs(filePath, XlFileFormat.xlCSVWindows,
+					Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+					XlSaveAsAccessMode.xlNoChange,
+					XlSaveConflictResolution.xlLocalSessionChanges, false,
+					Type.Missing, Type.Missing, true);
 			}
 			catch (Exception ex)
 			{
@@ -529,6 +534,11 @@ namespace DigitalZenWorks.Common.Utils
 			range.NumberFormat = "@";
 
 			Marshal.ReleaseComObject(range);
+		}
+
+		public void SetWorksheetName(string sheetName)
+		{
+			workSheet.Name = sheetName;
 		}
 
 		/// <summary>
