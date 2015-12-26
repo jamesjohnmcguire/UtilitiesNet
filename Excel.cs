@@ -403,6 +403,7 @@ namespace DigitalZenWorks.Common.Utils
 					if (workBook != null)
 					{
 						workSheets = workBook.Worksheets;
+						workSheet = workSheets[1];
 					}
 
 					result = true;
@@ -576,7 +577,7 @@ namespace DigitalZenWorks.Common.Utils
 
 					for (int index = 0; index < rowCount; index++)
 					{
-						stringArray[index] = new string[columnCount];
+						stringArray[index] = new string[columnCount+1];
 
 						for (int index2 = 0; index2 < columnCount; index2++)
 						{
