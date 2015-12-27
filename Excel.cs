@@ -577,7 +577,7 @@ namespace DigitalZenWorks.Common.Utils
 
 					for (int index = 0; index < rowCount; index++)
 					{
-						stringArray[index] = new string[columnCount+1];
+						stringArray[index] = new string[columnCount];
 
 						for (int index2 = 0; index2 < columnCount; index2++)
 						{
