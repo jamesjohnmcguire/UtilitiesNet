@@ -12,8 +12,8 @@ using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Drawing;
-using System.IO;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace DigitalZenWorks.Common.Utils
@@ -29,12 +29,16 @@ namespace DigitalZenWorks.Common.Utils
 	public class ExcelWrapper
 	{
 		private int columnCount = 0;
+
 		private Microsoft.Office.Interop.Excel.Application excelApplication =
 			null;
+
 		private string filename = string.Empty;
 		private bool hasHeaderRow = false;
+
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private Workbook workBook = null;
 		private Worksheet workSheet = null;
 		private Sheets workSheets = null;
@@ -153,7 +157,7 @@ namespace DigitalZenWorks.Common.Utils
 					workBook = null;
 				}
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				log.Error(CultureInfo.InvariantCulture,
 					m => m("Initialization Error: {0}", exception.Message));
@@ -292,6 +296,18 @@ namespace DigitalZenWorks.Common.Utils
 			double result = excelApplication.WorksheetFunction.CountA(range);
 
 			return Convert.ToInt32(result);
+		}
+
+		public string[][] GetEntireSheet()
+		{
+			string[][] values = null;
+
+			if (null != workSheet)
+			{
+				values = GetRangeValues(0, LastRowUsed, 0, LastColumnUsed);
+			}
+
+			return values;
 		}
 
 		public static string GetExcelColumnName(int columnNumber)
@@ -480,7 +496,7 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			Range columnRange = GetColumnRange(column);
 
-			switch(format)
+			switch (format)
 			{
 				case Format.Date:
 				{
@@ -595,6 +611,5 @@ namespace DigitalZenWorks.Common.Utils
 
 			return stringArray;
 		}
-
 	}
 }
