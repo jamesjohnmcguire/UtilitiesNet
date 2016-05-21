@@ -372,6 +372,39 @@ namespace DigitalZenWorks.Common.Utils
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
+		/// Touch
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="time"></param>
+		/////////////////////////////////////////////////////////////////////
+		public static void Touch(string path, string time)
+		{
+			string[] format = { "yyyyMMddHHmmss" };
+			DateTime dateTime;
+
+			if (DateTime.TryParseExact(time, format,
+				System.Globalization.CultureInfo.InvariantCulture,
+				System.Globalization.DateTimeStyles.None, out dateTime))
+			{
+				FileAttributes attributes = File.GetAttributes(path);
+
+				if (attributes.HasFlag(FileAttributes.Directory))
+				{
+					Directory.SetCreationTime(path, dateTime);
+					Directory.SetLastAccessTime(path, dateTime);
+					Directory.SetLastWriteTime(path, dateTime);
+				}
+				else
+				{
+					File.SetCreationTime(path, dateTime);
+					File.SetLastAccessTime(path, dateTime);
+					File.SetLastWriteTime(path, dateTime);
+				}
+			}
+		}
+
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
 		/////////////////////////////////////////////////////////////////////
