@@ -12,6 +12,7 @@ using Common.Logging;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utils
@@ -134,6 +135,18 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return streamWriter;
+		}
+
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Determines if a directory is empty or not
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		/////////////////////////////////////////////////////////////////////
+		public static bool IsDirectoryEmpty(string path)
+		{
+			return !Directory.EnumerateFileSystemEntries(path).Any();
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -339,6 +352,8 @@ namespace DigitalZenWorks.Common.Utils
 				{
 					log.Error(CultureInfo.InvariantCulture,
 						m => m(ex.Message));
+
+					throw;
 				}
 				finally
 				{
