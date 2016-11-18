@@ -11,6 +11,8 @@
 using Common.Logging;
 using Microsoft.Office.Interop.Excel;
 using System;
+using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -310,6 +312,32 @@ namespace DigitalZenWorks.Common.Utils
 			return values;
 		}
 
+		/// <summary>
+		/// Retrieve data from the Excel spreadsheet.
+		/// </summary>
+		/// <param name="fileName">file name</param>
+		/// <param name="sheetName">Worksheet name</param>
+		/// <returns>DataTable Data</returns>
+		public static System.Data.DataTable GetEntireSheet(string fileName,
+			string sheetName)
+		{
+			string connectionString = GetConnectionString(fileName);
+			System.Data.DataTable excelTable = new System.Data.DataTable();
+
+			using (OleDbConnection connection =
+				new OleDbConnection(connectionString))
+			{
+				using (OleDbDataAdapter adaptor = new OleDbDataAdapter(
+					string.Format("Select * from [{0}$]", sheetName),
+					connection))
+				{
+					adaptor.Fill(excelTable);
+				}
+			}
+
+			return excelTable;
+		}
+
 		public static string GetExcelColumnName(int columnNumber)
 		{
 			int dividend = columnNumber;
@@ -574,6 +602,15 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return row;
+		}
+
+		private static string GetConnectionString(string fileName)
+		{
+			string connectionString =
+				"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
+				fileName + ";Extended Properties='Excel 12.0 Xml;HDR=Yes'";
+
+			return connectionString;
 		}
 
 		private static string[][] GetStringArray(Object rangeValues)
