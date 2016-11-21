@@ -25,9 +25,18 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			StackFrame stackFrame = new StackFrame(1);
 			MethodBase methodBase = stackFrame.GetMethod();
-			string methodName = methodBase.Name.Substring(1);
-			int index = methodName.IndexOf('>');
-			methodName = methodName.Substring(0, index);
+
+			string methodName = methodBase.Name;
+			if (methodBase.Name.StartsWith("<"))
+			{
+				methodName = methodBase.Name.Substring(1);
+				int index = methodName.IndexOf('>');
+
+				if (index > 0)
+				{
+					methodName = methodName.Substring(0, index);
+				}
+			}
 
 			return methodName;
 		}
