@@ -27,7 +27,8 @@ namespace DigitalZenWorks.Common.Utils
 			MethodBase methodBase = stackFrame.GetMethod();
 
 			string methodName = methodBase.Name;
-			if (methodBase.Name.StartsWith("<"))
+			if (methodBase.Name.StartsWith("<",
+				StringComparison.Ordinal))
 			{
 				methodName = methodBase.Name.Substring(1);
 				int index = methodName.IndexOf('>');

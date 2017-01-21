@@ -12,10 +12,8 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 {
 	public static class StringExtender
 	{
-		public static bool CompareMultiple(
-			this string data,
-			StringComparison compareType,
-			params string[] compareValues)
+		public static bool CompareMultiple(this string data,
+			StringComparison compareType, params string[] compareValues)
 		{
 			if ((compareValues != null) && (!string.IsNullOrEmpty(data)))
 			{

@@ -323,12 +323,14 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			string connectionString = GetConnectionString(fileName);
 			System.Data.DataTable excelTable = new System.Data.DataTable();
+			excelTable.Locale = CultureInfo.InvariantCulture;
 
 			using (OleDbConnection connection =
 				new OleDbConnection(connectionString))
 			{
 				using (OleDbDataAdapter adaptor = new OleDbDataAdapter(
-					string.Format("Select * from [{0}$]", sheetName),
+					string.Format(CultureInfo.InvariantCulture,
+						"Select * from [{0}$]", sheetName),
 					connection))
 				{
 					adaptor.Fill(excelTable);
