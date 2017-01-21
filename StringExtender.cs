@@ -31,6 +31,18 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 			return false;
 		}
 
+		public static string Reverse(this string input)
+		{
+			if (!string.IsNullOrWhiteSpace(input))
+			{
+				char[] charArray = input.ToCharArray();
+				Array.Reverse(charArray);
+				input = new string(charArray);
+			}
+
+			return input;
+		}
+
 		// Convert the string to camel case.
 		public static string ToCamelCase(this string input)
 		{
