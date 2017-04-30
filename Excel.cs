@@ -321,20 +321,38 @@ namespace DigitalZenWorks.Common.Utils
 		public static System.Data.DataTable GetEntireSheet(string fileName,
 			string sheetName)
 		{
-			string connectionString = GetConnectionString(fileName);
-			System.Data.DataTable excelTable = new System.Data.DataTable();
-			excelTable.Locale = CultureInfo.InvariantCulture;
+			System.Data.DataTable excelTable = null;
 
-			using (OleDbConnection connection =
-				new OleDbConnection(connectionString))
+			try
 			{
-				using (OleDbDataAdapter adaptor = new OleDbDataAdapter(
-					string.Format(CultureInfo.InvariantCulture,
-						"Select * from [{0}$]", sheetName),
-					connection))
+				string connectionString = GetConnectionString(fileName);
+				excelTable = new System.Data.DataTable();
+				excelTable.Locale = CultureInfo.InvariantCulture;
+
+				using (OleDbConnection connection =
+					new OleDbConnection(connectionString))
 				{
-					adaptor.Fill(excelTable);
+					string query = "SELECT * FROM [?]";
+					string parameter = string.Format(
+						CultureInfo.InvariantCulture, "{0}$", sheetName);
+					using (OleDbCommand command =
+						new OleDbCommand(query, connection))
+					{
+						command.Parameters.Add("?", OleDbType.BSTR).Value =
+							parameter;
+
+						using (OleDbDataAdapter adaptor =
+							new OleDbDataAdapter(command))
+						{
+							adaptor.Fill(excelTable);
+						}
+					}
 				}
+			}
+			catch
+			{
+				excelTable.Dispose();
+				throw;
 			}
 
 			return excelTable;
