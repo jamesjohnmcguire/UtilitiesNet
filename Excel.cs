@@ -332,20 +332,13 @@ namespace DigitalZenWorks.Common.Utils
 				using (OleDbConnection connection =
 					new OleDbConnection(connectionString))
 				{
-					string query = "SELECT * FROM [?]";
-					string parameter = string.Format(
-						CultureInfo.InvariantCulture, "{0}$", sheetName);
-					using (OleDbCommand command =
-						new OleDbCommand(query, connection))
-					{
-						command.Parameters.Add("?", OleDbType.BSTR).Value =
-							parameter;
+					string query = string.Format(CultureInfo.InvariantCulture,
+						"SELECT * FROM [{0}$]", sheetName);
 
-						using (OleDbDataAdapter adaptor =
-							new OleDbDataAdapter(command))
-						{
-							adaptor.Fill(excelTable);
-						}
+					using (OleDbDataAdapter adaptor =
+						new OleDbDataAdapter(query, connection))
+					{
+						adaptor.Fill(excelTable);
 					}
 				}
 			}
