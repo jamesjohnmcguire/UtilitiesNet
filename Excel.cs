@@ -318,6 +318,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="fileName">file name</param>
 		/// <param name="sheetName">Worksheet name</param>
 		/// <returns>DataTable Data</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
 		public static System.Data.DataTable GetEntireSheet(string fileName,
 			string sheetName)
 		{
