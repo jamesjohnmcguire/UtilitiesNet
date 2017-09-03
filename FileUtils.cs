@@ -122,9 +122,10 @@ namespace DigitalZenWorks.Common.Utils
 					}
 				}
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
+				log.Error(CultureInfo.InvariantCulture, m => m(
+					exception.ToString()));
 			}
 			finally
 			{
@@ -188,9 +189,10 @@ namespace DigitalZenWorks.Common.Utils
 					}
 				}
 			}
-			catch (System.Exception ex)
+			catch (System.Exception exception)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m(ex.Message));
+				log.Error(CultureInfo.InvariantCulture, m => m(
+					exception.ToString()));
 			}
 		}
 
@@ -348,10 +350,10 @@ namespace DigitalZenWorks.Common.Utils
 
 					successCode = true;
 				}
-				catch (Exception ex)
+				catch (Exception exception)
 				{
 					log.Error(CultureInfo.InvariantCulture,
-						m => m(ex.Message));
+						m => m(exception.ToString()));
 
 					throw;
 				}

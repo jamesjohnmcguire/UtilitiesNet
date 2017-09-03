@@ -205,10 +205,10 @@ namespace DigitalZenWorks.Common.Utils
 					}
 				}
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
 				log.Error(CultureInfo.InvariantCulture, m =>
-					m("Error: {0}", ex.Message));
+					m("Error: {0}", exception));
 			}
 
 			return successCode;

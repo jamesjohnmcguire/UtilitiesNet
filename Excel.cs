@@ -162,7 +162,7 @@ namespace DigitalZenWorks.Common.Utils
 			catch (Exception exception)
 			{
 				log.Error(CultureInfo.InvariantCulture,
-					m => m("Initialization Error: {0}", exception.Message));
+					m => m("Initialization Error: {0}", exception));
 			}
 		}
 
@@ -467,11 +467,11 @@ namespace DigitalZenWorks.Common.Utils
 					result = true;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
 				this.CloseFile();
 				log.Error(CultureInfo.InvariantCulture,
-					m => m("Initialization Error: {0}", ex.Message));
+					m => m("Initialization Error: {0}", exception));
 			}
 
 			return result;
@@ -491,11 +491,11 @@ namespace DigitalZenWorks.Common.Utils
 					System.Reflection.Missing.Value,
 					System.Reflection.Missing.Value);
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
 				this.CloseFile();
 				log.Error(CultureInfo.InvariantCulture,
-					m => m("Initialization Error: {0}", ex.Message));
+					m => m("Initialization Error: {0}", exception));
 			}
 		}
 
@@ -511,11 +511,11 @@ namespace DigitalZenWorks.Common.Utils
 					XlSaveConflictResolution.xlLocalSessionChanges, false,
 					Type.Missing, Type.Missing, true);
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
 				this.CloseFile();
 				log.Error(CultureInfo.InvariantCulture,
-					m => m("Initialization Error: {0}", ex.Message));
+					m => m("Initialization Error: {0}", exception));
 			}
 		}
 
