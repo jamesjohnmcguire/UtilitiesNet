@@ -13,7 +13,10 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text.RegularExpressions;
+using System.Security;
 
 namespace DigitalZenWorks.Common.Utils
 {
@@ -26,6 +29,79 @@ namespace DigitalZenWorks.Common.Utils
 	{
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ResourceManager stringTable = new
+			ResourceManager("DigitalZenWorks.Common.Utils.Resources",
+			Assembly.GetExecutingAssembly());
+
+		public static bool CreateFileFromEmbeddedResource(string resourceName,
+			string filePath)
+		{
+			bool success = false;
+			Stream templateObjectStream = null;
+			FileStream fileStream = null;
+
+			try
+			{
+				byte[] embeddedResource;
+				Assembly thisAssembly = Assembly.GetCallingAssembly();
+
+				templateObjectStream =
+					thisAssembly.GetManifestResourceStream(resourceName);
+
+				if (null == templateObjectStream)
+				{
+					log.Error(CultureInfo.InvariantCulture, m => m(
+						"Failed to manifest resource stream"));
+				}
+				else
+				{
+					embeddedResource = new Byte[templateObjectStream.Length];
+					templateObjectStream.Read(embeddedResource, 0,
+						(int)templateObjectStream.Length);
+					fileStream = new FileStream(filePath, FileMode.Create);
+					{
+						if (null != fileStream)
+						{
+							fileStream.Write(embeddedResource, 0,
+							(int)templateObjectStream.Length);
+						}
+					}
+
+					success = true;
+				}
+			}
+			catch (Exception exception) when
+				(exception is ArgumentNullException ||
+				exception is ArgumentException ||
+				exception is FileLoadException ||
+				exception is FileNotFoundException ||
+				exception is BadImageFormatException ||
+				exception is NotImplementedException ||
+				exception is ArgumentOutOfRangeException ||
+				exception is IOException ||
+				exception is NotSupportedException ||
+				exception is ObjectDisposedException ||
+				exception is SecurityException ||
+				exception is DirectoryNotFoundException ||
+				exception is PathTooLongException)
+			{
+				log.Error(CultureInfo.InvariantCulture, m => m(
+					stringTable.GetString("EXCEPTION") + exception));
+			}
+			catch
+			{
+				throw;
+			}
+			finally
+			{
+				if (null != fileStream)
+				{
+					fileStream.Close();
+				}
+			}
+
+			return success;
+		}
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
