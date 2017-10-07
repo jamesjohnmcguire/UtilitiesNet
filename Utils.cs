@@ -139,6 +139,25 @@ namespace DigitalZenWorks.Common.Utils
 			return data;
 		}
 
+		public static string GetPackageVersion(string packageId)
+		{
+			string version = string.Empty;
+
+			// get the package file, based on current directory
+			string contents = FileUtils.GetFileContents("packages.config");
+
+			if (!string.IsNullOrWhiteSpace(contents))
+			{
+				int index = contents.IndexOf(packageId);
+				index += 19;
+				string substring = contents.Substring(index);
+				version =
+					Regex.Match(substring, "\"([^\"]*)\"").Groups[1].Value;
+			}
+
+			return version;
+		}
+
 		/// <summary>
 		/// Gets if the specified string is ASCII string.
 		/// </summary>
