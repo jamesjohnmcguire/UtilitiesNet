@@ -143,16 +143,20 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			string version = string.Empty;
 
-			// get the package file, based on current directory
-			string contents = FileUtils.GetFileContents("packages.config");
-
-			if (!string.IsNullOrWhiteSpace(contents))
+			if (!string.IsNullOrWhiteSpace(packageId))
 			{
-				int index = contents.IndexOf(packageId);
-				index += 19;
-				string substring = contents.Substring(index);
-				version =
-					Regex.Match(substring, "\"([^\"]*)\"").Groups[1].Value;
+				// get the package file, based on current directory
+				string contents = FileUtils.GetFileContents("packages.config");
+
+				if (!string.IsNullOrWhiteSpace(contents))
+				{
+					int index = contents.IndexOf(packageId,
+						StringComparison.OrdinalIgnoreCase) +
+						packageId.Length + 1;
+					string substring = contents.Substring(index);
+					version =
+						Regex.Match(substring, "\"([^\"]*)\"").Groups[1].Value;
+				}
 			}
 
 			return version;
