@@ -42,7 +42,6 @@ namespace DigitalZenWorks.Common.Utils
 
 			try
 			{
-				byte[] embeddedResource;
 				Assembly thisAssembly = Assembly.GetCallingAssembly();
 
 				templateObjectStream =
@@ -55,16 +54,10 @@ namespace DigitalZenWorks.Common.Utils
 				}
 				else
 				{
-					embeddedResource = new Byte[templateObjectStream.Length];
-					templateObjectStream.Read(embeddedResource, 0,
-						(int)templateObjectStream.Length);
-					fileStream = new FileStream(filePath, FileMode.Create);
+					using (FileStream file = new FileStream(filePath,
+						FileMode.Create, FileAccess.Write))
 					{
-						if (null != fileStream)
-						{
-							fileStream.Write(embeddedResource, 0,
-							(int)templateObjectStream.Length);
-						}
+						templateObjectStream.CopyTo(file);
 					}
 
 					success = true;

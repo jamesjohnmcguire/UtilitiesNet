@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<OrderedItem>
+	<ItemName>Widget</ItemName>
+	<Description>Regular Widget</Description>
+	<UnitPrice>2.3</UnitPrice>
+	<Quantity>10</Quantity>
+	<LineTotal>23</LineTotal>
+</OrderedItem>
