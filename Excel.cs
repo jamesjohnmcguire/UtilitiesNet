@@ -655,6 +655,12 @@ namespace DigitalZenWorks.Common.Utils
 
 								stringArray[index][index2] = value;
 							}
+							else
+							{
+								// design choice - empty seems to reflect more
+								// of the excel model
+								stringArray[index][index2] = string.Empty;
+							}
 						}
 					}
 				}
