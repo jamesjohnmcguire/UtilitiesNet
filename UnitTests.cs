@@ -15,6 +15,28 @@ namespace DigitalZenWorks.Common.Utils
 	[TestFixture]
 	public static class UnitTests
 	{
+		/////////////////////////////////////////////////////////////////////
+		/// Method <c>Teardown</c>
+		/// <summary>
+		/// function that is called just after each test method is called.
+		/// </summary>
+		/////////////////////////////////////////////////////////////////////
+		[TearDown]
+		public static void Teardown()
+		{
+			bool result = File.Exists("test.xml");
+			if (true == result)
+			{
+				File.Delete("test.xml");
+			}
+
+			result = File.Exists("test.xsd");
+			if (true == result)
+			{
+				File.Delete("test.xsd");
+			}
+		}
+
 		[Test]
 		public static void GetEmbeddedResource()
 		{
