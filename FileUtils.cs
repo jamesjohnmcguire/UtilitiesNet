@@ -351,28 +351,22 @@ namespace DigitalZenWorks.Common.Utils
 		public static void ReplaceStringInFile(string filePath,
 			string oldValue, string newValue)
 		{
-			string contents;
-			string newContents;
-
 			if (File.Exists(filePath))
 			{
-				using (StreamReader sr = new StreamReader(filePath))
+				using (FileStream file = File.Open(filePath,
+					FileMode.Open, FileAccess.ReadWrite, FileShare.None))
 				{
-					if (sr != null)
+					using (StreamReader reader = new StreamReader(file))
 					{
-						contents = sr.ReadToEnd();
+						string contents = reader.ReadToEnd();
 
-						using (FileStream fs = new FileStream(filePath,
-							FileMode.Open, FileAccess.ReadWrite))
+						string newContents =
+							contents.Replace(oldValue, newValue);
+
+						using (StreamWriter writer = new StreamWriter(file))
 						{
-							//set up a stream writer for adding text
-							StreamWriter sw = new StreamWriter(fs);
+							writer.Write(newContents);
 
-							newContents = contents.Replace(oldValue, newValue);
-
-							sw.Write(newContents);
-
-							// close file
 							//sw.Close();
 						}
 					}
