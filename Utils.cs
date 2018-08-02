@@ -44,7 +44,7 @@ namespace DigitalZenWorks.Common.Utils
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Validates command line parameters
+		/// Validates command line parameters.
 		/// </summary>
 		/// <param name="parameters"></param>
 		/// <returns></returns>
@@ -255,9 +255,11 @@ namespace DigitalZenWorks.Common.Utils
 			return isInteger;
 		}
 
-		/////////////////////////////////////////////////////////////////////
-		/// IsValidEmailAddress
-		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Checks to see if the given email address is valid.
+		/// </summary>
+		/// <param name="emailAddress"></param>
+		/// <returns></returns>
 		public static bool IsValidEmailAddress(string emailAddress)
 		{
 			bool valid = false;

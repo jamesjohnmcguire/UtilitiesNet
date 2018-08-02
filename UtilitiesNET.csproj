@@ -1,15 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
+		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
+		<Platforms>AnyCPU;x86</Platforms>
 	</PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
-    <RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
-    <Platforms>AnyCPU;x86</Platforms>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
@@ -37,14 +34,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
   </PropertyGroup>
-
   <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     <PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" />
-    <PackageReference Include="nunit" Version="3.9.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.1" />
+    <PackageReference Include="nunit" Version="3.10.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>
