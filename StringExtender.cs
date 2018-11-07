@@ -12,8 +12,10 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 {
 	public static class StringExtender
 	{
-		public static bool CompareMultiple(this string data,
-			StringComparison compareType, params string[] compareValues)
+		public static bool CompareMultiple(
+			this string data,
+			StringComparison compareType,
+			params string[] compareValues)
 		{
 			if ((compareValues != null) && (!string.IsNullOrEmpty(data)))
 			{
@@ -49,9 +51,9 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 				return input;
 
 			// Split the string into words.
-			string[] words = input.Split(
-				new char[] { },
-				StringSplitOptions.RemoveEmptyEntries);
+			char[] separators = Array.Empty<char>();
+			string[] words =
+				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
 			// Combine the words.
 			string result = words[0].Substring(0, 1).ToLower(
@@ -70,7 +72,7 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 		public static string ToDigitsOnly(this string input)
 		{
 			Regex digitsOnly = new Regex(@"[^\d]");
-			return digitsOnly.Replace(input, "");
+			return digitsOnly.Replace(input, string.Empty);
 		}
 
 		// Convert the string to Pascal case.
@@ -84,12 +86,12 @@ namespace DigitalZenWorks.Common.Utils.Extensions
 			}
 
 			// Split the string into words.
-			string[] words = input.Split(
-				new char[] { },
-				StringSplitOptions.RemoveEmptyEntries);
+			char[] separators = Array.Empty<char>();
+			string[] words =
+				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
 			// Combine the words.
-			string result = "";
+			string result = string.Empty;
 			foreach (string word in words)
 			{
 				result +=

@@ -15,8 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Text.RegularExpressions;
 using System.Security;
+using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utils
 {
@@ -29,13 +29,14 @@ namespace DigitalZenWorks.Common.Utils
 	{
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private static readonly ResourceManager stringTable = new
-			ResourceManager("DigitalZenWorks.Common.Utils.Resources",
-			Assembly.GetExecutingAssembly());
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-		public static bool CreateFileFromEmbeddedResource(string resourceName,
-			string filePath)
+		private static readonly ResourceManager stringTable = new
+			ResourceManager(
+				"DigitalZenWorks.Common.Utils.Resources",
+				Assembly.GetExecutingAssembly());
+
+		public static bool CreateFileFromEmbeddedResource(
+			string resourceName, string filePath)
 		{
 			bool success = false;
 			Stream templateObjectStream = null;
@@ -55,8 +56,8 @@ namespace DigitalZenWorks.Common.Utils
 				}
 				else
 				{
-					using (FileStream file = new FileStream(filePath,
-						FileMode.Create, FileAccess.Write))
+					using (FileStream file = new FileStream(
+						filePath, FileMode.Create, FileAccess.Write))
 					{
 						templateObjectStream.CopyTo(file);
 					}
@@ -151,12 +152,12 @@ namespace DigitalZenWorks.Common.Utils
 
 			if (File.Exists(filePath))
 			{
-				using (StreamReader StreamReaderObject = new
+				using (StreamReader streamReaderObject = new
 					StreamReader(filePath))
 				{
-					if (null != StreamReaderObject)
+					if (null != streamReaderObject)
 					{
-						fileContents = StreamReaderObject.ReadToEnd();
+						fileContents = streamReaderObject.ReadToEnd();
 					}
 				}
 			}
@@ -171,8 +172,6 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="filePath"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static StreamWriter GetWriteStreamObject(string filePath)
 		{
 			StreamWriter streamWriter = null;
@@ -182,12 +181,12 @@ namespace DigitalZenWorks.Common.Utils
 			{
 				if (File.Exists(filePath))
 				{
-					fileStream = new FileStream(filePath, FileMode.Open,
-						FileAccess.ReadWrite);
+					fileStream = new FileStream(
+						filePath, FileMode.Open, FileAccess.ReadWrite);
 
 					if (null != fileStream)
 					{
-						//set up a streamwriter for adding text
+						// set up a streamwriter for adding text
 						streamWriter = new StreamWriter(fileStream);
 					}
 				}
@@ -225,13 +224,11 @@ namespace DigitalZenWorks.Common.Utils
 		/// Safe recursive removal. Directories with a "DevClean Active" file
 		/// not deleted.
 		/// </summary>
-		/// <param name="filePath"></param>
-		/// <returns></returns>
+		/// <param name="initialPath">The initial path to start from.</param>
+		/// <param name="pathsToRemove">A list of paths to remove.</param>
 		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static void RecursiveRemove(string initialPath,
-			string[] pathsToRemove)
+		public static void RecursiveRemove(
+			string initialPath, string[] pathsToRemove)
 		{
 			try
 			{
@@ -239,15 +236,16 @@ namespace DigitalZenWorks.Common.Utils
 				{
 					if ((pathsToRemove != null) && (pathsToRemove.Length > 0))
 					{
-						foreach (string Path in pathsToRemove)
+						foreach (string path in pathsToRemove)
 						{
-							if (d.EndsWith("\\" + Path,
-								StringComparison.Ordinal))
+							if (d.EndsWith(
+								"\\" + path, StringComparison.Ordinal))
 							{
 								if (!File.Exists("DevClean.active"))
 								{
-									log.Info(CultureInfo.InvariantCulture,
-										m => m("Deleting: " + Path));
+									log.Info(
+										CultureInfo.InvariantCulture,
+										m => m("Deleting: " + path));
 									Directory.Delete(d, true);
 								}
 							}
@@ -272,8 +270,6 @@ namespace DigitalZenWorks.Common.Utils
 		/// </summary>
 		/// <param name="initialPath"></param>
 		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static void RecursiveUtf8WinFiles(string initialPath)
 		{
 			try
@@ -310,8 +306,8 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="oldValue"></param>
 		/// <param name="newValue"></param>
 		/////////////////////////////////////////////////////////////////////
-		public static void RegexStringInFile(string filePath, string oldValue,
-			string newValue)
+		public static void RegexStringInFile(
+			string filePath, string oldValue, string newValue)
 		{
 			string contents;
 
@@ -323,13 +319,13 @@ namespace DigitalZenWorks.Common.Utils
 					{
 						contents = sr.ReadToEnd();
 
-						using (FileStream fs = new FileStream(filePath,
-							FileMode.Open, FileAccess.ReadWrite))
+						using (FileStream fs = new FileStream(
+							filePath, FileMode.Open, FileAccess.ReadWrite))
 						{
 							StreamWriter sw = new StreamWriter(fs);
 
-							contents = Regex.Replace(contents, oldValue,
-								newValue);
+							contents = Regex.Replace(
+								contents, oldValue, newValue);
 
 							sw.Write(contents);
 
@@ -348,13 +344,16 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="oldValue"></param>
 		/// <param name="newValue"></param>
 		/////////////////////////////////////////////////////////////////////
-		public static void ReplaceStringInFile(string filePath,
-			string oldValue, string newValue)
+		public static void ReplaceStringInFile(
+			string filePath, string oldValue, string newValue)
 		{
 			if (File.Exists(filePath))
 			{
-				using (FileStream file = File.Open(filePath,
-					FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+				using (FileStream file = File.Open(
+					filePath,
+					FileMode.Open,
+					FileAccess.ReadWrite,
+					FileShare.None))
 				{
 					using (StreamReader reader = new StreamReader(file))
 					{
@@ -383,13 +382,15 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="insureWindowsLineEndings"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+		[System.Diagnostics.CodeAnalysis.SuppressMessage(
+			"Microsoft.Design",
 			"CA1026:DefaultParametersShouldNotBeUsed"),
-		System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
-			"CA2202:Do not dispose objects multiple times"),
-		System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static bool SaveFile(string fileContents, string filePathName,
+		System.Diagnostics.CodeAnalysis.SuppressMessage(
+			"Microsoft.Usage",
+			"CA2202:Do not dispose objects multiple times")]
+		public static bool SaveFile(
+			string fileContents,
+			string filePathName,
 			bool insureWindowsLineEndings = false)
 		{
 			bool successCode = false;
@@ -400,13 +401,13 @@ namespace DigitalZenWorks.Common.Utils
 				StreamWriter streamWriter = null;
 				try
 				{
-					fileStream = new FileStream(filePathName,
-						FileMode.Create, FileAccess.ReadWrite);
+					fileStream = new FileStream(
+						filePathName, FileMode.Create, FileAccess.ReadWrite);
 
 					if (true == insureWindowsLineEndings)
 					{
-						fileContents = fileContents.Replace("\n",
-							Environment.NewLine);
+						fileContents = fileContents.Replace(
+							"\n", Environment.NewLine);
 					}
 
 					streamWriter = new StreamWriter(fileStream);
@@ -416,7 +417,8 @@ namespace DigitalZenWorks.Common.Utils
 				}
 				catch (Exception exception)
 				{
-					log.Error(CultureInfo.InvariantCulture,
+					log.Error(
+						CultureInfo.InvariantCulture,
 						m => m(exception.ToString()));
 
 					throw;
@@ -461,11 +463,13 @@ namespace DigitalZenWorks.Common.Utils
 		public static void Touch(string path, string time)
 		{
 			string[] format = { "yyyyMMddHHmmss" };
-			DateTime dateTime;
 
-			if (DateTime.TryParseExact(time, format,
-				System.Globalization.CultureInfo.InvariantCulture,
-				System.Globalization.DateTimeStyles.None, out dateTime))
+			if (DateTime.TryParseExact(
+				time,
+				format,
+				CultureInfo.InvariantCulture,
+				DateTimeStyles.None,
+				out DateTime dateTime))
 			{
 				FileAttributes attributes = File.GetAttributes(path);
 
@@ -504,7 +508,8 @@ namespace DigitalZenWorks.Common.Utils
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+		[System.Diagnostics.CodeAnalysis.SuppressMessage(
+			"Microsoft.Usage",
 			"CA2202:Do not dispose objects multiple times")]
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{

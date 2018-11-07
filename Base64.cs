@@ -48,14 +48,18 @@ namespace DigitalZenWorks.Common.Utils
 		/// Decodes specified base64 string.
 		/// </summary>
 		/// <param name="value">Base64 string.</param>
-		/// <param name="ignoreNonBase64Chars">If true all invalid base64 chars ignored. If false, FormatException is raised.</param>
+		/// <param name="ignoreNonBase64Chars">If true all invalid base64
+		/// chars ignored. If false, FormatException is raised.</param>
 		/// <returns>Returns decoded data.</returns>
-		/// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
-		/// <exception cref="FormatException">Is raised when <b>value</b> contains invalid base64 data.</exception>
+		/// <exception cref="ArgumentNullException">Is raised when
+		/// <b>value</b> is null reference.</exception>
+		/// <exception cref="FormatException">Is raised when <b>value</b>
+		/// contains invalid base64 data.</exception>
 		public static byte[] Decode(string value,bool ignoreNonBase64Chars)
 		{
-			if(value == null){
-				throw new ArgumentNullException("value");
+			if (value == null)
+			{
+				throw new ArgumentNullException(nameof(value));
 			}
 
 			byte[] encBuffer = Encoding.ASCII.GetBytes(value);
@@ -80,8 +84,9 @@ namespace DigitalZenWorks.Common.Utils
 		/// <exception cref="FormatException">Is raised when <b>value</b> contains invalid base64 data.</exception>
 		public static byte[] Decode(byte[] data,int offset,int count,bool ignoreNonBase64Chars)
 		{
-			if(data == null){
-				throw new ArgumentNullException("data");
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
 			}
 
 			byte[] buffer = new byte[data.Length];
@@ -108,23 +113,34 @@ namespace DigitalZenWorks.Common.Utils
 		/// <exception cref="FormatException">Is raised when <b>encodeBuffer</b> contains invalid base64 data.</exception>
 		public static int Decode(byte[] encodeBuffer,int encodeOffset,int encodeCount,byte[] buffer,int offset,bool ignoreNonBase64Chars)
 		{
-			if(encodeBuffer == null){
-				throw new ArgumentNullException("encodeBuffer");
-			}           
-			if(encodeOffset < 0){
-				throw new ArgumentOutOfRangeException("encodeOffset","Argument 'encodeOffset' value must be >= 0.");
+			if (encodeBuffer == null)
+			{
+				throw new ArgumentNullException(nameof(encodeBuffer));
 			}
-			if(encodeCount < 0){
-				throw new ArgumentOutOfRangeException("encodeCount","Argument 'encodeCount' value must be >= 0.");
+
+			if (encodeOffset < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(encodeOffset), "Argument 'encodeOffset' value must be >= 0.");
 			}
-			if(encodeOffset + encodeCount > encodeBuffer.Length){
-				throw new ArgumentOutOfRangeException("encodeCount","Argument 'count' is bigger than than argument 'encodeBuffer'.");
+
+			if (encodeCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(encodeCount), "Argument 'encodeCount' value must be >= 0.");
 			}
-			if(buffer == null){
-				throw new ArgumentNullException("buffer");
+
+			if (encodeOffset + encodeCount > encodeBuffer.Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(encodeCount), "Argument 'count' is bigger than than argument 'encodeBuffer'.");
 			}
-			if(offset < 0 || offset >= buffer.Length){
-				throw new ArgumentOutOfRangeException("offset");
+
+			if (buffer == null)
+			{
+				throw new ArgumentNullException(nameof(buffer));
+			}
+
+			if (offset < 0 || offset >= buffer.Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(offset));
 			}
 
 			/* RFC 4648.
@@ -163,15 +179,20 @@ namespace DigitalZenWorks.Common.Utils
 			byte[] base64Block   = new byte[4];
 
 			// Decode while we have data.
-			while((decodeOffset - encodeOffset) < encodeCount){
+			while ((decodeOffset - encodeOffset) < encodeCount)
+			{
 				// Read 4-byte base64 block.
 				int offsetInBlock = 0;
-				while(offsetInBlock < 4){
+				while (offsetInBlock < 4)
+				{
 					// Check that we won't exceed buffer data.
-					if((decodeOffset - encodeOffset) >= encodeCount){
-						if(offsetInBlock == 0){
+					if ((decodeOffset - encodeOffset) >= encodeCount)
+					{
+						if (offsetInBlock == 0)
+						{
 							break;
 						}
+
 						// Incomplete 4-byte base64 data block.
 						else{
 							throw new FormatException("Invalid incomplete base64 4-char block");
@@ -182,27 +203,35 @@ namespace DigitalZenWorks.Common.Utils
 					short b = encodeBuffer[decodeOffset++];
 			 
 					// Pad char.
-					if(b == '='){
+					if (b == '=')
+					{
 						// Padding may appear only in last two chars of 4-char block.
 						// ab==
 						// abc=
-						if(offsetInBlock < 2){
+						if (offsetInBlock < 2)
+						{
 							throw new FormatException("Invalid base64 padding.");
 						}
 																		
 						// Skip next padding char.
-						if(offsetInBlock == 2){
+						if (offsetInBlock == 2)
+						{
 							decodeOffset++;
 						}
 						
 						break;
 					}
-					// Non-base64 char.
-					else if(b > 127 || BASE64_DECODE_TABLE[b] == -1){
-						if(!ignoreNonBase64Chars){
-							throw new FormatException("Invalid base64 char '" + b + "'.");
+					else if (b > 127 || BASE64_DECODE_TABLE[b] == -1)
+					{
+						// Non-base64 char.
+						if (!ignoreNonBase64Chars)
+						{
+							string message = string.Format(
+								"Invalid base64 char '{0}'.", b.ToString());
+							throw new FormatException(message);
 						}
-						// Igonre that char.
+
+						// Ignore that char.
 						//else{
 					}
 					// Base64 char.
@@ -212,13 +241,18 @@ namespace DigitalZenWorks.Common.Utils
 				}
 
 				// Decode base64 block.
-				if(offsetInBlock > 1){
+				if (offsetInBlock > 1)
+				{
 					buffer[decodedOffset++] = (byte)((base64Block[0] << 2) | (base64Block[1] >> 4));
 				}
-				if(offsetInBlock > 2){
+
+				if (offsetInBlock > 2)
+				{
 					buffer[decodedOffset++] = (byte)(((base64Block[1] & 0xF) << 4) | (base64Block[2] >> 2));
 				}
-				if(offsetInBlock > 3){
+
+				if (offsetInBlock > 3)
+				{
 					buffer[decodedOffset++] = (byte)(((base64Block[2] & 0x3) << 6) | base64Block[3]);
 				}
 			}

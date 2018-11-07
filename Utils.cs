@@ -27,8 +27,8 @@ namespace DigitalZenWorks.Common.Utils
 			MethodBase methodBase = stackFrame.GetMethod();
 
 			string methodName = methodBase.Name;
-			if (methodBase.Name.StartsWith("<",
-				StringComparison.Ordinal))
+			if (methodBase.Name.StartsWith(
+				"<", StringComparison.Ordinal))
 			{
 				methodName = methodBase.Name.Substring(1);
 				int index = methodName.IndexOf('>');
@@ -51,7 +51,7 @@ namespace DigitalZenWorks.Common.Utils
 		/////////////////////////////////////////////////////////////////////
 		public static bool CheckCommandLineParameters(string[] parameters)
 		{
-			bool IsValid = false;
+			bool isValid = false;
 
 			// Ensure we have a valid file name
 			if ((null != parameters) && (parameters.Length < 1))
@@ -60,10 +60,10 @@ namespace DigitalZenWorks.Common.Utils
 			}
 			else
 			{
-				IsValid = true;
+				isValid = true;
 			}
 
-			return IsValid;
+			return isValid;
 		}
 
 		public static DateTime DateFromString(string dateText)
@@ -89,7 +89,7 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			if (data == null)
 			{
-				throw new ArgumentNullException("data");
+				throw new ArgumentNullException(nameof(data));
 			}
 
 			return Base64.Decode(data, true);
@@ -105,7 +105,7 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			if (data == null)
 			{
-				throw new ArgumentNullException("data");
+				throw new ArgumentNullException(nameof(data));
 			}
 
 			return Base64.Decode(data, 0, data.Length, true);
@@ -123,10 +123,11 @@ namespace DigitalZenWorks.Common.Utils
 
 			if (hexData == null)
 			{
-				throw new ArgumentNullException("hexData");
+				throw new ArgumentNullException(nameof(hexData));
 			}
 
-			if (hexData.Length < 2 || (hexData.Length / (double)2 != Math.Floor(hexData.Length / (double)2)))
+			if (hexData.Length < 2 ||
+				(hexData.Length / 2D != Math.Floor(hexData.Length / 2D)))
 			{
 				throw new ArgumentException("Illegal hex data, hex data " +
 					"must be in two bytes pairs, for example: 0F,FF,A3,... .");
@@ -150,8 +151,8 @@ namespace DigitalZenWorks.Common.Utils
 
 				if (!string.IsNullOrWhiteSpace(contents))
 				{
-					int index = contents.IndexOf(packageId,
-						StringComparison.OrdinalIgnoreCase) +
+					int index = contents.IndexOf(
+						packageId, StringComparison.OrdinalIgnoreCase) +
 						packageId.Length + 1;
 					string substring = contents.Substring(index);
 					version =
@@ -197,9 +198,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="value"></param>
 		/// <returns></returns>
 		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1031:DoNotCatchGeneralExceptionTypes")]
-		public static bool IsDate(Object value)
+		public static bool IsDate(object value)
 		{
 			bool successCode = false;
 
@@ -207,12 +206,11 @@ namespace DigitalZenWorks.Common.Utils
 			{
 				if (value != null)
 				{
-					DateTime date;
 					string strDate = value.ToString();
 
 					try
 					{
-						if (DateTime.TryParse(strDate, out date))
+						if (DateTime.TryParse(strDate, out DateTime date))
 						{
 							if (date != DateTime.MinValue && date != DateTime.MaxValue)
 							{
@@ -248,8 +246,7 @@ namespace DigitalZenWorks.Common.Utils
 
 			if (!string.IsNullOrWhiteSpace(value))
 			{
-				long l = 0;
-				isInteger =  long.TryParse(value, out l);
+				isInteger = long.TryParse(value, out long l);
 			}
 
 			return isInteger;
@@ -279,9 +276,9 @@ namespace DigitalZenWorks.Common.Utils
 				@"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$";
 
 			// checks proper syntax
-			Match Match = Regex.Match(emailAddress, validEmailRegEx);
+			Match match = Regex.Match(emailAddress, validEmailRegEx);
 
-			if (true == Match.Success)
+			if (true == match.Success)
 			{
 				valid = true;
 			}
@@ -301,7 +298,7 @@ namespace DigitalZenWorks.Common.Utils
 			byte[] returnData = null;
 			if (data == null)
 			{
-				throw new ArgumentNullException("data");
+				throw new ArgumentNullException(nameof(data));
 			}
 
 			/* RFC 2045 6.7. Quoted-Printable Content-Transfer-Encoding
@@ -362,19 +359,19 @@ namespace DigitalZenWorks.Common.Utils
 					with the Quoted-Printable encoding, "soft" line breaks
 			*/
 
-			using (MemoryStream msRetVal = new MemoryStream())
+			using (MemoryStream destination = new MemoryStream())
 			{
-				using (MemoryStream msSourceStream = new MemoryStream(data))
+				using (MemoryStream sourceStream = new MemoryStream(data))
 				{
-					int b = msSourceStream.ReadByte();
+					int b = sourceStream.ReadByte();
 					while (b > -1)
 					{
 						// Encoded 8-bit byte(=XX) or soft line break(=CRLF)
 						if (b == '=')
 						{
 							byte[] buffer = new byte[2];
-							int nCount = msSourceStream.Read(buffer, 0, 2);
-							if (nCount == 2)
+							int bufferCount = sourceStream.Read(buffer, 0, 2);
+							if (bufferCount == 2)
 							{
 								// Soft line break, line spitted, just skip CRLF
 								if (buffer[0] == '\r' && buffer[1] == '\n')
@@ -385,33 +382,33 @@ namespace DigitalZenWorks.Common.Utils
 								{
 									try
 									{
-										msRetVal.Write(FromHex(buffer), 0, 1);
+										destination.Write(FromHex(buffer), 0, 1);
 									}
 									catch
 									{
 										// Illegal value after =, just leave it as is
-										msRetVal.WriteByte((byte)'=');
-										msRetVal.Write(buffer, 0, 2);
+										destination.WriteByte((byte)'=');
+										destination.Write(buffer, 0, 2);
 									}
 								}
 							}
 							// Illegal =, just leave as it is
 							else
 							{
-								msRetVal.Write(buffer, 0, nCount);
+								destination.Write(buffer, 0, bufferCount);
 							}
 						}
 						// Just write back all other bytes
 						else
 						{
-							msRetVal.WriteByte((byte)b);
+							destination.WriteByte((byte)b);
 						}
 
 						// Read next byte
-						b = msSourceStream.ReadByte();
+						b = sourceStream.ReadByte();
 					}
 				}
-				returnData = msRetVal.ToArray();
+				returnData = destination.ToArray();
 			}
 			return returnData;
 		}
@@ -427,7 +424,7 @@ namespace DigitalZenWorks.Common.Utils
 			if (null != data)
 			{
 				hexString = BitConverter.ToString(data).
-					ToLower(CultureInfo.CurrentCulture).Replace("-", "");
+					ToLower(CultureInfo.CurrentCulture).Replace("-", string.Empty);
 			}
 
 			return hexString;
@@ -445,7 +442,7 @@ namespace DigitalZenWorks.Common.Utils
 			{
 				hexString = BitConverter.ToString(Encoding.Default.
 				GetBytes(text)).ToLower(CultureInfo.CurrentCulture).
-				Replace("-", "");
+				Replace("-", string.Empty);
 			}
 
 			return hexString;
