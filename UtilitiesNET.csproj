@@ -6,43 +6,50 @@
 		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<Platforms>AnyCPU;x86</Platforms>
+		<RunCodeAnalysis>false</RunCodeAnalysis>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>UtilitiesNET.pfx</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
-    <PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.1" />
-    <PackageReference Include="nunit" Version="3.10.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="stylecop.json" />
+		<PackageReference Include="Common.Logging" Version="3.4.1" />
+		<PackageReference Include="Common.Logging.Core" Version="3.4.1" />
+		<PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+		<PackageReference Include="nunit" Version="3.11.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
+		<Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
+	</ItemGroup>
 
+  <Target Name="IgnoreRunCodeAnalysis" Condition=" '$(RunCodeAnalysis)' == 'true' " BeforeTargets="RunCodeAnalysis">
+    <Message Importance="normal" Text="Set RunCodeAnalysisOnThisProject to false" />
+    <Message Importance="normal" Text="Platform is $(Platform)'" />
+    <Message Importance="normal" Text="OutputPath is $(OutputPath)'" />
+    <PropertyGroup>
+      <RunCodeAnalysisOnThisProject>false</RunCodeAnalysisOnThisProject>
+    </PropertyGroup>
+  </Target>
 </Project>
