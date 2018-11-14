@@ -41,7 +41,7 @@ namespace DigitalZenWorks.Common.Utils
 		public static void GetEmbeddedResource()
 		{
 			bool result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utils.test.xml", "test.xml");
+				"DigitalZenWorks.Common.Utilities.test.xml", "test.xml");
 			Assert.True(result);
 
 			result = File.Exists("test.xml");
@@ -52,14 +52,14 @@ namespace DigitalZenWorks.Common.Utils
 		public static void ObjectFromXml()
 		{
 			bool result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utils.test.xsd", "test.xsd");
+				"DigitalZenWorks.Common.Utilities.test.xsd", "test.xsd");
 			Assert.True(result);
 
 			result = File.Exists("test.xsd");
 			Assert.True(result);
 
 			result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utils.test.xml", "test.xml");
+				"DigitalZenWorks.Common.Utilities.test.xml", "test.xml");
 			Assert.True(result);
 
 			result = File.Exists("test.xml");

@@ -30,9 +30,15 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="test.xml" />
+	  <None Remove="test.xsd" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
+		<EmbeddedResource Include="test.xml" />
+		<EmbeddedResource Include="test.xsd" />
 		<PackageReference Include="Common.Logging" Version="3.4.1" />
 		<PackageReference Include="Common.Logging.Core" Version="3.4.1" />
 		<PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
