@@ -15,12 +15,13 @@ namespace DigitalZenWorks.Common.Utils
 		private static readonly ILog log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private static readonly ResourceManager stringTable = new
-			ResourceManager("DigitalZenWorks.Common.Utils.Resources",
+			ResourceManager(
+			"DigitalZenWorks.Common.Utils.Resources",
 			Assembly.GetExecutingAssembly());
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-		public static object LoadWithValidation(string schemaFile,
-			string xmlFile, Type type)
+		public static object LoadWithValidation(
+			string schemaFile, string xmlFile, Type type)
 		{
 			object obj = null;
 
