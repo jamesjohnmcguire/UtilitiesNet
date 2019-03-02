@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace DigitalZenWorks.Common.Utils
@@ -227,7 +228,10 @@ namespace DigitalZenWorks.Common.Utils
 						if (!ignoreNonBase64Chars)
 						{
 							string message = string.Format(
-								"Invalid base64 char '{0}'.", b.ToString());
+								CultureInfo.InvariantCulture,
+								"Invalid base64 char '{0}'.",
+								b.ToString());
+
 							throw new FormatException(message);
 						}
 
