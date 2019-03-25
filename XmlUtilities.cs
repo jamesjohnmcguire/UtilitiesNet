@@ -1,4 +1,11 @@
-﻿using Common.Logging;
+﻿/////////////////////////////////////////////////////////////////////////////
+// $Id$
+// <copyright file="XmlUtilities.cs" company="James John McGuire">
+// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// </copyright>
+/////////////////////////////////////////////////////////////////////////////
+
+using Common.Logging;
 using System;
 using System.Globalization;
 using System.IO;
@@ -12,9 +19,10 @@ namespace DigitalZenWorks.Common.Utils
 {
 	public static class XmlUtilities
 	{
-		private static readonly ILog log = LogManager.GetLogger
-			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private static readonly ResourceManager stringTable = new
+		private static readonly ILog Log = LogManager.GetLogger(
+			MethodBase.GetCurrentMethod().DeclaringType);
+
+		private static readonly ResourceManager StringTable = new
 			ResourceManager(
 			"DigitalZenWorks.Common.Utils.Resources",
 			Assembly.GetExecutingAssembly());
@@ -56,8 +64,10 @@ namespace DigitalZenWorks.Common.Utils
 				exception is UriFormatException ||
 				exception is XmlSchemaException)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m(
-					stringTable.GetString("EXCEPTION") + exception));
+				Log.Error(CultureInfo.InvariantCulture, m => m(
+					StringTable.GetString(
+						"EXCEPTION",
+						CultureInfo.InvariantCulture) + exception));
 			}
 			catch
 			{

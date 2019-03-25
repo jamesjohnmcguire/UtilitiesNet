@@ -1,9 +1,10 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // $Id$
-//
-// Copyright © 2011-2016 by James John McGuire
-// All rights reserved.
+// <copyright file="StringExtender.cs" company="James John McGuire">
+// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// </copyright>
 /////////////////////////////////////////////////////////////////////////////
+
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;

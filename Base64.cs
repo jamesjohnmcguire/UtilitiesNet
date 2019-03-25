@@ -1,5 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/////////////////////////////////////////////////////////////////////////////
+// $Id$
+// <copyright file="Base64.cs" company="James John McGuire">
+// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// </copyright>
+/////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Globalization;
 using System.Text;
 
@@ -12,23 +18,24 @@ namespace DigitalZenWorks.Common.Utils
 	{
 		#region BASE64_DECODE_TABLE
 
-		private readonly static short[] BASE64_DECODE_TABLE = new short[]{
-			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
-			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //10 -   19
-			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //20 -   29
-			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //30 -   39
-			-1,-1,-1,62,-1,-1,-1,63,52,53,  //40 -   49
-			54,55,56,57,58,59,60,61,-1,-1,  //50 -   59
-			-1,-1,-1,-1,-1, 0, 1, 2, 3, 4,  //60 -   69
-			5, 6, 7, 8, 9,10,11,12,13,14,   //70 -   79
-			15,16,17,18,19,20,21,22,23,24,  //80 -   89
-			25,-1,-1,-1,-1,-1,-1,26,27,28,  //90 -   99
-			29,30,31,32,33,34,35,36,37,38,  //100 - 109
-			39,40,41,42,43,44,45,46,47,48,  //110 - 119
-			49,50,51,-1,-1,-1,-1,-1         //120 - 127
+		private static readonly short[] Base64DecodeTable = new short[]
+		{
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0 -    9
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10 -   19
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20 -   29
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 30 -   39
+			-1, -1, -1, 62, -1, -1, -1, 63, 52, 53, // 40 -   49
+			54, 55, 56, 57, 58, 59, 60, 61, -1, -1, // 50 -   59
+			-1, -1, -1, -1, -1, 0, 1, 2, 3, 4,      // 60 -   69
+			5, 6, 7, 8, 9, 10, 11, 12, 13, 14,      // 70 -   79
+			15, 16, 17, 18, 19, 20, 21, 22, 23, 24, // 80 -   89
+			25, -1, -1, -1, -1, -1, -1, 26, 27, 28, // 90 -   99
+			29, 30, 31, 32, 33, 34, 35, 36, 37, 38, // 100 - 109
+			39, 40, 41, 42, 43, 44, 45, 46, 47, 48, // 110 - 119
+			49, 50, 51, -1, -1, -1, -1, -1 // 120 - 127
 		};
 
-		#endregion
+		#endregion BASE64_DECODE_TABLE
 
 		#region method Encode
 
@@ -41,7 +48,7 @@ namespace DigitalZenWorks.Common.Utils
 			throw new NotImplementedException();
 		}
 
-		#endregion
+		#endregion method Encode
 
 		#region method Decode
 
@@ -56,7 +63,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <b>value</b> is null reference.</exception>
 		/// <exception cref="FormatException">Is raised when <b>value</b>
 		/// contains invalid base64 data.</exception>
-		public static byte[] Decode(string value,bool ignoreNonBase64Chars)
+		public static byte[] Decode(string value, bool ignoreNonBase64Chars)
 		{
 			if (value == null)
 			{
@@ -64,11 +71,11 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			byte[] encBuffer = Encoding.ASCII.GetBytes(value);
-			byte[] buffer    = new byte[encBuffer.Length];
+			byte[] buffer = new byte[encBuffer.Length];
 
-			int decodedCount = Decode(encBuffer,0,encBuffer.Length,buffer,0,ignoreNonBase64Chars);
+			int decodedCount = Decode(encBuffer, 0, encBuffer.Length, buffer, 0, ignoreNonBase64Chars);
 			byte[] retVal = new byte[decodedCount];
-			Array.Copy(buffer,retVal,decodedCount);
+			Array.Copy(buffer, retVal, decodedCount);
 
 			return retVal;
 		}
@@ -83,7 +90,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <returns>Returns decoded data.</returns>
 		/// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
 		/// <exception cref="FormatException">Is raised when <b>value</b> contains invalid base64 data.</exception>
-		public static byte[] Decode(byte[] data,int offset,int count,bool ignoreNonBase64Chars)
+		public static byte[] Decode(byte[] data, int offset, int count, bool ignoreNonBase64Chars)
 		{
 			if (data == null)
 			{
@@ -92,9 +99,9 @@ namespace DigitalZenWorks.Common.Utils
 
 			byte[] buffer = new byte[data.Length];
 
-			int decodedCount = Decode(data,offset,count,buffer,0,ignoreNonBase64Chars);
+			int decodedCount = Decode(data, offset, count, buffer, 0, ignoreNonBase64Chars);
 			byte[] retVal = new byte[decodedCount];
-			Array.Copy(buffer,retVal,decodedCount);
+			Array.Copy(buffer, retVal, decodedCount);
 
 			return retVal;
 		}
@@ -112,7 +119,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <exception cref="ArgumentNullException">Is raised when <b>encodeBuffer</b> or <b>encodeBuffer</b> is null reference.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
 		/// <exception cref="FormatException">Is raised when <b>encodeBuffer</b> contains invalid base64 data.</exception>
-		public static int Decode(byte[] encodeBuffer,int encodeOffset,int encodeCount,byte[] buffer,int offset,bool ignoreNonBase64Chars)
+		public static int Decode(byte[] encodeBuffer, int encodeOffset, int encodeCount, byte[] buffer, int offset, bool ignoreNonBase64Chars)
 		{
 			if (encodeBuffer == null)
 			{
@@ -145,11 +152,11 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			/* RFC 4648.
-			
-				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+
+				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block
 				are converted to 3 8-bit bytes.
-				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-							
+				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =.
+
 				Value Encoding  Value Encoding  Value Encoding  Value Encoding
 					0 A            17 R            34 i            51 z
 					1 B            18 S            35 j            52 0
@@ -168,16 +175,16 @@ namespace DigitalZenWorks.Common.Utils
 					14 O           31 f            48 w         (pad) =
 					15 P           32 g            49 x
 					16 Q           33 h            50 y
-					
-				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes				
+
+				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes
 					// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
 					// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
 					// |    8-bit         |    8-bit        |    8-bit         |
 			*/
 
-			int    decodeOffset  = encodeOffset;
-			int    decodedOffset = 0;
-			byte[] base64Block   = new byte[4];
+			int decodeOffset = encodeOffset;
+			int decodedOffset = 0;
+			byte[] base64Block = new byte[4];
 
 			// Decode while we have data.
 			while ((decodeOffset - encodeOffset) < encodeCount)
@@ -195,16 +202,17 @@ namespace DigitalZenWorks.Common.Utils
 						}
 
 						// Incomplete 4-byte base64 data block.
-						else{
+						else
+						{
 							throw new FormatException("Invalid incomplete base64 4-char block");
 						}
 					}
 
 					// Read byte.
-					short b = encodeBuffer[decodeOffset++];
-			 
+					short currentByte = encodeBuffer[decodeOffset++];
+
 					// Pad char.
-					if (b == '=')
+					if (currentByte == '=')
 					{
 						// Padding may appear only in last two chars of 4-char block.
 						// ab==
@@ -213,16 +221,16 @@ namespace DigitalZenWorks.Common.Utils
 						{
 							throw new FormatException("Invalid base64 padding.");
 						}
-																		
+
 						// Skip next padding char.
 						if (offsetInBlock == 2)
 						{
 							decodeOffset++;
 						}
-						
+
 						break;
 					}
-					else if (b > 127 || BASE64_DECODE_TABLE[b] == -1)
+					else if (currentByte > 127 || Base64DecodeTable[currentByte] == -1)
 					{
 						// Non-base64 char.
 						if (!ignoreNonBase64Chars)
@@ -230,40 +238,43 @@ namespace DigitalZenWorks.Common.Utils
 							string message = string.Format(
 								CultureInfo.InvariantCulture,
 								"Invalid base64 char '{0}'.",
-								b.ToString());
+								currentByte.ToString(
+									CultureInfo.InvariantCulture));
 
 							throw new FormatException(message);
 						}
-
-						// Ignore that char.
-						//else{
 					}
-					// Base64 char.
-					else{
-						base64Block[offsetInBlock++] = (byte)BASE64_DECODE_TABLE[b];
+					else
+					{
+						base64Block[offsetInBlock++] =
+							(byte)Base64DecodeTable[currentByte];
 					}
 				}
 
 				// Decode base64 block.
 				if (offsetInBlock > 1)
 				{
-					buffer[decodedOffset++] = (byte)((base64Block[0] << 2) | (base64Block[1] >> 4));
+					buffer[decodedOffset++] =
+						(byte)((base64Block[0] << 2) | (base64Block[1] >> 4));
 				}
 
 				if (offsetInBlock > 2)
 				{
-					buffer[decodedOffset++] = (byte)(((base64Block[1] & 0xF) << 4) | (base64Block[2] >> 2));
+					buffer[decodedOffset++] =
+						(byte)(((base64Block[1] & 0xF) << 4) |
+						(base64Block[2] >> 2));
 				}
 
 				if (offsetInBlock > 3)
 				{
-					buffer[decodedOffset++] = (byte)(((base64Block[2] & 0x3) << 6) | base64Block[3]);
+					buffer[decodedOffset++] =
+						(byte)(((base64Block[2] & 0x3) << 6) | base64Block[3]);
 				}
 			}
 
 			return decodedOffset;
 		}
 
-		#endregion
+		#endregion method Decode
 	}
 }

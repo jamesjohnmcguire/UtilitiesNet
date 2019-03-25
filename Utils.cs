@@ -1,8 +1,8 @@
-/////////////////////////////////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////////////////////////////////
 // $Id$
-//
-// Copyright � 2006-2016 by James John McGuire
-// All rights reserved.
+// <copyright file="Utils.cs" company="James John McGuire">
+// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
 using Common.Logging;
@@ -18,7 +18,7 @@ namespace DigitalZenWorks.Common.Utils
 {
 	public static class General
 	{
-		private static readonly ILog log = LogManager.GetLogger
+		private static readonly ILog Log = LogManager.GetLogger
 			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public static string CallingMethod()
@@ -56,7 +56,7 @@ namespace DigitalZenWorks.Common.Utils
 			// Ensure we have a valid file name
 			if ((null != parameters) && (parameters.Length < 1))
 			{
-				//Console.WriteLine("usage: ");
+				// Console.WriteLine("usage: ");
 			}
 			else
 			{
@@ -137,6 +137,7 @@ namespace DigitalZenWorks.Common.Utils
 			{
 				data = GetHexPair(hexData, retVal);
 			}
+
 			return data;
 		}
 
@@ -228,7 +229,7 @@ namespace DigitalZenWorks.Common.Utils
 			}
 			catch (Exception exception)
 			{
-				log.Error(CultureInfo.InvariantCulture, m =>
+				Log.Error(CultureInfo.InvariantCulture, m =>
 					m("Error: {0}", exception));
 			}
 
@@ -261,10 +262,10 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			bool valid = false;
 
-			//validEmailRegEx	= "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])" +
+			// validEmailRegEx = "/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])" +
 			// "*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/";
 
-			//string validEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])" +
+			// string validEmailRegEx = @"/^([a-z0-9])(([-a-z0-9._])" +
 			// "*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))" +
 			// "+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i";
 			string validEmailRegEx =
@@ -292,7 +293,6 @@ namespace DigitalZenWorks.Common.Utils
 		/// <param name="data">Data which to encode.</param>
 		/// <returns>Returns decoded data.</returns>
 		/// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static byte[] QuotedPrintableDecode(byte[] data)
 		{
 			byte[] returnData = null;
@@ -302,8 +302,8 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			/* RFC 2045 6.7. Quoted-Printable Content-Transfer-Encoding
-			 
-				(1)	(General 8bit representation) Any octet, except a CR or
+
+				(1) (General 8bit representation) Any octet, except a CR or
 					LF that is part of a CRLF line break of the canonical
 					(standard) form of the data being encoded, may be
 					represented by an "=" followed by a two digit
@@ -317,7 +317,7 @@ namespace DigitalZenWorks.Common.Utils
 					MAY be represented as the US-ASCII characters which
 					correspond to those octets (EXCLAMATION POINT through
 					LESS THAN, and GREATER THAN through TILDE, respectively).
-					
+
 				(3) (White Space) Octets with values of 9 and 32 MAY be
 					represented as US-ASCII TAB (HT) and SPACE characters,
 					respectively, but MUST NOT be so represented at the end
@@ -338,9 +338,9 @@ namespace DigitalZenWorks.Common.Utils
 					body, any trailing white space on a line must be
 					deleted, as it will necessarily have been added by
 					intermediate transport agents.
-					
+
 				(4) (Line Breaks) A line break in a text body, represented
-				    as a CRLF sequence in the text canonical form, must be
+					as a CRLF sequence in the text canonical form, must be
 					represented by a (RFC 822) line break, which is also a
 					CRLF sequence, in the Quoted-Printable encoding.  Since
 					the canonical representation of media types other than
@@ -377,9 +377,9 @@ namespace DigitalZenWorks.Common.Utils
 								if (buffer[0] == '\r' && buffer[1] == '\n')
 								{
 								}
-								// This must be encoded 8-bit byte
 								else
 								{
+									// This must be encoded 8-bit byte
 									try
 									{
 										destination.Write(FromHex(buffer), 0, 1);
@@ -392,15 +392,15 @@ namespace DigitalZenWorks.Common.Utils
 									}
 								}
 							}
-							// Illegal =, just leave as it is
 							else
 							{
+								// Illegal =, just leave as it is
 								destination.Write(buffer, 0, bufferCount);
 							}
 						}
-						// Just write back all other bytes
 						else
 						{
+							// Just write back all other bytes
 							destination.WriteByte((byte)b);
 						}
 
@@ -408,8 +408,10 @@ namespace DigitalZenWorks.Common.Utils
 						b = sourceStream.ReadByte();
 					}
 				}
+
 				returnData = destination.ToArray();
 			}
+
 			return returnData;
 		}
 
@@ -450,84 +452,86 @@ namespace DigitalZenWorks.Common.Utils
 
 		private static byte[] GetHexPair(byte[] hexData, MemoryStream retVal)
 		{
-				// Loop hex value pairs
-				for (int i = 0; i < hexData.Length; i += 2)
-				{
-					byte[] hexPairInDecimal = new byte[2];
-					// We need to convert hex char to decimal number, for example F = 15
-					for (int h = 0; h < 2; h++)
-					{
-						if (((char)hexData[i + h]) == '0')
-						{
-							hexPairInDecimal[h] = 0;
-						}
-						else if (((char)hexData[i + h]) == '1')
-						{
-							hexPairInDecimal[h] = 1;
-						}
-						else if (((char)hexData[i + h]) == '2')
-						{
-							hexPairInDecimal[h] = 2;
-						}
-						else if (((char)hexData[i + h]) == '3')
-						{
-							hexPairInDecimal[h] = 3;
-						}
-						else if (((char)hexData[i + h]) == '4')
-						{
-							hexPairInDecimal[h] = 4;
-						}
-						else if (((char)hexData[i + h]) == '5')
-						{
-							hexPairInDecimal[h] = 5;
-						}
-						else if (((char)hexData[i + h]) == '6')
-						{
-							hexPairInDecimal[h] = 6;
-						}
-						else if (((char)hexData[i + h]) == '7')
-						{
-							hexPairInDecimal[h] = 7;
-						}
-						else if (((char)hexData[i + h]) == '8')
-						{
-							hexPairInDecimal[h] = 8;
-						}
-						else if (((char)hexData[i + h]) == '9')
-						{
-							hexPairInDecimal[h] = 9;
-						}
-						else if (((char)hexData[i + h]) == 'A' || ((char)hexData[i + h]) == 'a')
-						{
-							hexPairInDecimal[h] = 10;
-						}
-						else if (((char)hexData[i + h]) == 'B' || ((char)hexData[i + h]) == 'b')
-						{
-							hexPairInDecimal[h] = 11;
-						}
-						else if (((char)hexData[i + h]) == 'C' || ((char)hexData[i + h]) == 'c')
-						{
-							hexPairInDecimal[h] = 12;
-						}
-						else if (((char)hexData[i + h]) == 'D' || ((char)hexData[i + h]) == 'd')
-						{
-							hexPairInDecimal[h] = 13;
-						}
-						else if (((char)hexData[i + h]) == 'E' || ((char)hexData[i + h]) == 'e')
-						{
-							hexPairInDecimal[h] = 14;
-						}
-						else if (((char)hexData[i + h]) == 'F' || ((char)hexData[i + h]) == 'f')
-						{
-							hexPairInDecimal[h] = 15;
-						}
-					}
+			// Loop hex value pairs
+			for (int i = 0; i < hexData.Length; i += 2)
+			{
+				byte[] hexPairInDecimal = new byte[2];
 
-					// Join hex 4 bit(left hex char) + 4bit(right hex char) in bytes 8 it
-					retVal.WriteByte((byte)((hexPairInDecimal[0] << 4) | hexPairInDecimal[1]));
+				// We need to convert hex char to decimal number,
+				// for example F = 15
+				for (int h = 0; h < 2; h++)
+				{
+					if (((char)hexData[i + h]) == '0')
+					{
+						hexPairInDecimal[h] = 0;
+					}
+					else if (((char)hexData[i + h]) == '1')
+					{
+						hexPairInDecimal[h] = 1;
+					}
+					else if (((char)hexData[i + h]) == '2')
+					{
+						hexPairInDecimal[h] = 2;
+					}
+					else if (((char)hexData[i + h]) == '3')
+					{
+						hexPairInDecimal[h] = 3;
+					}
+					else if (((char)hexData[i + h]) == '4')
+					{
+						hexPairInDecimal[h] = 4;
+					}
+					else if (((char)hexData[i + h]) == '5')
+					{
+						hexPairInDecimal[h] = 5;
+					}
+					else if (((char)hexData[i + h]) == '6')
+					{
+						hexPairInDecimal[h] = 6;
+					}
+					else if (((char)hexData[i + h]) == '7')
+					{
+						hexPairInDecimal[h] = 7;
+					}
+					else if (((char)hexData[i + h]) == '8')
+					{
+						hexPairInDecimal[h] = 8;
+					}
+					else if (((char)hexData[i + h]) == '9')
+					{
+						hexPairInDecimal[h] = 9;
+					}
+					else if (((char)hexData[i + h]) == 'A' || ((char)hexData[i + h]) == 'a')
+					{
+						hexPairInDecimal[h] = 10;
+					}
+					else if (((char)hexData[i + h]) == 'B' || ((char)hexData[i + h]) == 'b')
+					{
+						hexPairInDecimal[h] = 11;
+					}
+					else if (((char)hexData[i + h]) == 'C' || ((char)hexData[i + h]) == 'c')
+					{
+						hexPairInDecimal[h] = 12;
+					}
+					else if (((char)hexData[i + h]) == 'D' || ((char)hexData[i + h]) == 'd')
+					{
+						hexPairInDecimal[h] = 13;
+					}
+					else if (((char)hexData[i + h]) == 'E' || ((char)hexData[i + h]) == 'e')
+					{
+						hexPairInDecimal[h] = 14;
+					}
+					else if (((char)hexData[i + h]) == 'F' || ((char)hexData[i + h]) == 'f')
+					{
+						hexPairInDecimal[h] = 15;
+					}
 				}
 
-				return retVal.ToArray();
+				// Join hex 4 bit(left hex char) + 4bit(right hex char) in bytes 8 it
+				retVal.WriteByte((byte)((hexPairInDecimal[0] << 4) | hexPairInDecimal[1]));
+			}
+
+			return retVal.ToArray();
 		}
 	} // End Class
 } // End Namespace

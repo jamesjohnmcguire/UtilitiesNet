@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // $Id$
 // <copyright file="FileUtils.cs" company="James John McGuire">
-// Copyright © 2006 - 2018 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
@@ -27,10 +27,10 @@ namespace DigitalZenWorks.Common.Utils
 	/////////////////////////////////////////////////////////////////////////
 	public static class FileUtils
 	{
-		private static readonly ILog log = LogManager.GetLogger
-			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(
+			MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static readonly ResourceManager stringTable = new
+		private static readonly ResourceManager StringTable = new
 			ResourceManager(
 				"DigitalZenWorks.Common.Utils.Resources",
 				Assembly.GetExecutingAssembly());
@@ -51,7 +51,7 @@ namespace DigitalZenWorks.Common.Utils
 
 				if (null == templateObjectStream)
 				{
-					log.Error(CultureInfo.InvariantCulture, m => m(
+					Log.Error(CultureInfo.InvariantCulture, m => m(
 						"Failed to manifest resource stream"));
 				}
 				else
@@ -80,8 +80,10 @@ namespace DigitalZenWorks.Common.Utils
 				exception is DirectoryNotFoundException ||
 				exception is PathTooLongException)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m(
-					stringTable.GetString("EXCEPTION") + exception));
+				Log.Error(CultureInfo.InvariantCulture, m => m(
+					StringTable.GetString(
+						"EXCEPTION",
+						CultureInfo.InstalledUICulture) + exception));
 			}
 			catch
 			{
@@ -193,7 +195,7 @@ namespace DigitalZenWorks.Common.Utils
 			}
 			catch (Exception exception)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m(
+				Log.Error(CultureInfo.InvariantCulture, m => m(
 					exception.ToString()));
 			}
 			finally
@@ -243,7 +245,7 @@ namespace DigitalZenWorks.Common.Utils
 							{
 								if (!File.Exists("DevClean.active"))
 								{
-									log.Info(
+									Log.Info(
 										CultureInfo.InvariantCulture,
 										m => m("Deleting: " + path));
 									Directory.Delete(d, true);
@@ -259,7 +261,7 @@ namespace DigitalZenWorks.Common.Utils
 			}
 			catch (System.Exception exception)
 			{
-				log.Error(CultureInfo.InvariantCulture, m => m(
+				Log.Error(CultureInfo.InvariantCulture, m => m(
 					exception.ToString()));
 			}
 		}
@@ -280,14 +282,15 @@ namespace DigitalZenWorks.Common.Utils
 
 					foreach (string f in Directory.GetFiles(d, "*.php"))
 					{
-						log.Info(CultureInfo.InvariantCulture, m => m(
+						Log.Info(CultureInfo.InvariantCulture, m => m(
 							"Checking File: " + f));
 						UpdateFileLineEndingUnixToWindows(f);
 					}
 				}
+
 				foreach (string f in Directory.GetFiles(initialPath, "*.php"))
 				{
-					log.Info(CultureInfo.InvariantCulture, m => m(
+					Log.Info(CultureInfo.InvariantCulture, m => m(
 						"Checking Directory: " + f));
 					UpdateFileLineEndingUnixToWindows(f);
 				}
@@ -329,7 +332,7 @@ namespace DigitalZenWorks.Common.Utils
 
 							sw.Write(contents);
 
-							//sw.Close();
+							// sw.Close();
 						}
 					}
 				}
@@ -366,7 +369,7 @@ namespace DigitalZenWorks.Common.Utils
 						{
 							writer.Write(newContents);
 
-							//sw.Close();
+							// sw.Close();
 						}
 					}
 				}
@@ -417,7 +420,7 @@ namespace DigitalZenWorks.Common.Utils
 				}
 				catch (Exception exception)
 				{
-					log.Error(
+					Log.Error(
 						CultureInfo.InvariantCulture,
 						m => m(exception.ToString()));
 
@@ -429,12 +432,14 @@ namespace DigitalZenWorks.Common.Utils
 					{
 						streamWriter.Close();
 					}
+
 					if (fileStream != null)
 					{
 						fileStream.Close();
 					}
 				}
 			}
+
 			return successCode;
 		}
 
@@ -457,8 +462,8 @@ namespace DigitalZenWorks.Common.Utils
 		/// <summary>
 		/// Touch
 		/// </summary>
-		/// <param name="path"></param>
-		/// <param name="time"></param>
+		/// <param name="path">The path of the file to touch.</param>
+		/// <param name="time">The time to set the file time to.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void Touch(string path, string time)
 		{
@@ -492,6 +497,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <summary>
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
+		/// <param name="filePath">The path of the file to update.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void UpdateFileMacToWindows(string filePath)
 		{
@@ -502,6 +508,7 @@ namespace DigitalZenWorks.Common.Utils
 		/// <summary>
 		/// Update the given file so that all lines end with CRLF
 		/// </summary>
+		/// <param name="filePath">The path of the file to update.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void UpdateFileLineEndingUnixToWindows(string filePath)
 		{
