@@ -418,7 +418,7 @@ namespace DigitalZenWorks.Common.Utils
 					fileStream = new FileStream(
 						filePathName, FileMode.Create, FileAccess.ReadWrite);
 
-					streamWriter = new StreamWriter(fileStream);
+					streamWriter = new StreamWriter(fileStream, encoding);
 					streamWriter.Write(fileContents);
 
 					successCode = true;
