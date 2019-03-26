@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Security;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utils
@@ -380,21 +381,31 @@ namespace DigitalZenWorks.Common.Utils
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
-		/// <param name="fileContents"></param>
-		/// <param name="filePathName"></param>
-		/// <param name="insureWindowsLineEndings"></param>
-		/// <returns></returns>
+		/// <param name="fileContents">The contents of the file.</param>
+		/// <param name="filePathName">The full path of the file.</param>
+		/// <returns>A value indicating success.</returns>
+		/////////////////////////////////////////////////////////////////////
+		public static bool SaveFile(
+			string fileContents, string filePathName)
+		{
+			return SaveFile(fileContents, filePathName, Encoding.Default);
+		}
+
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Saves the file.
+		/// </summary>
+		/// <param name="fileContents">The contents of the file.</param>
+		/// <param name="filePathName">The full path of the file.</param>
+		/// <param name="encoding">The encoding to use to save
+		/// the text.</param>
+		/// <returns>A value indicating success.</returns>
 		/////////////////////////////////////////////////////////////////////
 		[System.Diagnostics.CodeAnalysis.SuppressMessage(
-			"Microsoft.Design",
-			"CA1026:DefaultParametersShouldNotBeUsed"),
-		System.Diagnostics.CodeAnalysis.SuppressMessage(
 			"Microsoft.Usage",
 			"CA2202:Do not dispose objects multiple times")]
 		public static bool SaveFile(
-			string fileContents,
-			string filePathName,
-			bool insureWindowsLineEndings = false)
+			string fileContents, string filePathName, Encoding encoding)
 		{
 			bool successCode = false;
 
@@ -406,12 +417,6 @@ namespace DigitalZenWorks.Common.Utils
 				{
 					fileStream = new FileStream(
 						filePathName, FileMode.Create, FileAccess.ReadWrite);
-
-					if (true == insureWindowsLineEndings)
-					{
-						fileContents = fileContents.Replace(
-							"\n", Environment.NewLine);
-					}
 
 					streamWriter = new StreamWriter(fileStream);
 					streamWriter.Write(fileContents);
@@ -447,15 +452,32 @@ namespace DigitalZenWorks.Common.Utils
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
-		/// <param name="fileContents"></param>
-		/// <param name="filePathName"></param>
-		/// <returns></returns>
+		/// <param name="fileContents">The contents of the file.</param>
+		/// <param name="filePathName">The full path of the file.</param>
+		/// <returns>A value indicating success.</returns>
+		/////////////////////////////////////////////////////////////////////
+		public static bool SaveFileUtf8Bom(
+			string fileContents, string filePathName)
+		{
+			UTF8Encoding utf8EmitBom = new UTF8Encoding(true);
+			return SaveFile(fileContents, filePathName, utf8EmitBom);
+		}
+
+		/////////////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Saves the file.
+		/// </summary>
+		/// <param name="fileContents">The contents of the file.</param>
+		/// <param name="filePathName">The full path of the file.</param>
+		/// <returns>A value indicating success.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFileWin(
-			string fileContents,
-			string filePathName)
+			string fileContents, string filePathName)
 		{
-			return SaveFile(fileContents, filePathName, true);
+			fileContents =
+				Regex.Replace(fileContents, @"\r\n|\n\r|\n|\r", "\r\n");
+
+			return SaveFile(fileContents, filePathName);
 		}
 
 		/////////////////////////////////////////////////////////////////////
