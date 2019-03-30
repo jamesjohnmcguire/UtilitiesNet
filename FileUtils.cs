@@ -101,6 +101,28 @@ namespace DigitalZenWorks.Common.Utils
 			return success;
 		}
 
+		public static void Flatten(string directory)
+		{
+			try
+			{
+				foreach (string subDirectory in Directory.GetDirectories(directory))
+				{
+					Flatten(subDirectory);
+					Directory.Delete(directory);
+				}
+
+				foreach (string fileName in Directory.GetFiles(directory))
+				{
+					string newFileName = fileName.Replace("\\", "_");
+					File.Move(fileName, newFileName);
+				}
+			}
+			catch (System.Exception excpt)
+			{
+				Console.WriteLine(excpt.Message);
+			}
+		}
+
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Compares two files to see if they are they same
