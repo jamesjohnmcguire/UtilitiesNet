@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 using Common.Logging;
+using DigitalZenWorks.Common.Utils.Extensions;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -64,6 +65,83 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return isValid;
+		}
+
+		/// <summary>
+		/// Gets the name in camel case.
+		/// </summary>
+		/// <param name="knrName">A string in knr format.</param>
+		/// <returns>A name in camel case.</returns>
+		public static string ConvertToCamelCaseFromKnr(string knrName)
+		{
+			string humanFriendlyName = string.Empty;
+
+			// split at underscores
+			string[] parts = knrName.Split(
+				new char[] { '_' },
+				StringSplitOptions.RemoveEmptyEntries);
+
+			// remove underscores
+			// make parts proper case
+			bool first = true;
+			for (int i = 0; i < parts.Length; i++)
+			{
+				if (first == true)
+				{
+					first = false;
+					humanFriendlyName = parts[i].ToProperCase();
+				}
+				else
+				{
+					// if the last part is 'id', just skip
+					if ((i < (parts[i].Length - 1)) || (!parts[i].Equals(
+						"id", StringComparison.InvariantCulture)))
+					{
+						if (parts[i].ToUpper(CultureInfo.InvariantCulture) ==
+							parts[i])
+						{
+							humanFriendlyName += " " + parts[i];
+						}
+						else
+						{
+							humanFriendlyName += " " + parts[i].ToProperCase();
+						}
+					}
+				}
+			}
+
+			return humanFriendlyName;
+		}
+
+		/// <summary>
+		/// Gets the name in pascal case.
+		/// </summary>
+		/// <param name="knrName">The name of variable in knr form.</param>
+		/// <returns>A variable name in Pascal case form.</returns>
+		public static string ConvertToPascalCaseNameFromKnr(string knrName)
+		{
+			string pascalCaseName = string.Empty;
+
+			// split at underscores
+			string[] parts = knrName.Split(
+				new char[] { '_' },
+				StringSplitOptions.RemoveEmptyEntries);
+
+			// remove underscores
+			// make parts proper case
+			foreach (string part in parts)
+			{
+				if (part.ToUpper(CultureInfo.InvariantCulture) == part)
+				{
+					pascalCaseName += part;
+				}
+				else
+				{
+					pascalCaseName += part.ToProperCase();
+				}
+			}
+
+			return pascalCaseName;
 		}
 
 		public static DateTime DateFromString(string dateText)
