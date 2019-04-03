@@ -318,9 +318,17 @@ namespace DigitalZenWorks.Common.Utils
 					UpdateFileLineEndingUnixToWindows(f);
 				}
 			}
-			catch (System.Exception excpt)
+			catch (Exception exception) when (exception is ArgumentException ||
+				exception is ArgumentNullException ||
+				exception is ArgumentOutOfRangeException)
 			{
-				Console.WriteLine(excpt.Message);
+				Log.Error(exception.ToString());
+			}
+			catch (Exception exception)
+			{
+				Log.Error(exception.ToString());
+
+				throw;
 			}
 		}
 
@@ -431,7 +439,7 @@ namespace DigitalZenWorks.Common.Utils
 		{
 			bool successCode = false;
 
-			if (!string.IsNullOrWhiteSpace(fileContents))
+			if (!string.IsNullOrWhiteSpace(filePathName))
 			{
 				FileStream fileStream = null;
 				StreamWriter streamWriter = null;

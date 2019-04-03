@@ -17,10 +17,10 @@ using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utils
 {
-	public static class General
+	public static class GeneralUtilities
 	{
-		private static readonly ILog Log = LogManager.GetLogger
-			(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(
+			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public static string CallingMethod()
 		{
