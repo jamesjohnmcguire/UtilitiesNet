@@ -11,7 +11,7 @@
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>UtilitiesNET.pfx</AssemblyOriginatorKeyFile>
-		<Version>1.1.0</Version>
+		<Version>1.2.0</Version>
 	</PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
