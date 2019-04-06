@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 using Common.Logging;
-using DigitalZenWorks.Common.Utils.Extensions;
+using DigitalZenWorks.Common.Utilities.Extensions;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace DigitalZenWorks.Common.Utils
+namespace DigitalZenWorks.Common.Utilities
 {
 	public static class GeneralUtilities
 	{
@@ -155,6 +155,38 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return date;
+		}
+
+		public static int FindInByteArray(byte[] haystack, byte[] needle)
+		{
+			int foundPosition = -1;
+			int mayHaveFoundIt = -1;
+			int miniCounter = 0;
+
+			for (int counter = 0; counter < haystack.Length; counter++)
+			{
+				if (haystack[counter] == needle[miniCounter])
+				{
+					if (miniCounter == 0)
+					{
+						mayHaveFoundIt = counter;
+					}
+
+					if (miniCounter == needle.Length - 1)
+					{
+						return mayHaveFoundIt;
+					}
+
+					miniCounter++;
+				}
+				else
+				{
+					mayHaveFoundIt = -1;
+					miniCounter = 0;
+				}
+			}
+
+			return foundPosition;
 		}
 
 		/// <summary>
@@ -491,6 +523,54 @@ namespace DigitalZenWorks.Common.Utils
 			}
 
 			return returnData;
+		}
+
+		public static byte[] ReplaceInByteArray(
+			byte[] originalArray, byte[] find, byte[] replace)
+		{
+			byte[] returnValue = originalArray;
+
+			if (System.Array.BinarySearch(returnValue, find) > -1)
+			{
+				byte[] newReturnValue;
+				int foundPosition;
+				int currentPosition;
+				int currentOriginalPosition;
+				while (FindInByteArray(returnValue, find) > -1)
+				{
+					newReturnValue = new byte[returnValue.Length + replace.Length - find.Length];
+					foundPosition = FindInByteArray(returnValue, find);
+					currentPosition = 0;
+					currentOriginalPosition = 0;
+
+					for (int x = 0; x < foundPosition; x++)
+					{
+						newReturnValue[x] = returnValue[x];
+						currentPosition++;
+						currentOriginalPosition++;
+					}
+
+					for (int y = 0; y < replace.Length; y++)
+					{
+						newReturnValue[currentPosition] = replace[y];
+						currentPosition++;
+					}
+
+					currentOriginalPosition = currentOriginalPosition + find.Length;
+
+					while (currentPosition < newReturnValue.Length)
+					{
+						newReturnValue[currentPosition] = returnValue[currentOriginalPosition];
+						currentPosition++;
+						currentOriginalPosition++;
+					}
+
+					returnValue = newReturnValue;
+				}
+
+			}
+
+			return returnValue;
 		}
 
 		/// <summary>

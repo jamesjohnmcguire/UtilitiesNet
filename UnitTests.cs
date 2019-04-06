@@ -8,7 +8,7 @@
 using NUnit.Framework;
 using System.IO;
 
-namespace DigitalZenWorks.Common.Utils
+namespace DigitalZenWorks.Common.Utilities
 {
 
 	[TestFixture]

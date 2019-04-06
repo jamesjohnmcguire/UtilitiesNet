@@ -14,5 +14,5 @@
 // Code Analysis results, point to "Suppress Message", and click 
 // "In Suppression File".
 // You do not need to add suppressions to this file manually.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "DigitalZenWorks.Common.Utils", Justification = "This will likely get more classes as time goes on.")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "DigitalZenWorks.Common.Utils.Extensions", Justification = "Can't really be helped, needed in it's own namespace.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "DigitalZenWorks.Common.Utilities", Justification = "This will likely get more classes as time goes on.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "DigitalZenWorks.Common.Utilities.Extensions", Justification = "Can't really be helped, needed in it's own namespace.")]

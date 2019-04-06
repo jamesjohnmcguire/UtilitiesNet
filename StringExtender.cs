@@ -9,7 +9,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace DigitalZenWorks.Common.Utils.Extensions
+namespace DigitalZenWorks.Common.Utilities.Extensions
 {
 	public static class StringExtender
 	{

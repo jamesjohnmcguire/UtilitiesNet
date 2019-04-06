@@ -15,7 +15,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace DigitalZenWorks.Common.Utils
+namespace DigitalZenWorks.Common.Utilities
 {
 	public static class XmlUtilities
 	{
@@ -24,7 +24,7 @@ namespace DigitalZenWorks.Common.Utils
 
 		private static readonly ResourceManager StringTable = new
 			ResourceManager(
-			"DigitalZenWorks.Common.Utils.Resources",
+			"DigitalZenWorks.Common.Utilities.Resources",
 			Assembly.GetExecutingAssembly());
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

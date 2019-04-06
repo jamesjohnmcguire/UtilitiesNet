@@ -19,7 +19,7 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace DigitalZenWorks.Common.Utils
+namespace DigitalZenWorks.Common.Utilities
 {
 	/////////////////////////////////////////////////////////////////////////
 	/// <summary>
@@ -33,7 +33,7 @@ namespace DigitalZenWorks.Common.Utils
 
 		private static readonly ResourceManager StringTable = new
 			ResourceManager(
-				"DigitalZenWorks.Common.Utils.Resources",
+				"DigitalZenWorks.Common.Utilities.Resources",
 				Assembly.GetExecutingAssembly());
 
 		public static bool CreateFileFromEmbeddedResource(

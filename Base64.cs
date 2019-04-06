@@ -9,7 +9,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace DigitalZenWorks.Common.Utils
+namespace DigitalZenWorks.Common.Utilities
 {
 	/// <summary>
 	/// This class implements base64 encoder/decoder.  Defined in RFC 4648.
