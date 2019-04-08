@@ -5,17 +5,18 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using NUnit.Framework;
-using System.IO;
-
 namespace DigitalZenWorks.Common.Utilities
 {
 	public class OrderedItem
 	{
 		public string ItemName { get; set; }
+
 		public string Description { get; set; }
+
 		public decimal UnitPrice { get; set; }
+
 		public int Quantity { get; set; }
+
 		public decimal LineTotal { get; set; }
 	}
 }
