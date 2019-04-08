@@ -103,33 +103,27 @@ namespace DigitalZenWorks.Common.Utilities
 
 		public static void Flatten(string directory)
 		{
-			try
+			foreach (string subDirectory in Directory.GetDirectories(directory))
 			{
-				foreach (string subDirectory in Directory.GetDirectories(directory))
-				{
-					Flatten(subDirectory);
-					Directory.Delete(directory);
-				}
-
-				foreach (string fileName in Directory.GetFiles(directory))
-				{
-					string newFileName = fileName.Replace("\\", "_");
-					File.Move(fileName, newFileName);
-				}
+				Flatten(subDirectory);
+				Directory.Delete(directory);
 			}
-			catch (System.Exception excpt)
+
+			foreach (string fileName in Directory.GetFiles(directory))
 			{
-				Console.WriteLine(excpt.Message);
+				string newFileName = fileName.Replace("\\", "_");
+				File.Move(fileName, newFileName);
 			}
 		}
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Compares two files to see if they are they same
+		/// Compares two files to see if they are they same.
 		/// </summary>
-		/// <param name="path1"></param>
-		/// <param name="path2"></param>
-		/// <returns></returns>
+		/// <param name="path1">The path of the first file to check.</param>
+		/// <param name="path2">The path of the second file to check.</param>
+		/// <returns>Return true if the file contents are the same,
+		/// otherwise returns false.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool FileEquals(string path1, string path2)
 		{
@@ -166,10 +160,11 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Reads a text file contents into a string
+		/// Reads a text file contents into a string.
 		/// </summary>
-		/// <param name="filePath"></param>
-		/// <returns></returns>
+		/// <param name="filePath">The path of the file.</param>
+		/// <returns>The contents of file upon success,
+		/// otherwise returns null.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static string GetFileContents(string filePath)
 		{
@@ -194,8 +189,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <summary>
 		/// Returns a writable stream object.
 		/// </summary>
-		/// <param name="filePath"></param>
-		/// <returns></returns>
+		/// <param name="filePath">The file path to file.</param>
+		/// <returns>A StreamWriter object upon success,
+		/// otherwise null.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static StreamWriter GetWriteStreamObject(string filePath)
 		{
@@ -216,7 +212,12 @@ namespace DigitalZenWorks.Common.Utilities
 					}
 				}
 			}
-			catch (Exception exception)
+			catch (Exception exception) when
+				(exception is ArgumentException ||
+				exception is ArgumentNullException ||
+				exception is IOException ||
+				exception is SecurityException ||
+				exception is UnauthorizedAccessException)
 			{
 				Log.Error(CultureInfo.InvariantCulture, m => m(
 					exception.ToString()));
@@ -234,10 +235,11 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Determines if a directory is empty or not
+		/// Determines if a directory is empty or not.
 		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
+		/// <param name="path">The path of the directory.</param>
+		/// <returns>Returns true if the directory is empty,
+		/// otherwise false.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool IsDirectoryEmpty(string path)
 		{
@@ -255,45 +257,38 @@ namespace DigitalZenWorks.Common.Utilities
 		public static void RecursiveRemove(
 			string initialPath, string[] pathsToRemove)
 		{
-			try
+			foreach (string d in Directory.GetDirectories(initialPath))
 			{
-				foreach (string d in Directory.GetDirectories(initialPath))
+				if ((pathsToRemove != null) && (pathsToRemove.Length > 0))
 				{
-					if ((pathsToRemove != null) && (pathsToRemove.Length > 0))
+					foreach (string path in pathsToRemove)
 					{
-						foreach (string path in pathsToRemove)
+						if (d.EndsWith(
+							"\\" + path, StringComparison.Ordinal))
 						{
-							if (d.EndsWith(
-								"\\" + path, StringComparison.Ordinal))
+							if (!File.Exists("DevClean.active"))
 							{
-								if (!File.Exists("DevClean.active"))
-								{
-									Log.Info(
-										CultureInfo.InvariantCulture,
-										m => m("Deleting: " + path));
-									Directory.Delete(d, true);
-								}
+								Log.Info(
+									CultureInfo.InvariantCulture,
+									m => m("Deleting: " + path));
+								Directory.Delete(d, true);
 							}
-							else
-							{
-								RecursiveRemove(d, pathsToRemove);
-							}
+						}
+						else
+						{
+							RecursiveRemove(d, pathsToRemove);
 						}
 					}
 				}
-			}
-			catch (System.Exception exception)
-			{
-				Log.Error(CultureInfo.InvariantCulture, m => m(
-					exception.ToString()));
 			}
 		}
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// RecursiveUtf8WinFiles
+		/// RecursiveUtf8WinFiles.
 		/// </summary>
-		/// <param name="initialPath"></param>
+		/// <param name="initialPath">The initial path to begin
+		/// recursion into.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void RecursiveUtf8WinFiles(string initialPath)
 		{
@@ -330,6 +325,37 @@ namespace DigitalZenWorks.Common.Utilities
 
 				throw;
 			}
+		}
+
+		public static byte[] ReadBinaryOutput(Stream output)
+		{
+			byte[] outputBytes = null;
+
+			using (Stream writeStream = new MemoryStream())
+			{
+				using (BinaryWriter binaryOutput =
+					new BinaryWriter(writeStream))
+				{
+					int currentByte = 0;
+
+					while (-1 != currentByte)
+					{
+						currentByte = output.ReadByte();
+
+						if (-1 != currentByte)
+						{
+							byte writeByte = Convert.ToByte(currentByte);
+							binaryOutput.BaseStream.WriteByte(writeByte);
+						}
+					}
+
+					outputBytes = new byte[binaryOutput.BaseStream.Length];
+					binaryOutput.BaseStream.Write(
+						outputBytes, 0, (int)binaryOutput.BaseStream.Length);
+				}
+			}
+
+			return outputBytes;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -508,6 +534,22 @@ namespace DigitalZenWorks.Common.Utilities
 				Regex.Replace(fileContents, @"\r\n|\n\r|\n|\r", "\r\n");
 
 			return SaveFile(fileContents, filePathName);
+		}
+
+		public static void StreamCopy(Stream input, Stream output)
+		{
+			int i;
+			byte b;
+
+			i = input.ReadByte();
+
+			while (i != -1)
+			{
+				b = (byte)i;
+				output.WriteByte(b);
+
+				i = input.ReadByte();
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////

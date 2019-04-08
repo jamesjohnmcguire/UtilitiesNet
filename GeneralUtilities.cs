@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // $Id$
-// <copyright file="Utils.cs" company="James John McGuire">
+// <copyright file="GeneralUtilities.cs" company="James John McGuire">
 // Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
@@ -47,8 +47,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <summary>
 		/// Validates command line parameters.
 		/// </summary>
-		/// <param name="parameters"></param>
-		/// <returns></returns>
+		/// <param name="parameters">The command line parameters.</param>
+		/// <returns>Returns true if there is at least one parameter,
+		/// otherwise false.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool CheckCommandLineParameters(string[] parameters)
 		{
@@ -155,6 +156,42 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return date;
+		}
+
+		public static byte[] Execute(
+			string filename, string arguments, byte[] standardInput)
+		{
+			Process externalProgram = new Process();
+
+			externalProgram.StartInfo.UseShellExecute = false;
+			externalProgram.StartInfo.CreateNoWindow = true;
+			externalProgram.StartInfo.ErrorDialog = false;
+
+			if (null != standardInput)
+			{
+				externalProgram.StartInfo.RedirectStandardInput = true;
+			}
+
+			externalProgram.StartInfo.RedirectStandardOutput = true;
+
+			externalProgram.StartInfo.FileName = filename;
+			externalProgram.StartInfo.Arguments = arguments;
+			externalProgram.Start();
+
+			if (standardInput != null)
+			{
+				// Prepare incoming binary stream to stdin
+				// hook up stdin
+				StreamWriter input = externalProgram.StandardInput;
+
+				// write bytes
+				input.BaseStream.Write(standardInput, 0, standardInput.Length);
+			}
+
+			Stream outputStream = externalProgram.StandardOutput.BaseStream;
+			byte[] outputBytes = FileUtils.ReadBinaryOutput(outputStream);
+
+			return outputBytes;
 		}
 
 		public static int FindInByteArray(byte[] haystack, byte[] needle)
@@ -304,43 +341,28 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Is object a date
+		/// Is object a date.
 		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
+		/// <param name="value">The object to check.</param>
+		/// <returns>Returns true if the object is a date,
+		/// otherwise false.</returns>
 		/////////////////////////////////////////////////////////////////////
 		public static bool IsDate(object value)
 		{
 			bool successCode = false;
 
-			try
+			if (value != null)
 			{
-				if (value != null)
-				{
-					string strDate = value.ToString();
+				string dateString = value.ToString();
 
-					try
+				if (DateTime.TryParse(dateString, out DateTime date))
+				{
+					if (date != DateTime.MinValue &&
+						date != DateTime.MaxValue)
 					{
-						if (DateTime.TryParse(strDate, out DateTime date))
-						{
-							if (date != DateTime.MinValue && date != DateTime.MaxValue)
-							{
-								successCode = true;
-							}
-						}
-					}
-					catch
-					{
-					}
-					finally
-					{
+						successCode = true;
 					}
 				}
-			}
-			catch (Exception exception)
-			{
-				Log.Error(CultureInfo.InvariantCulture, m =>
-					m("Error: {0}", exception));
 			}
 
 			return successCode;
@@ -366,8 +388,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <summary>
 		/// Checks to see if the given email address is valid.
 		/// </summary>
-		/// <param name="emailAddress"></param>
-		/// <returns></returns>
+		/// <param name="emailAddress">The email address to check.</param>
+		/// <returns>Returns true if the email address is valid,
+		/// otherwise false.</returns>
 		public static bool IsValidEmailAddress(string emailAddress)
 		{
 			bool valid = false;
@@ -494,8 +517,13 @@ namespace DigitalZenWorks.Common.Utilities
 									{
 										destination.Write(FromHex(buffer), 0, 1);
 									}
-									catch
+									catch (Exception exception) when
+										(exception is ArgumentException ||
+										exception is ArgumentOutOfRangeException)
 									{
+										Log.Error(CultureInfo.InvariantCulture,
+											m => m(exception.ToString()));
+
 										// Illegal value after =, just leave it as is
 										destination.WriteByte((byte)'=');
 										destination.Write(buffer, 0, 2);
