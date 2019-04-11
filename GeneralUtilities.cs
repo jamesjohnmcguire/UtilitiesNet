@@ -119,7 +119,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="knrName">The name of variable in knr form.</param>
 		/// <returns>A variable name in Pascal case form.</returns>
-		public static string ConvertToPascalCaseNameFromKnr(string knrName)
+		public static string ConvertToPascalCaseFromKnr(string knrName)
 		{
 			string pascalCaseName = string.Empty;
 
