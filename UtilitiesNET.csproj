@@ -12,7 +12,7 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>UtilitiesNET.pfx</AssemblyOriginatorKeyFile>
 		<Version>1.2.0</Version>
-		<NeutralLanguage />
+		<NeutralLanguage>en-US</NeutralLanguage>
 	</PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

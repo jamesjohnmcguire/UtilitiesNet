@@ -16,8 +16,6 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class Base64
 	{
-		#region BASE64_DECODE_TABLE
-
 		private static readonly short[] Base64DecodeTable = new short[]
 		{
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0 -    9
@@ -35,10 +33,6 @@ namespace DigitalZenWorks.Common.Utilities
 			49, 50, 51, -1, -1, -1, -1, -1 // 120 - 127
 		};
 
-		#endregion BASE64_DECODE_TABLE
-
-		#region method Encode
-
 		/// <summary>
 		/// Encodes bytes.
 		/// </summary>
@@ -47,10 +41,6 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			throw new NotImplementedException();
 		}
-
-		#endregion method Encode
-
-		#region method Decode
 
 		/// <summary>
 		/// Decodes specified base64 string.
@@ -274,7 +264,5 @@ namespace DigitalZenWorks.Common.Utilities
 
 			return decodedOffset;
 		}
-
-		#endregion method Decode
 	}
 }

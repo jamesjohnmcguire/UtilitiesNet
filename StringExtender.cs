@@ -49,7 +49,9 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		{
 			// If there are 0 or 1 characters, just return the string.
 			if (input == null || input.Length < 2)
+			{
 				return input;
+			}
 
 			// Split the string into words.
 			char[] separators = Array.Empty<char>();
@@ -80,7 +82,11 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		public static string ToPascalCase(this string input)
 		{
 			// If there are 0 or 1 characters, just return the string.
-			if (input == null) return input;
+			if (input == null)
+			{
+				return input;
+			}
+
 			if (input.Length < 2)
 			{
 				return input.ToUpper(CultureInfo.CurrentCulture);

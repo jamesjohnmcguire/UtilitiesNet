@@ -10,7 +10,6 @@ using System.IO;
 
 namespace DigitalZenWorks.Common.Utilities
 {
-
 	[TestFixture]
 	public static class UnitTests
 	{

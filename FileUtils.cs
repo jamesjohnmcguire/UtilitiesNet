@@ -459,7 +459,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/////////////////////////////////////////////////////////////////////
 		[System.Diagnostics.CodeAnalysis.SuppressMessage(
 			"Microsoft.Usage",
-			"CA2202:Do not dispose objects multiple times")]
+			"CA2202:Do not dispose objects multiple times",
+			Justification = "A harmless warning and difficult to get rid of.")]
 		public static bool SaveFile(
 			string fileContents, string filePathName, Encoding encoding)
 		{

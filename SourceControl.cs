@@ -23,13 +23,11 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="originalRepository">The original repository.</param>
 		/// <param name="originalProject">The original project.</param>
 		/// <param name="newRepository">The new repository.</param>
-		/// <param name="checkOutDir">The directory to check out in.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void SvnSplit(
 			string originalRepository,
 			string originalProject,
-			string newRepository,
-			string checkOutDir)
+			string newRepository)
 		{
 			if (!string.IsNullOrWhiteSpace(originalRepository))
 			{
