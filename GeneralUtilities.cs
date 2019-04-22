@@ -75,43 +75,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A name in camel case.</returns>
 		public static string ConvertToCamelCaseFromKnr(string knrName)
 		{
-			string humanFriendlyName = string.Empty;
-
-			// split at underscores
-			string[] parts = knrName.Split(
-				new char[] { '_' },
-				StringSplitOptions.RemoveEmptyEntries);
-
-			// remove underscores
-			// make parts proper case
-			bool first = true;
-			for (int i = 0; i < parts.Length; i++)
-			{
-				if (first == true)
-				{
-					first = false;
-					humanFriendlyName = parts[i].ToProperCase();
-				}
-				else
-				{
-					// if the last part is 'id', just skip
-					if ((i < (parts[i].Length - 1)) || (!parts[i].Equals(
-						"id", StringComparison.InvariantCulture)))
-					{
-						if (parts[i].ToUpper(CultureInfo.InvariantCulture) ==
-							parts[i])
-						{
-							humanFriendlyName += " " + parts[i];
-						}
-						else
-						{
-							humanFriendlyName += " " + parts[i].ToProperCase();
-						}
-					}
-				}
-			}
-
-			return humanFriendlyName;
+			return ConvertFromKnrText(knrName, true);
 		}
 
 		/// <summary>
@@ -121,28 +85,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A variable name in Pascal case form.</returns>
 		public static string ConvertToPascalCaseFromKnr(string knrName)
 		{
-			string pascalCaseName = string.Empty;
-
-			// split at underscores
-			string[] parts = knrName.Split(
-				new char[] { '_' },
-				StringSplitOptions.RemoveEmptyEntries);
-
-			// remove underscores
-			// make parts proper case
-			foreach (string part in parts)
-			{
-				if (part.ToUpper(CultureInfo.InvariantCulture) == part)
-				{
-					pascalCaseName += part;
-				}
-				else
-				{
-					pascalCaseName += part.ToProperCase();
-				}
-			}
-
-			return pascalCaseName;
+			return ConvertFromKnrText(knrName, false);
 		}
 
 		public static DateTime DateFromString(string dateText)
@@ -371,7 +314,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <summary>
 		/// Checks if specified string is integer(int/long).
 		/// </summary>
-		/// <param name="value"></param>
+		/// <param name="value">The item to test.</param>
 		/// <returns>Returns true if specified string is integer.</returns>
 		public static bool IsInteger(string value)
 		{
@@ -519,12 +462,15 @@ namespace DigitalZenWorks.Common.Utilities
 									}
 									catch (Exception exception) when
 										(exception is ArgumentException ||
-										exception is ArgumentOutOfRangeException)
+										exception is
+										ArgumentOutOfRangeException)
 									{
-										Log.Error(CultureInfo.InvariantCulture,
+										Log.Error(
+											CultureInfo.InvariantCulture,
 											m => m(exception.ToString()));
 
-										// Illegal value after =, just leave it as is
+										// Illegal value after =,
+										// just leave it as is
 										destination.WriteByte((byte)'=');
 										destination.Write(buffer, 0, 2);
 									}
@@ -595,7 +541,6 @@ namespace DigitalZenWorks.Common.Utilities
 
 					returnValue = newReturnValue;
 				}
-
 			}
 
 			return returnValue;
@@ -634,6 +579,38 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return hexString;
+		}
+
+		private static string ConvertFromKnrText(
+			string knrName, bool setToCamelCase)
+		{
+			string newCase = string.Empty;
+
+			// split at underscores
+			string[] parts = knrName.Split(
+				new char[] { '_' },
+				StringSplitOptions.RemoveEmptyEntries);
+			bool first = true;
+
+			// remove underscores, set parts in intended case
+			foreach (string part in parts)
+			{
+				if ((setToCamelCase == true) && (first == true))
+				{
+					// Idiots!! I need the lower case text!
+#pragma warning disable CA1308 // Normalize strings to uppercase
+					newCase += part.ToLowerInvariant();
+#pragma warning restore CA1308 // Normalize strings to uppercase
+				}
+				else
+				{
+					newCase += part.ToProperCase();
+				}
+
+				first = false;
+			}
+
+			return newCase;
 		}
 
 		private static byte[] GetHexPair(byte[] hexData, MemoryStream retVal)
