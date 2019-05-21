@@ -10,9 +10,10 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>UtilitiesNET.pfx</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
 		<Version>1.2.0</Version>
 		<NeutralLanguage>en-US</NeutralLanguage>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 	</PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -50,13 +51,4 @@
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
 		<Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
 	</ItemGroup>
-
-  <Target Name="IgnoreRunCodeAnalysis" Condition=" '$(RunCodeAnalysis)' == 'true' " BeforeTargets="RunCodeAnalysis">
-    <Message Importance="normal" Text="Set RunCodeAnalysisOnThisProject to false" />
-    <Message Importance="normal" Text="Platform is $(Platform)'" />
-    <Message Importance="normal" Text="OutputPath is $(OutputPath)'" />
-    <PropertyGroup>
-      <RunCodeAnalysisOnThisProject>false</RunCodeAnalysisOnThisProject>
-    </PropertyGroup>
-  </Target>
 </Project>
