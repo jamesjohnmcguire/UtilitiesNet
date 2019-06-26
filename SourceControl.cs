@@ -1,5 +1,4 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// $Id$
 // <copyright file="SourceControl.cs" company="James John McGuire">
 // Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
 // </copyright>
