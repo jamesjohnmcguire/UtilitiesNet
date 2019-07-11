@@ -18,10 +18,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="test.xml" />
-    <None Remove="test.xsd" />
-  </ItemGroup>
-  <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
     <EmbeddedResource Include="test.xml" />
     <EmbeddedResource Include="test.xsd" />
