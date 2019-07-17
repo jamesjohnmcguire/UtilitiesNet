@@ -106,28 +106,48 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="ignoreNonBase64Chars">If true all invalid base64 chars ignored. If false, FormatException is raised.</param>
 		/// <returns>Returns number of bytes decoded.</returns>
 		/// <exception cref="ArgumentNullException">Is raised when <b>encodeBuffer</b> or <b>encodeBuffer</b> is null reference.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
-		/// <exception cref="FormatException">Is raised when <b>encodeBuffer</b> contains invalid base64 data.</exception>
-		public static int Decode(byte[] encodeBuffer, int encodeOffset, int encodeCount, byte[] buffer, int offset, bool ignoreNonBase64Chars)
+		/* RFC 4648.
+			Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block
+			are converted to 3 8-bit bytes.
+			If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =.
+
+			Value Encoding  Value Encoding  Value Encoding  Value Encoding
+				0 A            17 R            34 i            51 z
+				1 B            18 S            35 j            52 0
+				2 C            19 T            36 k            53 1
+				3 D            20 U            37 l            54 2
+				4 E            21 V            38 m            55 3
+				5 F            22 W            39 n            56 4
+				6 G            23 X            40 o            57 5
+				7 H            24 Y            41 p            58 6
+				8 I            25 Z            42 q            59 7
+				9 J            26 a            43 r            60 8
+				10 K           27 b            44 s            61 9
+				11 L           28 c            45 t            62 +
+				12 M           29 d            46 u            63 /
+				13 N           30 e            47 v
+				14 O           31 f            48 w         (pad) =
+				15 P           32 g            49 x
+				16 Q           33 h            50 y
+
+			NOTE: 4 base64 6-bit bytes = 3 8-bit bytes
+				// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
+				// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
+				// |    8-bit         |    8-bit        |    8-bit         |
+		*/
+		public static int Decode(
+			byte[] encodeBuffer,
+			int encodeOffset,
+			int encodeCount,
+			byte[] buffer,
+			int offset,
+			bool ignoreNonBase64Chars)
 		{
+			int decodedOffset = 0;
+
 			if (encodeBuffer == null)
 			{
 				throw new ArgumentNullException(nameof(encodeBuffer));
-			}
-
-			if (encodeOffset < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(encodeOffset), "Argument 'encodeOffset' value must be >= 0.");
-			}
-
-			if (encodeCount < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(encodeCount), "Argument 'encodeCount' value must be >= 0.");
-			}
-
-			if (encodeOffset + encodeCount > encodeBuffer.Length)
-			{
-				throw new ArgumentOutOfRangeException(nameof(encodeCount), "Argument 'count' is bigger than than argument 'encodeBuffer'.");
 			}
 
 			if (buffer == null)
@@ -135,129 +155,97 @@ namespace DigitalZenWorks.Common.Utilities
 				throw new ArgumentNullException(nameof(buffer));
 			}
 
-			if (offset < 0 || offset >= buffer.Length)
+			if ((encodeOffset >= 0) && (encodeCount >= 0) &&
+				(encodeOffset + encodeCount <= encodeBuffer.Length) &&
+				(offset >= 0 || offset < buffer.Length))
 			{
-				throw new ArgumentOutOfRangeException(nameof(offset));
-			}
+				int decodeOffset = encodeOffset;
+				byte[] base64Block = new byte[4];
 
-			/* RFC 4648.
-
-				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block
-				are converted to 3 8-bit bytes.
-				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =.
-
-				Value Encoding  Value Encoding  Value Encoding  Value Encoding
-					0 A            17 R            34 i            51 z
-					1 B            18 S            35 j            52 0
-					2 C            19 T            36 k            53 1
-					3 D            20 U            37 l            54 2
-					4 E            21 V            38 m            55 3
-					5 F            22 W            39 n            56 4
-					6 G            23 X            40 o            57 5
-					7 H            24 Y            41 p            58 6
-					8 I            25 Z            42 q            59 7
-					9 J            26 a            43 r            60 8
-					10 K           27 b            44 s            61 9
-					11 L           28 c            45 t            62 +
-					12 M           29 d            46 u            63 /
-					13 N           30 e            47 v
-					14 O           31 f            48 w         (pad) =
-					15 P           32 g            49 x
-					16 Q           33 h            50 y
-
-				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes
-					// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
-					// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
-					// |    8-bit         |    8-bit        |    8-bit         |
-			*/
-
-			int decodeOffset = encodeOffset;
-			int decodedOffset = 0;
-			byte[] base64Block = new byte[4];
-
-			// Decode while we have data.
-			while ((decodeOffset - encodeOffset) < encodeCount)
-			{
-				// Read 4-byte base64 block.
-				int offsetInBlock = 0;
-				while (offsetInBlock < 4)
+				// Decode while we have data.
+				while ((decodeOffset - encodeOffset) < encodeCount)
 				{
-					// Check that we won't exceed buffer data.
-					if ((decodeOffset - encodeOffset) >= encodeCount)
+					// Read 4-byte base64 block.
+					int offsetInBlock = 0;
+					while (offsetInBlock < 4)
 					{
-						if (offsetInBlock == 0)
+						// Check that we won't exceed buffer data.
+						if ((decodeOffset - encodeOffset) >= encodeCount)
 						{
+							if (offsetInBlock == 0)
+							{
+								break;
+							}
+
+							// Incomplete 4-byte base64 data block.
+							else
+							{
+								throw new FormatException("Invalid incomplete base64 4-char block");
+							}
+						}
+
+						// Read byte.
+						short currentByte = encodeBuffer[decodeOffset++];
+
+						// Pad char.
+						if (currentByte == '=')
+						{
+							// Padding may appear only in last two chars of 4-char block.
+							// ab==
+							// abc=
+							if (offsetInBlock < 2)
+							{
+								throw new FormatException("Invalid base64 padding.");
+							}
+
+							// Skip next padding char.
+							if (offsetInBlock == 2)
+							{
+								decodeOffset++;
+							}
+
 							break;
 						}
+						else if (currentByte > 127 || Base64DecodeTable[currentByte] == -1)
+						{
+							// Non-base64 char.
+							if (!ignoreNonBase64Chars)
+							{
+								string message = string.Format(
+									CultureInfo.InvariantCulture,
+									"Invalid base64 char '{0}'.",
+									currentByte.ToString(
+										CultureInfo.InvariantCulture));
 
-						// Incomplete 4-byte base64 data block.
+								throw new FormatException(message);
+							}
+						}
 						else
 						{
-							throw new FormatException("Invalid incomplete base64 4-char block");
+							base64Block[offsetInBlock++] =
+								(byte)Base64DecodeTable[currentByte];
 						}
 					}
 
-					// Read byte.
-					short currentByte = encodeBuffer[decodeOffset++];
-
-					// Pad char.
-					if (currentByte == '=')
+					// Decode base64 block.
+					if (offsetInBlock > 1)
 					{
-						// Padding may appear only in last two chars of 4-char block.
-						// ab==
-						// abc=
-						if (offsetInBlock < 2)
-						{
-							throw new FormatException("Invalid base64 padding.");
-						}
-
-						// Skip next padding char.
-						if (offsetInBlock == 2)
-						{
-							decodeOffset++;
-						}
-
-						break;
+						buffer[decodedOffset++] =
+							(byte)((base64Block[0] << 2) | (base64Block[1] >> 4));
 					}
-					else if (currentByte > 127 || Base64DecodeTable[currentByte] == -1)
+
+					if (offsetInBlock > 2)
 					{
-						// Non-base64 char.
-						if (!ignoreNonBase64Chars)
-						{
-							string message = string.Format(
-								CultureInfo.InvariantCulture,
-								"Invalid base64 char '{0}'.",
-								currentByte.ToString(
-									CultureInfo.InvariantCulture));
-
-							throw new FormatException(message);
-						}
+						buffer[decodedOffset++] =
+							(byte)(((base64Block[1] & 0xF) << 4) |
+							(base64Block[2] >> 2));
 					}
-					else
+
+					if (offsetInBlock > 3)
 					{
-						base64Block[offsetInBlock++] =
-							(byte)Base64DecodeTable[currentByte];
+						buffer[decodedOffset++] =
+							(byte)(((base64Block[2] & 0x3) << 6) | base64Block[3]);
 					}
-				}
-
-				// Decode base64 block.
-				if (offsetInBlock > 1)
-				{
-					buffer[decodedOffset++] =
-						(byte)((base64Block[0] << 2) | (base64Block[1] >> 4));
-				}
-
-				if (offsetInBlock > 2)
-				{
-					buffer[decodedOffset++] =
-						(byte)(((base64Block[1] & 0xF) << 4) |
-						(base64Block[2] >> 2));
-				}
-
-				if (offsetInBlock > 3)
-				{
-					buffer[decodedOffset++] =
-						(byte)(((base64Block[2] & 0x3) << 6) | base64Block[3]);
 				}
 			}
 

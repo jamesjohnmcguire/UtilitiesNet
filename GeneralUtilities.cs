@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -20,6 +21,11 @@ namespace DigitalZenWorks.Common.Utilities
 	{
 		private static readonly ILog Log = LogManager.GetLogger(
 			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private static readonly ResourceManager StringTable = new
+			ResourceManager(
+				"DigitalZenWorks.Common.Utilities.Resources",
+				Assembly.GetExecutingAssembly());
 
 		public static string CallingMethod()
 		{
@@ -74,7 +80,14 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A name in camel case.</returns>
 		public static string ConvertToCamelCaseFromKnr(string knrName)
 		{
-			return ConvertFromKnrText(knrName, true);
+			string output = null;
+
+			if (!string.IsNullOrEmpty(knrName))
+			{
+				output = ConvertFromKnrText(knrName, true);
+			}
+
+			return output;
 		}
 
 		/// <summary>
@@ -84,15 +97,21 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A variable name in Pascal case form.</returns>
 		public static string ConvertToPascalCaseFromKnr(string knrName)
 		{
-			return ConvertFromKnrText(knrName, false);
+			string output = null;
+
+			if (!string.IsNullOrEmpty(knrName))
+			{
+				output = ConvertFromKnrText(knrName, true);
+			}
+
+			return output;
 		}
 
 		public static DateTime DateFromString(string dateText)
 		{
 			DateTime date = DateTime.MinValue;
-			DateTime testDate = DateTime.MinValue;
 
-			if (DateTime.TryParse(dateText, out testDate))
+			if (DateTime.TryParse(dateText, out DateTime testDate))
 			{
 				date = testDate;
 			}
@@ -142,26 +161,29 @@ namespace DigitalZenWorks.Common.Utilities
 			int mayHaveFoundIt = -1;
 			int miniCounter = 0;
 
-			for (int counter = 0; counter < haystack.Length; counter++)
+			if ((haystack != null) && (needle != null))
 			{
-				if (haystack[counter] == needle[miniCounter])
+				for (int counter = 0; counter < haystack.Length; counter++)
 				{
-					if (miniCounter == 0)
+					if (haystack[counter] == needle[miniCounter])
 					{
-						mayHaveFoundIt = counter;
-					}
+						if (miniCounter == 0)
+						{
+							mayHaveFoundIt = counter;
+						}
 
-					if (miniCounter == needle.Length - 1)
+						if (miniCounter == needle.Length - 1)
+						{
+							return mayHaveFoundIt;
+						}
+
+						miniCounter++;
+					}
+					else
 					{
-						return mayHaveFoundIt;
+						mayHaveFoundIt = -1;
+						miniCounter = 0;
 					}
-
-					miniCounter++;
-				}
-				else
-				{
-					mayHaveFoundIt = -1;
-					miniCounter = 0;
 				}
 			}
 
@@ -215,11 +237,15 @@ namespace DigitalZenWorks.Common.Utilities
 				throw new ArgumentNullException(nameof(hexData));
 			}
 
-			if (hexData.Length < 2 ||
-				(hexData.Length / 2D != Math.Floor(hexData.Length / 2D)))
+			double floor = Math.Floor(hexData.Length / 2D);
+
+			if (hexData.Length < 2 || (hexData.Length / 2D != floor))
 			{
-				throw new ArgumentException("Illegal hex data, hex data " +
-					"must be in two bytes pairs, for example: 0F,FF,A3,... .");
+				string message = StringTable.GetString(
+					"ILLEGAL_HEX_DATA",
+					CultureInfo.InstalledUICulture);
+
+				throw new ArgumentException(message);
 			}
 
 			using (MemoryStream retVal = new MemoryStream(hexData.Length / 2))
@@ -321,7 +347,9 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrWhiteSpace(value))
 			{
+#pragma warning disable IDE0059 // Value assigned to symbol is never used
 				isInteger = long.TryParse(value, out long l);
+#pragma warning restore IDE0059 // Value assigned to symbol is never used
 			}
 
 			return isInteger;
@@ -503,42 +531,48 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[] returnValue = originalArray;
 
-			if (System.Array.BinarySearch(returnValue, find) > -1)
+			if ((originalArray != null) && (find != null) && (replace != null))
 			{
-				byte[] newReturnValue;
-				int foundPosition;
-				int currentPosition;
-				int currentOriginalPosition;
-				while (FindInByteArray(returnValue, find) > -1)
+				if (System.Array.BinarySearch(returnValue, find) > -1)
 				{
-					newReturnValue = new byte[returnValue.Length + replace.Length - find.Length];
-					foundPosition = FindInByteArray(returnValue, find);
-					currentPosition = 0;
-					currentOriginalPosition = 0;
-
-					for (int x = 0; x < foundPosition; x++)
+					byte[] newReturnValue;
+					int foundPosition;
+					int currentPosition;
+					int currentOriginalPosition;
+					while (FindInByteArray(returnValue, find) > -1)
 					{
-						newReturnValue[x] = returnValue[x];
-						currentPosition++;
-						currentOriginalPosition++;
+						int length =
+							returnValue.Length + replace.Length - find.Length;
+						newReturnValue = new byte[length];
+
+						foundPosition = FindInByteArray(returnValue, find);
+						currentPosition = 0;
+						currentOriginalPosition = 0;
+
+						for (int x = 0; x < foundPosition; x++)
+						{
+							newReturnValue[x] = returnValue[x];
+							currentPosition++;
+							currentOriginalPosition++;
+						}
+
+						for (int y = 0; y < replace.Length; y++)
+						{
+							newReturnValue[currentPosition] = replace[y];
+							currentPosition++;
+						}
+
+						currentOriginalPosition += find.Length;
+
+						while (currentPosition < newReturnValue.Length)
+						{
+							newReturnValue[currentPosition] = returnValue[currentOriginalPosition];
+							currentPosition++;
+							currentOriginalPosition++;
+						}
+
+						returnValue = newReturnValue;
 					}
-
-					for (int y = 0; y < replace.Length; y++)
-					{
-						newReturnValue[currentPosition] = replace[y];
-						currentPosition++;
-					}
-
-					currentOriginalPosition = currentOriginalPosition + find.Length;
-
-					while (currentPosition < newReturnValue.Length)
-					{
-						newReturnValue[currentPosition] = returnValue[currentOriginalPosition];
-						currentPosition++;
-						currentOriginalPosition++;
-					}
-
-					returnValue = newReturnValue;
 				}
 			}
 

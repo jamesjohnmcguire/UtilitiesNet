@@ -330,27 +330,30 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[] outputBytes = null;
 
-			using (Stream writeStream = new MemoryStream())
+			if (output != null)
 			{
-				using (BinaryWriter binaryOutput =
-					new BinaryWriter(writeStream))
+				using (Stream writeStream = new MemoryStream())
 				{
-					int currentByte = 0;
-
-					while (-1 != currentByte)
+					using (BinaryWriter binaryOutput =
+						new BinaryWriter(writeStream))
 					{
-						currentByte = output.ReadByte();
+						int currentByte = 0;
 
-						if (-1 != currentByte)
+						while (-1 != currentByte)
 						{
-							byte writeByte = Convert.ToByte(currentByte);
-							binaryOutput.BaseStream.WriteByte(writeByte);
-						}
-					}
+							currentByte = output.ReadByte();
 
-					outputBytes = new byte[binaryOutput.BaseStream.Length];
-					binaryOutput.BaseStream.Write(
-						outputBytes, 0, (int)binaryOutput.BaseStream.Length);
+							if (-1 != currentByte)
+							{
+								byte writeByte = Convert.ToByte(currentByte);
+								binaryOutput.BaseStream.WriteByte(writeByte);
+							}
+						}
+
+						outputBytes = new byte[binaryOutput.BaseStream.Length];
+						binaryOutput.BaseStream.Write(
+							outputBytes, 0, (int)binaryOutput.BaseStream.Length);
+					}
 				}
 			}
 
@@ -541,14 +544,17 @@ namespace DigitalZenWorks.Common.Utilities
 			int i;
 			byte b;
 
-			i = input.ReadByte();
-
-			while (i != -1)
+			if ((input != null) && (output != null))
 			{
-				b = (byte)i;
-				output.WriteByte(b);
-
 				i = input.ReadByte();
+
+				while (i != -1)
+				{
+					b = (byte)i;
+					output.WriteByte(b);
+
+					i = input.ReadByte();
+				}
 			}
 		}
 
