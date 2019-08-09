@@ -18,9 +18,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="UtilitiesNetTests\**" />
+    <EmbeddedResource Remove="UtilitiesNetTests\**" />
+    <None Remove="UtilitiesNetTests\**" />
+  </ItemGroup>
+  <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
-    <EmbeddedResource Include="test.xml" />
-    <EmbeddedResource Include="test.xsd" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     <PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />

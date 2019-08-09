@@ -4,10 +4,11 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
+using DigitalZenWorks.Common.Utilities;
 using NUnit.Framework;
 using System.IO;
 
-namespace DigitalZenWorks.Common.Utilities
+namespace DigitalZenWorks.Common.Utilities.Tests
 {
 	[TestFixture]
 	public static class UnitTests
@@ -38,7 +39,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static void GetEmbeddedResource()
 		{
 			bool result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utilities.test.xml", "test.xml");
+				"DigitalZenWorks.Common.Utilities.Tests.test.xml", "test.xml");
 			Assert.True(result);
 
 			result = File.Exists("test.xml");
@@ -49,14 +50,14 @@ namespace DigitalZenWorks.Common.Utilities
 		public static void ObjectFromXml()
 		{
 			bool result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utilities.test.xsd", "test.xsd");
+				"DigitalZenWorks.Common.Utilities.Tests.test.xsd", "test.xsd");
 			Assert.True(result);
 
 			result = File.Exists("test.xsd");
 			Assert.True(result);
 
 			result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utilities.test.xml", "test.xml");
+				"DigitalZenWorks.Common.Utilities.Tests.test.xml", "test.xml");
 			Assert.True(result);
 
 			result = File.Exists("test.xml");
