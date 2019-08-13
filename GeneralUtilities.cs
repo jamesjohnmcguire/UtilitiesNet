@@ -122,35 +122,40 @@ namespace DigitalZenWorks.Common.Utilities
 		public static byte[] Execute(
 			string filename, string arguments, byte[] standardInput)
 		{
-			Process externalProgram = new Process();
+			byte[] outputBytes;
 
-			externalProgram.StartInfo.UseShellExecute = false;
-			externalProgram.StartInfo.CreateNoWindow = true;
-			externalProgram.StartInfo.ErrorDialog = false;
-
-			if (null != standardInput)
+			using (Process externalProgram = new Process())
 			{
-				externalProgram.StartInfo.RedirectStandardInput = true;
+				externalProgram.StartInfo.UseShellExecute = false;
+				externalProgram.StartInfo.CreateNoWindow = true;
+				externalProgram.StartInfo.ErrorDialog = false;
+
+				if (null != standardInput)
+				{
+					externalProgram.StartInfo.RedirectStandardInput = true;
+				}
+
+				externalProgram.StartInfo.RedirectStandardOutput = true;
+
+				externalProgram.StartInfo.FileName = filename;
+				externalProgram.StartInfo.Arguments = arguments;
+				externalProgram.Start();
+
+				if (standardInput != null)
+				{
+					// Prepare incoming binary stream to stdin
+					// hook up stdin
+					StreamWriter input = externalProgram.StandardInput;
+
+					// write bytes
+					input.BaseStream.Write(
+						standardInput, 0, standardInput.Length);
+				}
+
+				Stream outputStream =
+					externalProgram.StandardOutput.BaseStream;
+				outputBytes = FileUtils.ReadBinaryOutput(outputStream);
 			}
-
-			externalProgram.StartInfo.RedirectStandardOutput = true;
-
-			externalProgram.StartInfo.FileName = filename;
-			externalProgram.StartInfo.Arguments = arguments;
-			externalProgram.Start();
-
-			if (standardInput != null)
-			{
-				// Prepare incoming binary stream to stdin
-				// hook up stdin
-				StreamWriter input = externalProgram.StandardInput;
-
-				// write bytes
-				input.BaseStream.Write(standardInput, 0, standardInput.Length);
-			}
-
-			Stream outputStream = externalProgram.StandardOutput.BaseStream;
-			byte[] outputBytes = FileUtils.ReadBinaryOutput(outputStream);
 
 			return outputBytes;
 		}
