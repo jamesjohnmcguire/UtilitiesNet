@@ -101,7 +101,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrEmpty(knrName))
 			{
-				output = ConvertFromKnrText(knrName, true);
+				output = ConvertFromKnrText(knrName, false);
 			}
 
 			return output;
