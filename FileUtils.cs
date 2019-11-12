@@ -22,7 +22,7 @@ namespace DigitalZenWorks.Common.Utilities
 {
 	/////////////////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Represents a FileUtils object
+	/// Represents a FileUtils object.
 	/// </summary>
 	/////////////////////////////////////////////////////////////////////////
 	public static class FileUtils
@@ -362,11 +362,11 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// RegexStringInFile
+		/// Replace string in file by regular expression.
 		/// </summary>
-		/// <param name="filePath"></param>
-		/// <param name="oldValue"></param>
-		/// <param name="newValue"></param>
+		/// <param name="filePath">The path of the file.</param>
+		/// <param name="oldValue">The value to be replaced.</param>
+		/// <param name="newValue">The value of the replacement.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void RegexStringInFile(
 			string filePath, string oldValue, string newValue)
@@ -381,17 +381,17 @@ namespace DigitalZenWorks.Common.Utilities
 					{
 						contents = sr.ReadToEnd();
 
-						using (FileStream fs = new FileStream(
+						using (FileStream stream = new FileStream(
 							filePath, FileMode.Open, FileAccess.ReadWrite))
 						{
-							StreamWriter sw = new StreamWriter(fs);
+							using (StreamWriter writer =
+								new StreamWriter(stream))
+							{
+								contents = Regex.Replace(
+									contents, oldValue, newValue);
 
-							contents = Regex.Replace(
-								contents, oldValue, newValue);
-
-							sw.Write(contents);
-
-							// sw.Close();
+								writer.Write(contents);
+							}
 						}
 					}
 				}
@@ -400,7 +400,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Replace a string in a file
+		/// Replace a string in a file.
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <param name="oldValue"></param>
@@ -560,7 +560,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Touch
+		/// Touch the file path with the time.
 		/// </summary>
 		/// <param name="path">The path of the file to touch.</param>
 		/// <param name="time">The time to set the file time to.</param>
@@ -595,7 +595,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Update the given file so that all lines end with CRLF
+		/// Update the given file so that all lines end with CRLF.
 		/// </summary>
 		/// <param name="filePath">The path of the file to update.</param>
 		/////////////////////////////////////////////////////////////////////
@@ -606,7 +606,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Update the given file so that all lines end with CRLF
+		/// Update the given file so that all lines end with CRLF.
 		/// </summary>
 		/// <param name="filePath">The path of the file to update.</param>
 		/////////////////////////////////////////////////////////////////////

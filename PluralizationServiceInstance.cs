@@ -1,4 +1,10 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////
+// <copyright file="PluralizationServiceInstance.cs" company="James John McGuire">
+// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// </copyright>
+/////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -14,16 +20,6 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly CultureInfo CultureInfo =
 			new CultureInfo("en-US");
 
-		static IPluralizationApi BuildApi()
-		{
-			PluralizationApiBuilder builder = new PluralizationApiBuilder();
-			builder.AddEnglishProvider();
-
-			IPluralizationApi api = builder.Build();
-
-			return api;
-		}
-
 		public static string Pluralize(string name)
 		{
 			return Api.Pluralize(name, CultureInfo) ?? name;
@@ -32,6 +28,16 @@ namespace DigitalZenWorks.Common.Utilities
 		public static string Singularize(string name)
 		{
 			return Api.Singularize(name, CultureInfo) ?? name;
+		}
+
+		private static IPluralizationApi BuildApi()
+		{
+			PluralizationApiBuilder builder = new PluralizationApiBuilder();
+			builder.AddEnglishProvider();
+
+			IPluralizationApi api = builder.Build();
+
+			return api;
 		}
 	}
 }

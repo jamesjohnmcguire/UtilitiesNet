@@ -123,4 +123,10 @@
   <data name="ILLEGAL_HEX_DATA" xml:space="preserve">
     <value>Illegal hex data, hex data must be in two bytes pairs, for example: 0F,FF,A3, ...</value>
   </data>
+  <data name="INCOMPLETE_BASE64_BLOCK" xml:space="preserve">
+    <value>Invalid incomplete base64 4-char block</value>
+  </data>
+  <data name="INVALID_BASE64_PADDING" xml:space="preserve">
+    <value>Invalid base64 padding</value>
+  </data>
 </root>

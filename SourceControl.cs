@@ -43,7 +43,7 @@ namespace DigitalZenWorks.Common.Utilities
 					output = GeneralUtilities.Execute(
 						"svndumpfilter.exe", "include " + originalProject, output);
 
-					// Edit output to remove 'project' path as it will be 
+					// Edit output to remove 'project' path as it will be
 					// the root in the new repository
 					byte[] replacedOutput = GeneralUtilities.ReplaceInByteArray(
 						output,

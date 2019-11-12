@@ -6,6 +6,8 @@
 
 using System;
 using System.Globalization;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 
 namespace DigitalZenWorks.Common.Utilities
@@ -15,6 +17,11 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class Base64
 	{
+		private static readonly ResourceManager StringTable = new
+			ResourceManager(
+				"DigitalZenWorks.Common.Utilities.Resources",
+				Assembly.GetExecutingAssembly());
+
 		private static readonly short[] Base64DecodeTable = new short[]
 		{
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0 -    9
@@ -176,11 +183,14 @@ namespace DigitalZenWorks.Common.Utilities
 							{
 								break;
 							}
-
-							// Incomplete 4-byte base64 data block.
 							else
 							{
-								throw new FormatException("Invalid incomplete base64 4-char block");
+								// Incomplete 4-byte base64 data block.
+								string message = StringTable.GetString(
+									"INCOMPLETE_BASE64_BLOCK",
+									CultureInfo.InstalledUICulture);
+
+								throw new FormatException(message);
 							}
 						}
 
@@ -195,7 +205,11 @@ namespace DigitalZenWorks.Common.Utilities
 							// abc=
 							if (offsetInBlock < 2)
 							{
-								throw new FormatException("Invalid base64 padding.");
+								string message = StringTable.GetString(
+									"INVALID_BASE64_PADDING",
+									CultureInfo.InstalledUICulture);
+
+								throw new FormatException(message);
 							}
 
 							// Skip next padding char.
