@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <TargetFramework>netstandard2.0</TargetFramework>
+  <CodeAnalysisRuleSet>CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+  <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
     <RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
     <Platforms>AnyCPU;x64;x86</Platforms>
@@ -24,7 +24,11 @@
     <None Remove="UtilitiesNetTests\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="CodeAnalysis.ruleset" />
+  </ItemGroup>
+  <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
+    <CodeAnalysisDictionary Include="CodeAnalysis.ruleset" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
     <PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
