@@ -26,7 +26,6 @@ namespace DigitalZenWorks.Common.Utilities
 			"DigitalZenWorks.Common.Utilities.Resources",
 			Assembly.GetExecutingAssembly());
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
 		public static object LoadWithValidation(
 			string schemaFile, string xmlFile, Type type)
 		{

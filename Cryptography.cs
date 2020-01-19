@@ -127,7 +127,6 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			RijndaelManaged algorithm = new RijndaelManaged();
 
-			// Create an encryption key from the encryptionPassword and salt.
 			using (Rfc2898DeriveBytes key =
 				new Rfc2898DeriveBytes(encryptionPassword, Salt))
 			{
