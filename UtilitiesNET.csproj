@@ -4,10 +4,10 @@
 		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
 		<CodeAnalysisRuleSet>CodeAnalysis.ruleset</CodeAnalysisRuleSet>
 		<NoWarn>NU1701</NoWarn>
-		<TargetFramework>netstandard2.0</TargetFramework>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-		<SignAssembly>true</SignAssembly>
 		<Platforms>AnyCPU;x64;x86</Platforms>
+		<SignAssembly>true</SignAssembly>
+		<TargetFramework>netstandard2.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>
