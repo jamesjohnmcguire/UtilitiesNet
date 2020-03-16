@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // <copyright file="FileUtils.cs" company="James John McGuire">
-// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2020 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
@@ -402,9 +402,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <summary>
 		/// Replace a string in a file.
 		/// </summary>
-		/// <param name="filePath"></param>
-		/// <param name="oldValue"></param>
-		/// <param name="newValue"></param>
+		/// <param name="filePath">The path of the file.</param>
+		/// <param name="oldValue">The text to replace.</param>
+		/// <param name="newValue">The text of replacement.</param>
 		/////////////////////////////////////////////////////////////////////
 		public static void ReplaceStringInFile(
 			string filePath, string oldValue, string newValue)
@@ -617,7 +617,8 @@ namespace DigitalZenWorks.Common.Utilities
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage(
 			"Microsoft.Usage",
-			"CA2202:Do not dispose objects multiple times")]
+			"CA2202:Do not dispose objects multiple times",
+			Justification = "The warning seems to be a mistake.")]
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
 			using (FileStream fileStream =

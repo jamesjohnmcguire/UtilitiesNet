@@ -8,6 +8,8 @@
     <AssemblyName>DigitalZenWorks.Common.Utilities.Tests</AssemblyName>
 
     <RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
+
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // <copyright file="XmlUtilities.cs" company="James John McGuire">
-// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2020 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +26,6 @@ namespace DigitalZenWorks.Common.Utilities
 			"DigitalZenWorks.Common.Utilities.Resources",
 			Assembly.GetExecutingAssembly());
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
 		public static object LoadWithValidation(
 			string schemaFile, string xmlFile, Type type)
 		{

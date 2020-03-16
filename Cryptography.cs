@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // <copyright file="Cryptography.cs" company="James John McGuire">
-// Copyright © 2006 - 2019 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2020 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
@@ -127,7 +127,6 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			RijndaelManaged algorithm = new RijndaelManaged();
 
-			// Create an encryption key from the encryptionPassword and salt.
 			using (Rfc2898DeriveBytes key =
 				new Rfc2898DeriveBytes(encryptionPassword, Salt))
 			{

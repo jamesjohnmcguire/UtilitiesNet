@@ -1,40 +1,44 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
-    <RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
-    <Platforms>AnyCPU;x64;x86</Platforms>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
-    <Version>1.2.0</Version>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <NoWarn>1701;1702;NU1605</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="UtilitiesNetTests\**" />
-    <EmbeddedResource Remove="UtilitiesNetTests\**" />
-    <None Remove="UtilitiesNetTests\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
-    <PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
+		<CodeAnalysisRuleSet>CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+		<NoWarn>NU1701</NoWarn>
+		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
+		<Platforms>AnyCPU;x64;x86</Platforms>
+		<SignAssembly>true</SignAssembly>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Common.Logging" Version="3.4.1" />
+		<PackageReference Include="Common.Logging.Core" Version="3.4.1" />
+		<PackageReference Include="Common.Logging.Log4Net208" Version="3.4.1" />
+		<PackageReference Include="log4net" Version="2.0.8" />
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="UtilitiesNetTests\**" />
+		<EmbeddedResource Remove="UtilitiesNetTests\**" />
+		<None Remove="UtilitiesNetTests\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="CodeAnalysis.ruleset" />
+		<None Remove="stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="stylecop.json" />
+		<CodeAnalysisDictionary Include="CodeAnalysis.ruleset" />
+	</ItemGroup>
+
 </Project>
