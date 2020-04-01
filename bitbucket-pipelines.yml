@@ -11,7 +11,7 @@ pipelines:
         caches:
           - dotnetcore
         script: # Modify the commands below to build your repository.
-          - export PROJECT_NAME=UtilitiesNet
+          - export PROJECT_NAME=UtilitiesNET.csproj
           - export TEST_NAME=UtilitiesNetTest
           - dotnet restore
           - dotnet build $PROJECT_NAME
