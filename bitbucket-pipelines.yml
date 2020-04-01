@@ -12,7 +12,7 @@ pipelines:
           - dotnetcore
         script: # Modify the commands below to build your repository.
           - export PROJECT_NAME=UtilitiesNET.csproj
-          - export TEST_NAME=UtilitiesNetTest
+          - export TEST_NAME=UtilitiesNetTests\UtilitiesNetTests.csproj
           - dotnet restore
           - dotnet build $PROJECT_NAME
           - dotnet test $TEST_NAME
