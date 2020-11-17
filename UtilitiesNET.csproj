@@ -1,15 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
 		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
 		<CodeAnalysisRuleSet>CodeAnalysis.ruleset</CodeAnalysisRuleSet>
 		<Company>James John McGuire</Company>
-		<Copyright>Copyright c 2006 - 2020</Copyright>
+		<Copyright>Copyright © 2006 - 2020</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<NoWarn>NU1605;NU1701</NoWarn>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-		<Platforms>AnyCPU;x64;x86</Platforms>
+		<Platforms>AnyCPU;x86;x64</Platforms>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<TargetFramework>netstandard2.0</TargetFramework>
