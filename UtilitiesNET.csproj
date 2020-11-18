@@ -38,11 +38,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="CodeAnalysis.ruleset" />
-		<None Remove="stylecop.json" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 		<CodeAnalysisDictionary Include="CodeAnalysis.ruleset" />
 	</ItemGroup>
