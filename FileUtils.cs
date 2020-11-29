@@ -459,10 +459,6 @@ namespace DigitalZenWorks.Common.Utilities
 		/// the text.</param>
 		/// <returns>A value indicating success.</returns>
 		/////////////////////////////////////////////////////////////////////
-		[System.Diagnostics.CodeAnalysis.SuppressMessage(
-			"Microsoft.Usage",
-			"CA2202:Do not dispose objects multiple times",
-			Justification = "A harmless warning and difficult to get rid of.")]
 		public static bool SaveFile(
 			string fileContents, string filePathName, Encoding encoding)
 		{
@@ -615,10 +611,6 @@ namespace DigitalZenWorks.Common.Utilities
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage(
-			"Microsoft.Usage",
-			"CA2202:Do not dispose objects multiple times",
-			Justification = "The warning seems to be a mistake.")]
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
 			using (FileStream fileStream =
