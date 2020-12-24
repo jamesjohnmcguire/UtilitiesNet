@@ -10,7 +10,7 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<NoWarn>NU1605;NU1701</NoWarn>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-		<Platforms>AnyCPU;x86;x64</Platforms>
+		<Platforms>x86;x64</Platforms>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<TargetFramework>netstandard2.0</TargetFramework>
