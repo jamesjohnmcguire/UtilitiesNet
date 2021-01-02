@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // <copyright file="AESGCM.cs" company="James John McGuire">
-// Copyright © 2006 - 2020 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2021 James John McGuire. All Rights Reserved.
 // </copyright>
 //
 // This file has been slightly modified from its source in order to elimate
