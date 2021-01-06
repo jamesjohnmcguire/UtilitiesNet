@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// <copyright file="Encryption.cs" company="James John McGuire">
+// <copyright file="PasswordEncryption.cs" company="James John McGuire">
 // Copyright © 2006 - 2021 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ namespace DigitalZenWorks.Common.Utilities
 	/// Changed to use the work of James Tuley's AESGCM.cs, as it is more
 	/// modern and vetted by code reviews.
 	/// </remarks>
-	public static class Encryption
+	public static class PasswordEncryption
 	{
 		/// <summary>
 		/// Takes the given text and encrypts it using the given password.
