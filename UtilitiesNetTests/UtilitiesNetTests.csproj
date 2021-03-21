@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AssemblyName>DigitalZenWorks.Common.Utilities.Tests</AssemblyName>
+		<CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-	<TargetFramework>netcoreapp3.1</TargetFramework>
-
-	<IsPackable>false</IsPackable>
-
-	<AssemblyName>DigitalZenWorks.Common.Utilities.Tests</AssemblyName>
-
-	<RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
-
-	<Platforms>AnyCPU;x64;x86</Platforms>
+		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
+		<Platforms>AnyCPU;x64;x86</Platforms>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+		<RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
