@@ -38,4 +38,8 @@
 		<CodeAnalysisDictionary Include="CodeAnalysis.ruleset" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include=".editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
 </Project>
