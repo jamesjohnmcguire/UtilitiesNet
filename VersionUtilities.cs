@@ -16,9 +16,9 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			int buildNumber;
 
-			Assembly thisAssembly = Assembly.GetExecutingAssembly();
+			Assembly assembly = Assembly.GetCallingAssembly();
 
-			AssemblyName name = thisAssembly.GetName();
+			AssemblyName name = assembly.GetName();
 			Version version = name.Version;
 
 			buildNumber = version.Revision;
@@ -53,9 +53,9 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			string version;
 
-			Assembly thisAssembly = Assembly.GetExecutingAssembly();
+			Assembly assembly = Assembly.GetCallingAssembly();
 
-			AssemblyName name = thisAssembly.GetName();
+			AssemblyName name = assembly.GetName();
 			Version versionNumber = name.Version;
 
 			version = versionNumber.ToString();
