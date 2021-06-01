@@ -26,6 +26,29 @@ namespace DigitalZenWorks.Common.Utilities
 			return buildNumber;
 		}
 
+		public static string GetPackageVersion(string packageId)
+		{
+			string version = string.Empty;
+
+			if (!string.IsNullOrWhiteSpace(packageId))
+			{
+				// get the package file, based on current directory
+				string contents = FileUtils.GetFileContents("packages.config");
+
+				if (!string.IsNullOrWhiteSpace(contents))
+				{
+					int index = contents.IndexOf(
+						packageId, StringComparison.OrdinalIgnoreCase) +
+						packageId.Length + 1;
+					string substring = contents.Substring(index);
+					version =
+						Regex.Match(substring, "\"([^\"]*)\"").Groups[1].Value;
+				}
+			}
+
+			return version;
+		}
+
 		public static string GetVersion()
 		{
 			string version;
