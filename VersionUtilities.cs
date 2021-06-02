@@ -5,6 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -33,7 +35,7 @@ namespace DigitalZenWorks.Common.Utilities
 			if (!string.IsNullOrWhiteSpace(packageId))
 			{
 				// get the package file, based on current directory
-				string contents = FileUtils.GetFileContents("packages.config");
+				string contents = File.ReadAllText("packages.config");
 
 				if (!string.IsNullOrWhiteSpace(contents))
 				{
@@ -59,6 +61,59 @@ namespace DigitalZenWorks.Common.Utilities
 			Version versionNumber = name.Version;
 
 			version = versionNumber.ToString();
+
+			return version;
+		}
+
+		public static string UpdateVersion(string fileName)
+		{
+			string version = null;
+
+			try
+			{
+				if (File.Exists(fileName))
+				{
+					string contents = File.ReadAllText(fileName);
+
+					if (!string.IsNullOrWhiteSpace(contents))
+					{
+						int major = 0;
+						int minor = 0;
+						int build = 0;
+						int revision = 0;
+						string pattern = "AssemblyVersion\\(\"(?<major>\\d+)\\." +
+							"(?<minor>\\d+)\\.(?<revision>\\d+)\\.(?<build>\\d+)\"\\)";
+
+						Regex regex = new Regex(pattern);
+						MatchCollection matches = regex.Matches(contents);
+
+						if (matches.Count > 0)
+						{
+							major = Convert.ToInt32(matches[0].Groups["major"].Value);
+							minor = Convert.ToInt32(matches[0].Groups["minor"].Value);
+							revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
+							build = Convert.ToInt32(matches[0].Groups["build"].Value) + 1;
+
+							version = build.ToString(CultureInfo.InvariantCulture);
+						}
+					}
+				}
+			}
+			catch (Exception exception) when
+				(exception is ArgumentException ||
+				exception is ArgumentNullException ||
+				exception is ArgumentOutOfRangeException ||
+				exception is DirectoryNotFoundException ||
+				exception is FileNotFoundException ||
+				exception is FormatException ||
+				exception is IOException ||
+				exception is NotSupportedException ||
+				exception is OverflowException ||
+				exception is PathTooLongException ||
+				exception is System.Security.SecurityException ||
+				exception is UnauthorizedAccessException)
+			{
+			}
 
 			return version;
 		}
