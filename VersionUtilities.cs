@@ -65,7 +65,7 @@ namespace DigitalZenWorks.Common.Utilities
 			return version;
 		}
 
-		public static string UpdateVersion(string fileName)
+		public static string VersionUpdate(string fileName)
 		{
 			string version = null;
 
