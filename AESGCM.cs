@@ -27,16 +27,37 @@ using Org.BouncyCastle.Security;
 
 namespace Encryption
 {
+	/// <summary>
+	/// Encryption support class.
+	/// </summary>
 	public static class AESGCM
 	{
 		// Preconfigured Encryption Parameters
+		/// <summary>
+		/// Default nonce bit size.
+		/// </summary>
 		public static readonly int NonceBitSize = 128;
+		/// <summary>
+		/// Mac bit size.
+		/// </summary>
 		public static readonly int MacBitSize = 128;
+		/// <summary>
+		/// Key bit size.
+		/// </summary>
 		public static readonly int KeyBitSize = 256;
 
 		// Preconfigured Password Key Derivation Parameters
+		/// <summary>
+		/// Salt bit size.
+		/// </summary>
 		public static readonly int SaltBitSize = 128;
+		/// <summary>
+		/// Iteractions.
+		/// </summary>
 		public static readonly int Iterations = 10000;
+		/// <summary>
+		/// Mininmum password length.
+		/// </summary>
 		public static readonly int MinPasswordLength = 12;
 
 		private static readonly SecureRandom Random = new SecureRandom();
@@ -76,7 +97,7 @@ namespace Encryption
 		}
 
 		/// <summary>
-		/// Simple Decryption & Authentication (AES-GCM) of a UTF8 Message.
+		/// Simple Decryption and Authentication (AES-GCM) of a UTF8 Message.
 		/// </summary>
 		/// <param name="encryptedMessage">The encrypted message.</param>
 		/// <param name="key">The key.</param>
@@ -207,7 +228,7 @@ namespace Encryption
 		}
 
 		/// <summary>
-		/// Simple Decryption & Authentication (AES-GCM) of a UTF8 Message.
+		/// Simple Decryption and Authentication (AES-GCM) of a UTF8 Message.
 		/// </summary>
 		/// <param name="encryptedMessage">The encrypted message.</param>
 		/// <param name="key">The key.</param>

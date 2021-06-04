@@ -10,8 +10,16 @@ using System.Text;
 
 namespace DigitalZenWorks.Common.Utilities
 {
+	/// <summary>
+	/// Converter class.
+	/// </summary>
 	public static class Converter
 	{
+		/// <summary>
+		/// Converts a string to a byte array.
+		/// </summary>
+		/// <param name="original">The string to be converted.</param>
+		/// <returns>The byte array.</returns>
 		public static byte[] StringToByteArray(
 			string original)
 		{

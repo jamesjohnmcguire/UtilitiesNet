@@ -16,6 +16,9 @@ using System.Xml.Serialization;
 
 namespace DigitalZenWorks.Common.Utilities
 {
+	/// <summary>
+	/// XML utilities class.
+	/// </summary>
 	public static class XmlUtilities
 	{
 		private static readonly ILog Log = LogManager.GetLogger(
@@ -26,6 +29,13 @@ namespace DigitalZenWorks.Common.Utilities
 			"DigitalZenWorks.Common.Utilities.Resources",
 			Assembly.GetExecutingAssembly());
 
+		/// <summary>
+		/// Load with validation.
+		/// </summary>
+		/// <param name="schemaFile">The schema file.</param>
+		/// <param name="xmlFile">The XML file.</param>
+		/// <param name="type">The serializer type.</param>
+		/// <returns>The XML object.</returns>
 		public static object LoadWithValidation(
 			string schemaFile, string xmlFile, Type type)
 		{

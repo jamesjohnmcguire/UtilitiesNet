@@ -35,6 +35,12 @@ namespace DigitalZenWorks.Common.Utilities
 				"DigitalZenWorks.Common.Utilities.Resources",
 				Assembly.GetExecutingAssembly());
 
+		/// <summary>
+		/// Create file from embedded resource.
+		/// </summary>
+		/// <param name="resourceName">The name of resource.</param>
+		/// <param name="filePath">The file path to save the resource to.</param>
+		/// <returns>A value indicating success or not.</returns>
 		public static bool CreateFileFromEmbeddedResource(
 			string resourceName, string filePath)
 		{
@@ -100,6 +106,10 @@ namespace DigitalZenWorks.Common.Utilities
 			return success;
 		}
 
+		/// <summary>
+		/// Flatten the given directory.
+		/// </summary>
+		/// <param name="directory">The directory to be flattened.</param>
 		public static void Flatten(string directory)
 		{
 			foreach (string subDirectory in Directory.GetDirectories(directory))
@@ -326,6 +336,11 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
+		/// <summary>
+		/// Read binary output.
+		/// </summary>
+		/// <param name="output">The output to be read.</param>
+		/// <returns>The bytes of the output.</returns>
 		public static byte[] ReadBinaryOutput(Stream output)
 		{
 			byte[] outputBytes = null;
@@ -535,6 +550,11 @@ namespace DigitalZenWorks.Common.Utilities
 			return SaveFile(fileContents, filePathName);
 		}
 
+		/// <summary>
+		/// Copies one stream to another.
+		/// </summary>
+		/// <param name="input">The input stream.</param>
+		/// <param name="output">The output stream.</param>
 		public static void StreamCopy(Stream input, Stream output)
 		{
 			int i;
@@ -611,6 +631,11 @@ namespace DigitalZenWorks.Common.Utilities
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
+		/// <summary>
+		/// Writes the extracted file.
+		/// </summary>
+		/// <param name="fileName">The file to copy to.</param>
+		/// <param name="contents">The contents to copy.</param>
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
 			using (FileStream fileStream =

@@ -10,6 +10,9 @@ using System.Text;
 
 namespace DigitalZenWorks.Common.Utilities
 {
+	/// <summary>
+	/// Source version control class.
+	/// </summary>
 	public static class SourceControl
 	{
 		/////////////////////////////////////////////////////////////////////

@@ -12,8 +12,15 @@ using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utilities
 {
+	/// <summary>
+	/// Version Utilities.
+	/// </summary>
 	public static class VersionUtilities
 	{
+		/// <summary>
+		/// Gets the build number.
+		/// </summary>
+		/// <returns>The build number.</returns>
 		public static int GetBuildNumber()
 		{
 			int buildNumber;
@@ -28,6 +35,11 @@ namespace DigitalZenWorks.Common.Utilities
 			return buildNumber;
 		}
 
+		/// <summary>
+		/// Gets the package version.
+		/// </summary>
+		/// <param name="packageId">The identifier for the package.</param>
+		/// <returns>The package version.</returns>
 		public static string GetPackageVersion(string packageId)
 		{
 			string version = string.Empty;
@@ -51,6 +63,10 @@ namespace DigitalZenWorks.Common.Utilities
 			return version;
 		}
 
+		/// <summary>
+		/// Get the version.
+		/// </summary>
+		/// <returns>The version.</returns>
 		public static string GetVersion()
 		{
 			string version;
@@ -65,6 +81,11 @@ namespace DigitalZenWorks.Common.Utilities
 			return version;
 		}
 
+		/// <summary>
+		/// Updates the version tag inside the given file.
+		/// </summary>
+		/// <param name="fileName">The file containing the version tag.</param>
+		/// <returns>The updated version build number.</returns>
 		public static string VersionUpdate(string fileName)
 		{
 			string version = null;
@@ -109,7 +130,45 @@ namespace DigitalZenWorks.Common.Utilities
 			return version;
 		}
 
-		public static string VersionTagUpdate(
+		private static string AssemblyInfoTagUpdate(
+			string contents, string tag, out string version)
+		{
+			version = null;
+
+			string pattern = tag + "\\(\"(?<major>\\d+)\\.(?<minor>\\d+)\\." +
+				"(?<revision>\\d+)\\.(?<build>\\d+)\"\\)";
+			string replacementFormat = tag + "(\"{0}.{1}.{2}.{3}\")";
+
+			contents = VersionTagUpdate(
+				contents, pattern, replacementFormat, out version);
+
+			return contents;
+		}
+
+		private static string AssemblyInfoUpdate(string fileName)
+		{
+			string version = null;
+
+			if (File.Exists(fileName))
+			{
+				string contents = File.ReadAllText(fileName);
+
+				if (!string.IsNullOrWhiteSpace(contents))
+				{
+					string tag = "AssemblyVersion";
+					contents = AssemblyInfoTagUpdate(contents, tag, out version);
+
+					tag = "AssemblyFileVersion";
+					contents = AssemblyInfoTagUpdate(contents, tag, out version);
+
+					File.WriteAllText(fileName, contents);
+				}
+			}
+
+			return version;
+		}
+
+		private static string VersionTagUpdate(
 			string contents,
 			string pattern,
 			string replacementFormat,

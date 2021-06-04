@@ -10,8 +10,18 @@ using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utilities.Extensions
 {
+	/// <summary>
+	/// String extender class.
+	/// </summary>
 	public static class StringExtender
 	{
+		/// <summary>
+		/// Compare multiple strings.
+		/// </summary>
+		/// <param name="data">The base data to compare.</param>
+		/// <param name="compareType">The compare type.</param>
+		/// <param name="compareValues">A set of values to compare.</param>
+		/// <returns>The result of the compare.</returns>
 		public static bool CompareMultiple(
 			this string data,
 			StringComparison compareType,
@@ -31,6 +41,11 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			return false;
 		}
 
+		/// <summary>
+		/// Reverse a string.
+		/// </summary>
+		/// <param name="input">The input string.</param>
+		/// <returns>The reversed string.</returns>
 		public static string Reverse(this string input)
 		{
 			if (!string.IsNullOrWhiteSpace(input))
@@ -43,7 +58,11 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			return input;
 		}
 
-		// Convert the string to camel case.
+		/// <summary>
+		/// Convert the string to camel case.
+		/// </summary>
+		/// <param name="input">The input string.</param>
+		/// <returns>The camel case string.</returns>
 		public static string ToCamelCase(this string input)
 		{
 			// If there are 0 or 1 characters, just return the string.
@@ -71,13 +90,22 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			return result;
 		}
 
+		/// <summary>
+		/// Converts a string to digits only.
+		/// </summary>
+		/// <param name="input">The input string.</param>
+		/// <returns>The digits only string.</returns>
 		public static string ToDigitsOnly(this string input)
 		{
 			Regex digitsOnly = new Regex(@"[^\d]");
 			return digitsOnly.Replace(input, string.Empty);
 		}
 
-		// Convert the string to Pascal case.
+		/// <summary>
+		/// Convert the string to Pascal case.
+		/// </summary>
+		/// <param name="input">The input string.</param>
+		/// <returns>The Pascal case string.</returns>
 		public static string ToPascalCase(this string input)
 		{
 			// If there are 0 or 1 characters, just return the string.
@@ -108,6 +136,11 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			return result;
 		}
 
+		/// <summary>
+		/// Convert the string to proper case.
+		/// </summary>
+		/// <param name="unformattedText">The input string.</param>
+		/// <returns>The proper case string.</returns>
 		public static string ToProperCase(this string unformattedText)
 		{
 			string formattedText = null;

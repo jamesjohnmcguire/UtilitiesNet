@@ -17,6 +17,9 @@ using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utilities
 {
+	/// <summary>
+	/// General utilities class.
+	/// </summary>
 	public static class GeneralUtilities
 	{
 		private static readonly ILog Log = LogManager.GetLogger(
@@ -27,6 +30,10 @@ namespace DigitalZenWorks.Common.Utilities
 				"DigitalZenWorks.Common.Utilities.Resources",
 				Assembly.GetExecutingAssembly());
 
+		/// <summary>
+		/// Get the calling method.
+		/// </summary>
+		/// <returns>The calling method.</returns>
 		public static string CallingMethod()
 		{
 			StackFrame stackFrame = new StackFrame(1);
@@ -107,6 +114,11 @@ namespace DigitalZenWorks.Common.Utilities
 			return output;
 		}
 
+		/// <summary>
+		/// Gets a date from a string.
+		/// </summary>
+		/// <param name="dateText">The date string.</param>
+		/// <returns>The DateTime object.</returns>
 		public static DateTime DateFromString(string dateText)
 		{
 			DateTime date = DateTime.MinValue;
@@ -119,6 +131,13 @@ namespace DigitalZenWorks.Common.Utilities
 			return date;
 		}
 
+		/// <summary>
+		/// Execute the given file.
+		/// </summary>
+		/// <param name="filename">The file name of the file.</param>
+		/// <param name="arguments">The arguments to the file.</param>
+		/// <param name="standardInput">The input to file.</param>
+		/// <returns>The ouput of the file.</returns>
 		public static byte[] Execute(
 			string filename, string arguments, byte[] standardInput)
 		{
@@ -160,6 +179,12 @@ namespace DigitalZenWorks.Common.Utilities
 			return outputBytes;
 		}
 
+		/// <summary>
+		/// Finds an item in a byte array.
+		/// </summary>
+		/// <param name="haystack">The byte array haystack.</param>
+		/// <param name="needle">The needle byte.</param>
+		/// <returns>The index of the bytes found.</returns>
 		public static int FindInByteArray(byte[] haystack, byte[] needle)
 		{
 			int foundPosition = -1;
@@ -508,6 +533,13 @@ namespace DigitalZenWorks.Common.Utilities
 			return returnData;
 		}
 
+		/// <summary>
+		/// Replace in byte array.
+		/// </summary>
+		/// <param name="originalArray">The byte array.</param>
+		/// <param name="find">The bytes to replace.</param>
+		/// <param name="replace">The replacement bytes.</param>
+		/// <returns>The new byte array.</returns>
 		public static byte[] ReplaceInByteArray(
 			byte[] originalArray, byte[] find, byte[] replace)
 		{
