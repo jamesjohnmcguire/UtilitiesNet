@@ -77,25 +77,16 @@ namespace DigitalZenWorks.Common.Utilities
 
 					if (!string.IsNullOrWhiteSpace(contents))
 					{
-						int major = 0;
-						int minor = 0;
-						int build = 0;
-						int revision = 0;
-						string pattern = "AssemblyVersion\\(\"(?<major>\\d+)\\." +
-							"(?<minor>\\d+)\\.(?<revision>\\d+)\\.(?<build>\\d+)\"\\)";
+						string pattern = "AssemblyVersion\\(\"" +
+							"(?<major>\\d+)\\.(?<minor>\\d+)\\." +
+							"(?<revision>\\d+)\\.(?<build>\\d+)\"\\)";
+						string replacementFormat =
+							"AssemblyVersion(\"{0}.{1}.{2}.{3}\")";
 
-						Regex regex = new Regex(pattern);
-						MatchCollection matches = regex.Matches(contents);
+						contents = VersionTagUpdate(
+							contents, pattern, replacementFormat, out version);
 
-						if (matches.Count > 0)
-						{
-							major = Convert.ToInt32(matches[0].Groups["major"].Value);
-							minor = Convert.ToInt32(matches[0].Groups["minor"].Value);
-							revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
-							build = Convert.ToInt32(matches[0].Groups["build"].Value) + 1;
-
-							version = build.ToString(CultureInfo.InvariantCulture);
-						}
+						File.WriteAllText(fileName, contents);
 					}
 				}
 			}
@@ -116,6 +107,43 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return version;
+		}
+
+		public static string VersionTagUpdate(
+			string contents,
+			string pattern,
+			string replacementFormat,
+			out string version)
+		{
+			version = null;
+			Regex regex = new Regex(pattern);
+			MatchCollection matches = regex.Matches(contents);
+
+			if (matches.Count > 0)
+			{
+				int build;
+				string major = matches[0].Groups["major"].Value;
+				string minor = matches[0].Groups["minor"].Value;
+				string revision = matches[0].Groups["revision"].Value;
+
+				build = Convert.ToInt32(matches[0].Groups["build"].Value);
+				build++;
+
+				version = build.ToString(CultureInfo.InvariantCulture);
+
+				string replacement = string.Format(
+					CultureInfo.InvariantCulture,
+					replacementFormat,
+					major,
+					minor,
+					revision,
+					version);
+
+				contents = Regex.Replace(
+					contents, pattern, replacement);
+			}
+
+			return contents;
 		}
 	}
 }
