@@ -98,14 +98,21 @@ namespace DigitalZenWorks.Common.Utilities
 
 					if (!string.IsNullOrWhiteSpace(contents))
 					{
-						string pattern = "AssemblyVersion\\(\"" +
-							"(?<major>\\d+)\\.(?<minor>\\d+)\\." +
-							"(?<revision>\\d+)\\.(?<build>\\d+)\"\\)";
-						string replacementFormat =
-							"AssemblyVersion(\"{0}.{1}.{2}.{3}\")";
+						VersionFileType fileType = GetFileType(fileName);
 
-						contents = VersionTagUpdate(
-							contents, pattern, replacementFormat, out version);
+						switch (fileType)
+						{
+							case VersionFileType.AssemblyInfo:
+								contents = AssemblyInfoUpdate(
+									contents, out version);
+								break;
+							case VersionFileType.CsProj:
+								contents = CsProjUpdate(
+									contents, out version);
+								break;
+							default:
+								break;
+						}
 
 						File.WriteAllText(fileName, contents);
 					}
@@ -145,27 +152,80 @@ namespace DigitalZenWorks.Common.Utilities
 			return contents;
 		}
 
-		private static string AssemblyInfoUpdate(string fileName)
+		private static string AssemblyInfoUpdate(
+			string contents, out string version)
 		{
-			string version = null;
+			version = null;
 
-			if (File.Exists(fileName))
+			string tag = "AssemblyVersion";
+			contents = AssemblyInfoTagUpdate(contents, tag, out version);
+
+			tag = "AssemblyFileVersion";
+			string nextVersion = null;
+			contents = AssemblyInfoTagUpdate(contents, tag, out nextVersion);
+
+			if (!string.IsNullOrWhiteSpace(nextVersion))
 			{
-				string contents = File.ReadAllText(fileName);
-
-				if (!string.IsNullOrWhiteSpace(contents))
-				{
-					string tag = "AssemblyVersion";
-					contents = AssemblyInfoTagUpdate(contents, tag, out version);
-
-					tag = "AssemblyFileVersion";
-					contents = AssemblyInfoTagUpdate(contents, tag, out version);
-
-					File.WriteAllText(fileName, contents);
-				}
+				version = nextVersion;
 			}
 
-			return version;
+			return contents;
+		}
+
+		private static string CsProjTagUpdate(
+			string contents, string tag, out string version)
+		{
+			version = null;
+
+			string pattern = tag + "\\>(?<major>\\d+)\\.(?<minor>\\d+)\\." +
+				"(?<revision>\\d+)\\.(?<build>\\d+)\\<";
+			string replacementFormat = tag + ">{0}.{1}.{2}.{3}<";
+
+			contents = VersionTagUpdate(
+				contents, pattern, replacementFormat, out version);
+
+			return contents;
+		}
+
+		private static string CsProjUpdate(
+			string contents, out string version)
+		{
+			version = null;
+
+			string tag = "AssemblyVersion";
+			contents = CsProjTagUpdate(contents, tag, out version);
+
+			tag = "AssemblyFileVersion";
+			string nextVersion = null;
+			contents = CsProjTagUpdate(contents, tag, out nextVersion);
+
+			if (!string.IsNullOrWhiteSpace(nextVersion))
+			{
+				version = nextVersion;
+			}
+
+			return contents;
+		}
+
+		private static VersionFileType GetFileType(string fileName)
+		{
+			VersionFileType fileType = VersionFileType.Generic;
+
+			string extension = Path.GetExtension(fileName);
+
+			switch (extension)
+			{
+				case ".cs":
+					fileType = VersionFileType.AssemblyInfo;
+					break;
+				case ".csproj":
+					fileType = VersionFileType.CsProj;
+					break;
+				default:
+					break;
+			}
+	
+			return fileType;
 		}
 
 		private static string VersionTagUpdate(
