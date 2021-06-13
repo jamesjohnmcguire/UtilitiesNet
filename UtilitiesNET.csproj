@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
 		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
