@@ -224,7 +224,7 @@ namespace DigitalZenWorks.Common.Utilities
 				default:
 					break;
 			}
-	
+
 			return fileType;
 		}
 
@@ -245,7 +245,9 @@ namespace DigitalZenWorks.Common.Utilities
 				string minor = matches[0].Groups["minor"].Value;
 				string revision = matches[0].Groups["revision"].Value;
 
-				build = Convert.ToInt32(matches[0].Groups["build"].Value);
+				build = Convert.ToInt32(
+					matches[0].Groups["build"].Value,
+					CultureInfo.InvariantCulture);
 				build++;
 
 				version = build.ToString(CultureInfo.InvariantCulture);

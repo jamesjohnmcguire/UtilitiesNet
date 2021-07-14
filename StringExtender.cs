@@ -27,7 +27,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			StringComparison compareType,
 			params string[] compareValues)
 		{
-			if ((compareValues != null) && (!string.IsNullOrEmpty(data)))
+			if (!string.IsNullOrEmpty(data))
 			{
 				foreach (string s in compareValues)
 				{

@@ -15,6 +15,8 @@ using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
 
+[assembly: CLSCompliant(true)]
+
 namespace DigitalZenWorks.Common.Utilities
 {
 	/// <summary>

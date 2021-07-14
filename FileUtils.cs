@@ -97,10 +97,7 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 			finally
 			{
-				if (null != fileStream)
-				{
-					fileStream.Close();
-				}
+				fileStream.Close();
 			}
 
 			return success;
@@ -184,10 +181,7 @@ namespace DigitalZenWorks.Common.Utilities
 				using (StreamReader streamReaderObject = new
 					StreamReader(filePath))
 				{
-					if (null != streamReaderObject)
-					{
-						fileContents = streamReaderObject.ReadToEnd();
-					}
+					fileContents = streamReaderObject.ReadToEnd();
 				}
 			}
 
@@ -214,11 +208,7 @@ namespace DigitalZenWorks.Common.Utilities
 					fileStream = new FileStream(
 						filePath, FileMode.Open, FileAccess.ReadWrite);
 
-					if (null != fileStream)
-					{
-						// set up a streamwriter for adding text
-						streamWriter = new StreamWriter(fileStream);
-					}
+					streamWriter = new StreamWriter(fileStream);
 				}
 			}
 			catch (Exception exception) when
@@ -392,21 +382,18 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				using (StreamReader sr = new StreamReader(filePath))
 				{
-					if (sr != null)
+					contents = sr.ReadToEnd();
+
+					using (FileStream stream = new FileStream(
+						filePath, FileMode.Open, FileAccess.ReadWrite))
 					{
-						contents = sr.ReadToEnd();
-
-						using (FileStream stream = new FileStream(
-							filePath, FileMode.Open, FileAccess.ReadWrite))
+						using (StreamWriter writer =
+							new StreamWriter(stream))
 						{
-							using (StreamWriter writer =
-								new StreamWriter(stream))
-							{
-								contents = Regex.Replace(
-									contents, oldValue, newValue);
+							contents = Regex.Replace(
+								contents, oldValue, newValue);
 
-								writer.Write(contents);
-							}
+							writer.Write(contents);
 						}
 					}
 				}
