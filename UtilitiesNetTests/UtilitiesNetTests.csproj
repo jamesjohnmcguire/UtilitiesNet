@@ -6,7 +6,7 @@
 		<CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-		<Platforms>AnyCPU;x64;x86</Platforms>
+		<Platforms>x86;x64</Platforms>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
