@@ -448,6 +448,13 @@ namespace DigitalZenWorks.Common.Utilities
 		public static bool SaveFile(
 			string fileContents, string filePathName)
 		{
+			string folder = Path.GetDirectoryName(filePathName);
+
+			if (!Directory.Exists(folder))
+			{
+				Directory.CreateDirectory(folder);
+			}
+
 			return SaveFile(fileContents, filePathName, Encoding.Default);
 		}
 
