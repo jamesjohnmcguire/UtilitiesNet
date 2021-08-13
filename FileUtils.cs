@@ -46,7 +46,6 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			bool success = false;
 			Stream templateObjectStream = null;
-			FileStream fileStream = null;
 
 			try
 			{
@@ -94,10 +93,6 @@ namespace DigitalZenWorks.Common.Utilities
 			catch
 			{
 				throw;
-			}
-			finally
-			{
-				fileStream.Close();
 			}
 
 			return success;
