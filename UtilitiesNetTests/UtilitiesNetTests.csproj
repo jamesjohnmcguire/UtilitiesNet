@@ -5,6 +5,7 @@
 		<AssemblyName>DigitalZenWorks.Common.Utilities.Tests</AssemblyName>
 		<CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<IsTestProject>true</IsTestProject>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
 		<Platforms>x86;x64</Platforms>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
