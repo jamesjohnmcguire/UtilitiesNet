@@ -18,6 +18,8 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// <summary>
 		/// Compare multiple strings.
 		/// </summary>
+		/// <remarks>Not quite sure what the intent of this
+		/// message is.</remarks>
 		/// <param name="data">The base data to compare.</param>
 		/// <param name="compareType">The compare type.</param>
 		/// <param name="compareValues">A set of values to compare.</param>
@@ -27,18 +29,21 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			StringComparison compareType,
 			params string[] compareValues)
 		{
-			if (!string.IsNullOrEmpty(data))
+			bool result = false;
+
+			if (!string.IsNullOrEmpty(data) && compareValues != null)
 			{
-				foreach (string s in compareValues)
+				foreach (string compare in compareValues)
 				{
-					if (data.Equals(s, compareType))
+					if (data.Equals(compare, compareType))
 					{
-						return true;
+						result = true;
+						break;
 					}
 				}
 			}
 
-			return false;
+			return result;
 		}
 
 		/// <summary>
