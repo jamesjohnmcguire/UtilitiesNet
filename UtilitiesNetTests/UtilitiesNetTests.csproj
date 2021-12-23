@@ -10,8 +10,8 @@
 		<Platforms>x86;x64</Platforms>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\UtilitiesNET.csproj" />
