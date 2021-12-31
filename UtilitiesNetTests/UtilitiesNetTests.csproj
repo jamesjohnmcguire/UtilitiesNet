@@ -9,7 +9,7 @@
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 	</PropertyGroup>
 
   <ItemGroup>
