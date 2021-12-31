@@ -7,7 +7,6 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<IsTestProject>true</IsTestProject>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
-		<Platforms>x86;x64</Platforms>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<RootNamespace>DigitalZenWorks.Common.Utilities.Tests</RootNamespace>
 		<TargetFramework>net5.0</TargetFramework>
