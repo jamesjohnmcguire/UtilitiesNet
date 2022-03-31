@@ -31,50 +31,68 @@ namespace DigitalZenWorks.Common.Utilities
 			string originalProject,
 			string newRepository)
 		{
-			if (!string.IsNullOrWhiteSpace(originalRepository))
+			if (!string.IsNullOrWhiteSpace(originalRepository) &&
+				!string.IsNullOrWhiteSpace(originalProject))
 			{
-				// Dump original repository
-				// byte[] Output = GeneralUtilities.Execute(
-				// "C:\Program Files\CollabNet Subversion Server\svnadmin.exe",
-				// "dump " + arguments[0], null);
+				string arguments = "dump " + originalRepository;
 				byte[] output = GeneralUtilities.Execute(
-					@"svnadmin.exe", "dump " + originalRepository, null);
+					"svnadmin.exe", arguments, null);
 
-				if (!string.IsNullOrWhiteSpace(originalProject))
+				// Filter out project
+				arguments = "include " + originalProject;
+				output = GeneralUtilities.Execute(
+					"svndumpfilter.exe", arguments, output);
+
+				byte[] replacedOutput = RemoveProject(originalProject, output);
+
+				replacedOutput =
+					ReplaceProject(originalProject, replacedOutput);
+
+				if (!string.IsNullOrWhiteSpace(newRepository))
 				{
-					// Filter out project
-					output = GeneralUtilities.Execute(
-						"svndumpfilter.exe", "include " + originalProject, output);
+					// Create new repository
+					arguments = "create " + newRepository;
+					GeneralUtilities.Execute(
+						"svnadmin.exe", arguments, null);
 
-					// Edit output to remove 'project' path as it will be
-					// the root in the new repository
-					byte[] replacedOutput = BitBytes.ReplaceInByteArray(
-						output,
-						BitBytes.StringToByteArray(
-							"Node-path: " + originalProject + "/"),
-						BitBytes.StringToByteArray("Node-path: "));
-
-					replacedOutput = BitBytes.ReplaceInByteArray(
-							replacedOutput,
-							BitBytes.StringToByteArray(
-								"Node-copyfrom-path: " + originalProject + "/"),
-							BitBytes.StringToByteArray(
-								"Node-copyfrom-path: "));
-
-					if (!string.IsNullOrWhiteSpace(newRepository))
-					{
-						// Create new repository
-						GeneralUtilities.Execute(
-							"svnadmin.exe", "create " + newRepository, null);
-
-						// Load project
-						GeneralUtilities.Execute(
-							"svnadmin.exe",
-							"load " + newRepository,
-							replacedOutput);
-					}
+					// Load project
+					arguments = "load " + newRepository;
+					GeneralUtilities.Execute(
+						"svnadmin.exe", arguments, replacedOutput);
 				}
 			}
+		}
+
+		private static byte[] RemoveProject(
+			string originalProject, byte[] output)
+		{
+			// Edit output to remove 'project' path as it will be
+			// the root in the new repository
+			string nodePath = "Node-path: " + originalProject + "/";
+			byte[] nodePathBytes = BitBytes.StringToByteArray(nodePath);
+
+			nodePath = "Node-path: ";
+			byte[] nodePathBytesAgain = BitBytes.StringToByteArray(nodePath);
+
+			byte[] replacedOutput = BitBytes.ReplaceInByteArray(
+				output, nodePathBytes, nodePathBytesAgain);
+
+			return replacedOutput;
+		}
+
+		private static byte[] ReplaceProject(
+			string originalProject, byte[] output)
+		{
+			string nodeCopy = "Node-copyfrom-path: " + originalProject + "/";
+			byte[] nodeCopyBytes = BitBytes.StringToByteArray(nodeCopy);
+
+			nodeCopy = "Node-copyfrom-path: ";
+			byte[] nodeCopyBytesAgain = BitBytes.StringToByteArray(nodeCopy);
+
+			byte[] replacedOutput = BitBytes.ReplaceInByteArray(
+				output, nodeCopyBytes, nodeCopyBytesAgain);
+
+			return replacedOutput;
 		}
 	}
 }
