@@ -48,13 +48,13 @@ namespace DigitalZenWorks.Common.Utilities
 
 					// Edit output to remove 'project' path as it will be
 					// the root in the new repository
-					byte[] replacedOutput = GeneralUtilities.ReplaceInByteArray(
+					byte[] replacedOutput = BitBytes.ReplaceInByteArray(
 						output,
 						BitBytes.StringToByteArray(
 							"Node-path: " + originalProject + "/"),
 						BitBytes.StringToByteArray("Node-path: "));
 
-					replacedOutput = GeneralUtilities.ReplaceInByteArray(
+					replacedOutput = BitBytes.ReplaceInByteArray(
 							replacedOutput,
 							BitBytes.StringToByteArray(
 								"Node-copyfrom-path: " + originalProject + "/"),
