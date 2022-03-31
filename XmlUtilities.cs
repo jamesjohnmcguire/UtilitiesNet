@@ -39,7 +39,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static object LoadWithValidation(
 			string schemaFile, string xmlFile, Type type)
 		{
-			object obj = null;
+			object deserializedObject = null;
 
 			try
 			{
@@ -58,8 +58,8 @@ namespace DigitalZenWorks.Common.Utilities
 							using (XmlReader validatingReader =
 								XmlReader.Create(xmlFile, settings))
 							{
-								obj = (OrderedItem)serializer.Deserialize(
-									validatingReader);
+								deserializedObject =
+									serializer.Deserialize(validatingReader);
 							}
 						}
 					}
@@ -82,7 +82,7 @@ namespace DigitalZenWorks.Common.Utilities
 				throw;
 			}
 
-			return obj;
+			return deserializedObject;
 		}
 	}
 }
