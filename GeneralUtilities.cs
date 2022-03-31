@@ -223,38 +223,6 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 
 		/// <summary>
-		/// Decodes specified base64 data.
-		/// </summary>
-		/// <param name="data">Base64 string.</param>
-		/// <returns>Returns decoded data.</returns>
-		/// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
-		public static byte[] FromBase64(string data)
-		{
-			if (data == null)
-			{
-				throw new ArgumentNullException(nameof(data));
-			}
-
-			return Base64.Decode(data, true);
-		}
-
-		/// <summary>
-		/// Decodes specified base64 data.
-		/// </summary>
-		/// <param name="data">Base64 data.</param>
-		/// <returns>Returns decoded data.</returns>
-		/// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
-		public static byte[] FromBase64(byte[] data)
-		{
-			if (data == null)
-			{
-				throw new ArgumentNullException(nameof(data));
-			}
-
-			return Base64.Decode(data, 0, data.Length, true);
-		}
-
-		/// <summary>
 		/// Converts hex byte data to normal byte data. Hex data must be in
 		/// two bytes pairs, for example: 0F,FF,A3,... .
 		/// </summary>
