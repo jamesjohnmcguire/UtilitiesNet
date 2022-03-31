@@ -50,15 +50,15 @@ namespace DigitalZenWorks.Common.Utilities
 					// the root in the new repository
 					byte[] replacedOutput = GeneralUtilities.ReplaceInByteArray(
 						output,
-						Converter.StringToByteArray(
+						BitBytes.StringToByteArray(
 							"Node-path: " + originalProject + "/"),
-						Converter.StringToByteArray("Node-path: "));
+						BitBytes.StringToByteArray("Node-path: "));
 
 					replacedOutput = GeneralUtilities.ReplaceInByteArray(
 							replacedOutput,
-							Converter.StringToByteArray(
+							BitBytes.StringToByteArray(
 								"Node-copyfrom-path: " + originalProject + "/"),
-							Converter.StringToByteArray(
+							BitBytes.StringToByteArray(
 								"Node-copyfrom-path: "));
 
 					if (!string.IsNullOrWhiteSpace(newRepository))

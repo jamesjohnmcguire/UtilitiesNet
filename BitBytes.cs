@@ -1,5 +1,5 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
-// <copyright file="Converter.cs" company="James John McGuire">
+// <copyright file="BitBytes.cs" company="James John McGuire">
 // Copyright © 2006 - 2022 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
@@ -11,9 +11,9 @@ using System.Text;
 namespace DigitalZenWorks.Common.Utilities
 {
 	/// <summary>
-	/// Converter class.
+	/// BitBytes class.
 	/// </summary>
-	public static class Converter
+	public static class BitBytes
 	{
 		/// <summary>
 		/// Converts a string to a byte array.
