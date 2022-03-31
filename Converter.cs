@@ -23,7 +23,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static byte[] StringToByteArray(
 			string original)
 		{
-			ASCIIEncoding encoding = new ASCIIEncoding();
+			Encoding encoding = Encoding.UTF8;
 			byte[] byteArrary = encoding.GetBytes(original);
 			return byteArrary;
 		}
