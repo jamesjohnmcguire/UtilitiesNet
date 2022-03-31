@@ -161,30 +161,6 @@ namespace DigitalZenWorks.Common.Utilities
 
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Reads a text file contents into a string.
-		/// </summary>
-		/// <param name="filePath">The path of the file.</param>
-		/// <returns>The contents of file upon success,
-		/// otherwise returns null.</returns>
-		/////////////////////////////////////////////////////////////////////
-		public static string GetFileContents(string filePath)
-		{
-			string fileContents = null;
-
-			if (File.Exists(filePath))
-			{
-				using (StreamReader streamReaderObject = new
-					StreamReader(filePath))
-				{
-					fileContents = streamReaderObject.ReadToEnd();
-				}
-			}
-
-			return fileContents;
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
 		/// Returns a writable stream object.
 		/// </summary>
 		/// <param name="filePath">The file path to file.</param>
@@ -238,43 +214,6 @@ namespace DigitalZenWorks.Common.Utilities
 		public static bool IsDirectoryEmpty(string path)
 		{
 			return !Directory.EnumerateFileSystemEntries(path).Any();
-		}
-
-		/////////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Safe recursive removal. Directories with a "DevClean Active" file
-		/// not deleted.
-		/// </summary>
-		/// <param name="initialPath">The initial path to start from.</param>
-		/// <param name="pathsToRemove">A list of paths to remove.</param>
-		/////////////////////////////////////////////////////////////////////
-		public static void RecursiveRemove(
-			string initialPath, string[] pathsToRemove)
-		{
-			foreach (string d in Directory.GetDirectories(initialPath))
-			{
-				if ((pathsToRemove != null) && (pathsToRemove.Length > 0))
-				{
-					foreach (string path in pathsToRemove)
-					{
-						if (d.EndsWith(
-							"\\" + path, StringComparison.Ordinal))
-						{
-							if (!File.Exists("DevClean.active"))
-							{
-								Log.Info(
-									CultureInfo.InvariantCulture,
-									m => m("Deleting: " + path));
-								Directory.Delete(d, true);
-							}
-						}
-						else
-						{
-							RecursiveRemove(d, pathsToRemove);
-						}
-					}
-				}
-			}
 		}
 
 		/////////////////////////////////////////////////////////////////////
