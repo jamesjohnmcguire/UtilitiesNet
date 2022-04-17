@@ -45,7 +45,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="stylecop.json" />
 		<CodeAnalysisDictionary Include="CodeAnalysis.ruleset" />
 		<None Include=".editorconfig" Link=".editorconfig" />
 		<None Include="..\LICENSE">
@@ -56,6 +55,7 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
 
 </Project>
