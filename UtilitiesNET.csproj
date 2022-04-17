@@ -2,18 +2,26 @@
 
 	<PropertyGroup>
 		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
 		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
 		<AssemblyVersion>1.1.0.52</AssemblyVersion>
+		<Authors>James John McGuire</Authors>
 		<CodeAnalysisRuleSet>CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-		<Company>James John McGuire</Company>
+		<Company>Digital Zen Works</Company>
 		<Copyright>Copyright © 2006 - 2022</Copyright>
+		<Description>This client library provides general functionality.</Description>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<FileVersion>1.1.0.52</FileVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<LangVersion>Latest</LangVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<NoWarn>NU1605;NU1701</NoWarn>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
+		<PackageId>DigitalZenWorks.Common.Utilities</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>Digital Zen Works;Common;Utilities</PackageTags>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -39,10 +47,15 @@
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 		<CodeAnalysisDictionary Include="CodeAnalysis.ruleset" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include=".editorconfig" Link=".editorconfig" />
+		<None Include=".editorconfig" Link=".editorconfig" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>
