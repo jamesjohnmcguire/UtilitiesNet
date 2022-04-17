@@ -20,6 +20,7 @@
 		<NoWarn>NU1605;NU1701</NoWarn>
 		<OutputPath>$(SolutionDir)\Bin\$(Configuration)\$(Platform)</OutputPath>
 		<PackageId>DigitalZenWorks.Common.Utilities</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>Digital Zen Works;Common;Utilities</PackageTags>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
