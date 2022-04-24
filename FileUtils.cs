@@ -334,6 +334,31 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
+		/// <summary>
+		/// Remove empty directories.
+		/// </summary>
+		/// <param name="path">The initial path to check.</param>
+		public static void RemoveEmptyDirectories(string path)
+		{
+			if (Directory.Exists(path))
+			{
+				string[] directories = Directory.GetDirectories(path);
+				string[] files = Directory.GetFiles(path);
+
+				if (directories.Length == 0 && files.Length == 0)
+				{
+					Directory.Delete(path);
+				}
+				else
+				{
+					foreach (string directory in directories)
+					{
+						RemoveEmptyDirectories(directory);
+					}
+				}
+			}
+		}
+
 		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Replace a string in a file.
