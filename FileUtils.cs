@@ -347,6 +347,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 				if (directories.Length == 0 && files.Length == 0)
 				{
+					Console.WriteLine("Deleting: " + path);
 					Directory.Delete(path);
 				}
 				else
