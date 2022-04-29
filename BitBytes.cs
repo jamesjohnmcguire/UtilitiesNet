@@ -217,6 +217,44 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 
 		/// <summary>
+		/// Set a specific bit.
+		/// </summary>
+		/// <param name="holder">The byte holding the bit to set.</param>
+		/// <param name="bitIndex">The bit index.</param>
+		/// <param name="value">The value to set.</param>
+		/// <returns>The updated byte holding the bit.</returns>
+		public static byte SetBit(byte holder, byte bitIndex, bool value)
+		{
+			int intValue = Convert.ToInt32(value);
+
+			// 0 based
+			int shifter = intValue << bitIndex;
+			int intHolder = holder | shifter;
+			holder = (byte)intHolder;
+
+			return holder;
+		}
+
+		/// <summary>
+		/// Set a specific bit.
+		/// </summary>
+		/// <param name="holder">The byte holding the bit to set.</param>
+		/// <param name="bitIndex">The bit index.</param>
+		/// <param name="value">The value to set.</param>
+		/// <returns>The updated byte holding the bit.</returns>
+		public static ushort SetBit(ushort holder, byte bitIndex, bool value)
+		{
+			int intValue = Convert.ToInt32(value);
+
+			// 0 based
+			int shifter = intValue << bitIndex;
+			int intHolder = holder | shifter;
+			holder = (ushort)intHolder;
+
+			return holder;
+		}
+
+		/// <summary>
 		/// Converts a string to a byte array.
 		/// </summary>
 		/// <param name="original">The string to be converted.</param>
