@@ -172,19 +172,33 @@ namespace DigitalZenWorks.Common.Utilities
 
 			try
 			{
-				long bufferSize =
-					buffer1.LongLength + buffer2.LongLength;
-				newBuffer = new byte[bufferSize];
+				if (buffer1 != null || buffer2 != null)
+				{
+					if (buffer1 == null)
+					{
+						newBuffer = buffer2;
+					}
+					else if (buffer2 == null)
+					{
+						newBuffer = buffer1;
+					}
+					else
+					{
+						long bufferSize =
+							buffer1.LongLength + buffer2.LongLength;
+						newBuffer = new byte[bufferSize];
 
-				// combine the parts
-				Array.Copy(buffer1, newBuffer, buffer1.LongLength);
+						// combine the parts
+						Array.Copy(buffer1, newBuffer, buffer1.LongLength);
 
-				Array.Copy(
-					buffer2,
-					0,
-					newBuffer,
-					buffer1.LongLength,
-					buffer2.LongLength);
+						Array.Copy(
+							buffer2,
+							0,
+							newBuffer,
+							buffer1.LongLength,
+							buffer2.LongLength);
+					}
+				}
 			}
 			catch (System.Exception exception) when
 				(exception is ArgumentException ||
