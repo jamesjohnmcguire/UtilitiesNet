@@ -4,8 +4,10 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
+using Common.Logging;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace DigitalZenWorks.Common.Utilities
@@ -15,6 +17,9 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class BitBytes
 	{
+		private static readonly ILog Log = LogManager.GetLogger(
+			MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Copies the array if existent.
 		/// </summary>
