@@ -161,6 +161,46 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 
 		/// <summary>
+		/// Merge byte arrays.
+		/// </summary>
+		/// <param name="buffer1">The first buffer to merge.</param>
+		/// <param name="buffer2">The second buffer to merge.</param>
+		/// <returns>The merged byte array.</returns>
+		public static byte[] MergeByteArrays(byte[] buffer1, byte[] buffer2)
+		{
+			byte[] newBuffer = null;
+
+			try
+			{
+				long bufferSize =
+					buffer1.LongLength + buffer2.LongLength;
+				newBuffer = new byte[bufferSize];
+
+				// combine the parts
+				Array.Copy(buffer1, newBuffer, buffer1.LongLength);
+
+				Array.Copy(
+					buffer2,
+					0,
+					newBuffer,
+					buffer1.LongLength,
+					buffer2.LongLength);
+			}
+			catch (System.Exception exception) when
+				(exception is ArgumentException ||
+				exception is ArgumentNullException ||
+				exception is ArgumentOutOfRangeException ||
+				exception is ArrayTypeMismatchException ||
+				exception is InvalidCastException ||
+				exception is RankException)
+			{
+				Log.Error(exception.ToString());
+			}
+
+			return newBuffer;
+		}
+
+		/// <summary>
 		/// Replace in byte array.
 		/// </summary>
 		/// <param name="originalArray">The byte array.</param>
