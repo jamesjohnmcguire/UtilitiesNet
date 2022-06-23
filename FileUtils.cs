@@ -61,6 +61,9 @@ namespace DigitalZenWorks.Common.Utilities
 				}
 				else
 				{
+					string path = Path.GetDirectoryName(filePath);
+					Directory.CreateDirectory(path);
+
 					using (FileStream file = new FileStream(
 						filePath, FileMode.Create, FileAccess.Write))
 					{
