@@ -38,33 +38,33 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void GetEmbeddedResource()
 		{
-			bool result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utilities.Tests.test.xml", "test.xml");
+			string filePath =
+				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
+
+			bool result = File.Exists(filePath);
 			Assert.True(result);
 
-			result = File.Exists("test.xml");
-			Assert.True(result);
+			if (result == true)
+			{
+				File.Delete(filePath);
+			}
 		}
 
 		[Test]
 		public static void ObjectFromXml()
 		{
-			bool result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utilities.Tests.test.xsd", "test.xsd");
+			string xmlFilePath =
+				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
+			bool result = File.Exists(xmlFilePath);
 			Assert.True(result);
 
-			result = File.Exists("test.xsd");
-			Assert.True(result);
-
-			result = FileUtils.CreateFileFromEmbeddedResource(
-				"DigitalZenWorks.Common.Utilities.Tests.test.xml", "test.xml");
-			Assert.True(result);
-
-			result = File.Exists("test.xml");
+			string xsdFilePath =
+				GetXmlResourceFile("UtilitiesNetTests.test.xsd", ".xsd");
+			result = File.Exists(xmlFilePath);
 			Assert.True(result);
 
 			OrderedItem item = (OrderedItem)XmlUtilities.LoadWithValidation(
-				"test.xsd", "test.xml", typeof(OrderedItem));
+				xsdFilePath, xmlFilePath, typeof(OrderedItem));
 
 			Assert.NotNull(item);
 			Assert.AreEqual(item.ItemName, "Widget");
@@ -72,6 +72,23 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.AreEqual(item.UnitPrice, 2.3);
 			Assert.AreEqual(item.Quantity, 10);
 			Assert.AreEqual(item.LineTotal, 23);
+		}
+
+		private static string GetXmlResourceFile(
+			string resource, string extension)
+		{
+			string fileName = Path.GetTempFileName();
+
+			// A 0 byte sized file is created.  Need to remove it.
+			File.Delete(fileName);
+			string filePath = Path.ChangeExtension(fileName, extension);
+
+			bool result = FileUtils.CreateFileFromEmbeddedResource(
+				resource, filePath);
+
+			Assert.True(result);
+
+			return filePath;
 		}
 	}
 }
