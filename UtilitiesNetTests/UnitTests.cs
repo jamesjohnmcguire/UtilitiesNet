@@ -10,11 +10,14 @@ using System.IO;
 
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
+	/// <summary>
+	/// Automated Tests for UtilitiesNET.
+	/// </summary>
 	[TestFixture]
 	public static class UnitTests
 	{
 		/////////////////////////////////////////////////////////////////////
-		/// Method <c>Teardown</c>
+		/// Method <c>Teardown.</c>
 		/// <summary>
 		/// function that is called just after each test method is called.
 		/// </summary>
@@ -35,6 +38,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			}
 		}
 
+		/// <summary>
+		/// Get embedded resource test.
+		/// </summary>
 		[Test]
 		public static void GetEmbeddedResource()
 		{
@@ -50,6 +56,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			}
 		}
 
+		/// <summary>
+		/// Object from xml test.
+		/// </summary>
 		[Test]
 		public static void ObjectFromXml()
 		{
