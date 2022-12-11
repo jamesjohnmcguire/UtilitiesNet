@@ -30,10 +30,12 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log = LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
+#pragma warning disable CA1823
 		private static readonly ResourceManager StringTable = new
 			ResourceManager(
 				"DigitalZenWorks.Common.Utilities.Resources",
 				Assembly.GetExecutingAssembly());
+#pragma warning restore CA1823
 
 		/// <summary>
 		/// Create file from embedded resource.
@@ -56,8 +58,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 				if (null == templateObjectStream)
 				{
-					Log.Error(CultureInfo.InvariantCulture, m => m(
-						"Failed to manifest resource stream"));
+					Log.Error("Failed to manifest resource stream");
 				}
 				else
 				{
@@ -88,10 +89,7 @@ namespace DigitalZenWorks.Common.Utilities
 				exception is DirectoryNotFoundException ||
 				exception is PathTooLongException)
 			{
-				Log.Error(CultureInfo.InvariantCulture, m => m(
-					StringTable.GetString(
-						"EXCEPTION",
-						CultureInfo.InstalledUICulture) + exception));
+				Log.Error(exception.ToString());
 			}
 			catch
 			{
@@ -192,8 +190,7 @@ namespace DigitalZenWorks.Common.Utilities
 				exception is SecurityException ||
 				exception is UnauthorizedAccessException)
 			{
-				Log.Error(CultureInfo.InvariantCulture, m => m(
-					exception.ToString()));
+				Log.Error(exception.ToString());
 			}
 			finally
 			{
@@ -236,17 +233,15 @@ namespace DigitalZenWorks.Common.Utilities
 
 					foreach (string f in Directory.GetFiles(d, "*.php"))
 					{
-						Log.Info(CultureInfo.InvariantCulture, m => m(
-							"Checking File: " + f));
+						Log.Info("Checking File: " + f);
 						UpdateFileLineEndingUnixToWindows(f);
 					}
 				}
 
-				foreach (string f in Directory.GetFiles(initialPath, "*.php"))
+				foreach (string d in Directory.GetFiles(initialPath, "*.php"))
 				{
-					Log.Info(CultureInfo.InvariantCulture, m => m(
-						"Checking Directory: " + f));
-					UpdateFileLineEndingUnixToWindows(f);
+					Log.Info("Checking Directory: " + d);
+					UpdateFileLineEndingUnixToWindows(d);
 				}
 			}
 			catch (Exception exception) when (exception is ArgumentException ||
@@ -452,9 +447,7 @@ namespace DigitalZenWorks.Common.Utilities
 				}
 				catch (Exception exception)
 				{
-					Log.Error(
-						CultureInfo.InvariantCulture,
-						m => m(exception.ToString()));
+					Log.Error(exception.ToString());
 
 					throw;
 				}

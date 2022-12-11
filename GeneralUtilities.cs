@@ -427,9 +427,7 @@ namespace DigitalZenWorks.Common.Utilities
 										exception is
 										ArgumentOutOfRangeException)
 									{
-										Log.Error(
-											CultureInfo.InvariantCulture,
-											m => m(exception.ToString()));
+										Log.Error(exception.ToString());
 
 										// Illegal value after =,
 										// just leave it as is

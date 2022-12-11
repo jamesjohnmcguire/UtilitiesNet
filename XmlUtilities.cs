@@ -72,10 +72,7 @@ namespace DigitalZenWorks.Common.Utilities
 				exception is UriFormatException ||
 				exception is XmlSchemaException)
 			{
-				Log.Error(CultureInfo.InvariantCulture, m => m(
-					StringTable.GetString(
-						"EXCEPTION",
-						CultureInfo.InvariantCulture) + exception));
+				Log.Error(exception.ToString());
 			}
 			catch
 			{

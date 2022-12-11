@@ -4,9 +4,11 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using DigitalZenWorks.Common.Utilities;
 using NUnit.Framework;
+using System;
 using System.IO;
+
+[assembly: CLSCompliant(true)]
 
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
