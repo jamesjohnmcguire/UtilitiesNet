@@ -72,6 +72,12 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.AreEqual(item.UnitPrice, 2.3);
 			Assert.AreEqual(item.Quantity, 10);
 			Assert.AreEqual(item.LineTotal, 23);
+
+			if (result == true)
+			{
+				File.Delete(xmlFilePath);
+				File.Delete(xsdFilePath);
+			}
 		}
 
 		private static string GetXmlResourceFile(
