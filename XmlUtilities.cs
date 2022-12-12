@@ -24,10 +24,12 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log = LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
+#pragma warning disable CA1823
 		private static readonly ResourceManager StringTable = new
 			ResourceManager(
-			"DigitalZenWorks.Common.Utilities.Resources",
-			Assembly.GetExecutingAssembly());
+				"DigitalZenWorks.Common.Utilities.Resources",
+				Assembly.GetExecutingAssembly());
+#pragma warning restore CA1823
 
 		/// <summary>
 		/// Load with validation.
