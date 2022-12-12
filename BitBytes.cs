@@ -6,7 +6,7 @@
 
 using Common.Logging;
 using System;
-using System.Collections.Generic;
+using System.Buffers;
 using System.Reflection;
 using System.Text;
 
@@ -215,6 +215,63 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 
 		/// <summary>
+		/// Merge byte arrays.
+		/// </summary>
+		/// <remarks>The returned buffer needs to be released with
+		/// ArrayPool.Shared.Return.</remarks>
+		/// <param name="buffer1">The first buffer to merge.</param>
+		/// <param name="buffer2">The second buffer to merge.</param>
+		/// <returns>The merged byte array.</returns>
+		public static byte[] MergeByteArraysPooled(
+			byte[] buffer1, byte[] buffer2)
+		{
+			byte[] newBuffer = null;
+
+			try
+			{
+				if (buffer1 != null || buffer2 != null)
+				{
+					if (buffer1 == null)
+					{
+						newBuffer = buffer2;
+					}
+					else if (buffer2 == null)
+					{
+						newBuffer = buffer1;
+					}
+					else
+					{
+						int bufferSize =
+							buffer1.Length + buffer2.Length;
+						newBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+
+						// combine the parts
+						Array.Copy(buffer1, newBuffer, buffer1.LongLength);
+
+						Array.Copy(
+							buffer2,
+							0,
+							newBuffer,
+							buffer1.LongLength,
+							buffer2.LongLength);
+					}
+				}
+			}
+			catch (System.Exception exception) when
+				(exception is ArgumentException ||
+				exception is ArgumentNullException ||
+				exception is ArgumentOutOfRangeException ||
+				exception is ArrayTypeMismatchException ||
+				exception is InvalidCastException ||
+				exception is RankException)
+			{
+				Log.Error(exception.ToString());
+			}
+
+			return newBuffer;
+		}
+
+		/// <summary>
 		/// Replace in byte array.
 		/// </summary>
 		/// <param name="originalArray">The byte array.</param>
@@ -234,6 +291,7 @@ namespace DigitalZenWorks.Common.Utilities
 					int foundPosition;
 					int currentPosition;
 					int currentOriginalPosition;
+
 					while (FindInByteArray(returnValue, find) > -1)
 					{
 						int length =
