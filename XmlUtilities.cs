@@ -25,10 +25,9 @@ namespace DigitalZenWorks.Common.Utilities
 			MethodBase.GetCurrentMethod().DeclaringType);
 
 #pragma warning disable CA1823
-		private static readonly ResourceManager StringTable = new
-			ResourceManager(
-				"DigitalZenWorks.Common.Utilities.Resources",
-				Assembly.GetExecutingAssembly());
+		private static readonly ResourceManager StringTable = new (
+			"DigitalZenWorks.Common.Utilities.Resources",
+			Assembly.GetExecutingAssembly());
 #pragma warning restore CA1823
 
 		/// <summary>
@@ -47,22 +46,20 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if (null != type)
 				{
-					XmlSerializer serializer = new XmlSerializer(type);
+					XmlSerializer serializer = new (type);
 
 					if (File.Exists(schemaFile))
 					{
-						XmlReaderSettings settings = new XmlReaderSettings();
+						XmlReaderSettings settings = new ();
 						settings.ValidationType = ValidationType.Schema;
 						settings.Schemas.Add(null, schemaFile);
 
 						if (File.Exists(xmlFile))
 						{
-							using (XmlReader validatingReader =
-								XmlReader.Create(xmlFile, settings))
-							{
-								deserializedObject =
-									serializer.Deserialize(validatingReader);
-							}
+							using XmlReader validatingReader =
+								XmlReader.Create(xmlFile, settings);
+							deserializedObject =
+								serializer.Deserialize(validatingReader);
 						}
 					}
 				}
