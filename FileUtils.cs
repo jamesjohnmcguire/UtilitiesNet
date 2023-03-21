@@ -165,6 +165,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>Return true if the file contents are the same,
 		/// otherwise returns false.</returns>
 		/////////////////////////////////////////////////////////////////////
+		[Obsolete("FileEquals(string, string) is deprecated, " +
+			"please use AreFilesTheSame(string, string) instead.")]
 		public static bool FileEquals(string path1, string path2)
 		{
 			bool filesSame = false;
