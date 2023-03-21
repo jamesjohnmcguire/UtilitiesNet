@@ -18,23 +18,23 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 	[TestFixture]
 	public static class UnitTests
 	{
-		private static string testData = "Lorem ipsum dolor sit amet, " +
-			"consectetur adipiscing elit. Proin auctor pharetra ipsum, ac " +
-			"molestie nibh. Sed interdum, eros mollis pellentesque rhoncus, " +
-			"erat odio pretium erat, in finibus orci turpis ac mi. " +
-			"Vestibulum efficitur odio non ex tempus commodo. Maecenas " +
-			"vitae lectus non ex laoreet egestas. Fusce vitae felis quis " +
-			"ligula sagittis blandit at a risus. Nunc fringilla, augue non " +
-			"accumsan vestibulum, orci mi bibendum metus, eget fermentum " +
-			"lectus erat vitae nisi. Vivamus ac lobortis felis, ac molestie " +
-			"nisi. Suspendisse accumsan nibh sit amet massa finibus, ac " +
-			"rhoncus magna scelerisque. Aenean ut tortor sed dui eleifend " +
-			"consectetur eget a urna. Etiam sit amet est sem. Nullam " +
-			"ultricies mollis diam, vel laoreet eros tincidunt vel. Aliquam " +
-			"at vestibulum tortor. Curabitur gravida, nisi vitae porttitor " +
-			"placerat, arcu tortor gravida purus, at vulputate turpis ante " +
-			"sed lorem. Integer in fermentum lacus, quis tempor elit. " +
-			"Praesent elementum nisi vitae egestas elementum.";
+		private const string TestData = "Lorem ipsum dolor sit " +
+			"amet, consectetur adipiscing elit. Proin auctor pharetra " +
+			"ipsum, ac molestie nibh. Sed interdum, eros mollis " +
+			"pellentesque rhoncus, erat odio pretium erat, in finibus orci " +
+			"turpis ac mi. Vestibulum efficitur odio non ex tempus commodo. " +
+			"Maecenas vitae lectus non ex laoreet egestas. Fusce vitae " +
+			"felis quis ligula sagittis blandit at a risus. Nunc fringilla, " +
+			"augue non accumsan vestibulum, orci mi bibendum metus, eget " +
+			"fermentum lectus erat vitae nisi. Vivamus ac lobortis felis, " +
+			"ac molestie nisi. Suspendisse accumsan nibh sit amet massa " +
+			"finibus, ac rhoncus magna scelerisque. Aenean ut tortor sed " +
+			"dui eleifend consectetur eget a urna. Etiam sit amet est sem. " +
+			"Nullam ultricies mollis diam, vel laoreet eros tincidunt vel. " +
+			"Aliquam at vestibulum tortor. Curabitur gravida, nisi vitae " +
+			"porttitor placerat, arcu tortor gravida purus, at vulputate " +
+			"turpis ante sed lorem. Integer in fermentum lacus, quis tempor " +
+			"elit. Praesent elementum nisi vitae egestas elementum.";
 
 		/////////////////////////////////////////////////////////////////////
 		/// Method <c>Teardown.</c>
@@ -145,7 +145,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		public static void GetFileHash()
 		{
 			string filePath = Path.GetTempFileName();
-			File.WriteAllText(filePath, testData);
+			File.WriteAllText(filePath, TestData);
 
 			byte[] hash = FileUtils.GetFileHash(filePath);
 			Assert.NotNull(hash);

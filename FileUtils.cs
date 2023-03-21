@@ -33,12 +33,11 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log = LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-#pragma warning disable CA1823
-		private static readonly ResourceManager StringTable = new
-			ResourceManager(
+#pragma warning disable IDE0052
+		private static readonly ResourceManager StringTable = new (
 				"DigitalZenWorks.Common.Utilities.Resources",
 				Assembly.GetExecutingAssembly());
-#pragma warning restore CA1823
+#pragma warning restore IDE0052
 
 		/// <summary>
 		/// Are files the same.
@@ -49,7 +48,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// the same content or not.</returns>
 		public static bool AreFilesTheSame(string file1Path, string file2Path)
 		{
-			bool result = false;
+			bool result;
 
 			StringComparison compareOption =
 				StringComparison.OrdinalIgnoreCase;
@@ -85,13 +84,12 @@ namespace DigitalZenWorks.Common.Utilities
 			string resourceName, string filePath)
 		{
 			bool success = false;
-			Stream templateObjectStream = null;
 
 			try
 			{
 				Assembly thisAssembly = Assembly.GetCallingAssembly();
 
-				templateObjectStream =
+				Stream templateObjectStream =
 					thisAssembly.GetManifestResourceStream(resourceName);
 
 				if (null == templateObjectStream)
@@ -103,7 +101,7 @@ namespace DigitalZenWorks.Common.Utilities
 					string path = Path.GetDirectoryName(filePath);
 					Directory.CreateDirectory(path);
 
-					using (FileStream file = new FileStream(
+					using (FileStream file = new (
 						filePath, FileMode.Create, FileAccess.Write))
 					{
 						templateObjectStream.CopyTo(file);
@@ -274,10 +272,7 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 			finally
 			{
-				if (null != fileStream)
-				{
-					fileStream.Close();
-				}
+				fileStream?.Close();
 			}
 
 			return streamWriter;
@@ -349,29 +344,25 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (output != null)
 			{
-				using (Stream writeStream = new MemoryStream())
+				using Stream writeStream = new MemoryStream();
+				using BinaryWriter binaryOutput = new (writeStream);
+
+				int currentByte = 0;
+
+				while (-1 != currentByte)
 				{
-					using (BinaryWriter binaryOutput =
-						new BinaryWriter(writeStream))
+					currentByte = output.ReadByte();
+
+					if (-1 != currentByte)
 					{
-						int currentByte = 0;
-
-						while (-1 != currentByte)
-						{
-							currentByte = output.ReadByte();
-
-							if (-1 != currentByte)
-							{
-								byte writeByte = Convert.ToByte(currentByte);
-								binaryOutput.BaseStream.WriteByte(writeByte);
-							}
-						}
-
-						outputBytes = new byte[binaryOutput.BaseStream.Length];
-						binaryOutput.BaseStream.Write(
-							outputBytes, 0, (int)binaryOutput.BaseStream.Length);
+						byte writeByte = Convert.ToByte(currentByte);
+						binaryOutput.BaseStream.WriteByte(writeByte);
 					}
 				}
+
+				outputBytes = new byte[binaryOutput.BaseStream.Length];
+				binaryOutput.BaseStream.Write(
+					outputBytes, 0, (int)binaryOutput.BaseStream.Length);
 			}
 
 			return outputBytes;
@@ -392,23 +383,16 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (File.Exists(filePath))
 			{
-				using (StreamReader sr = new StreamReader(filePath))
-				{
-					contents = sr.ReadToEnd();
+				using StreamReader sr = new (filePath);
+				contents = sr.ReadToEnd();
 
-					using (FileStream stream = new FileStream(
-						filePath, FileMode.Open, FileAccess.ReadWrite))
-					{
-						using (StreamWriter writer =
-							new StreamWriter(stream))
-						{
-							contents = Regex.Replace(
-								contents, oldValue, newValue);
+				using FileStream stream =
+					new (filePath, FileMode.Open, FileAccess.ReadWrite);
+				using StreamWriter writer = new (stream);
+				contents = Regex.Replace(
+					contents, oldValue, newValue);
 
-							writer.Write(contents);
-						}
-					}
-				}
+				writer.Write(contents);
 			}
 		}
 
@@ -451,27 +435,21 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			if (File.Exists(filePath))
 			{
-				using (FileStream file = File.Open(
+				using FileStream file = File.Open(
 					filePath,
 					FileMode.Open,
 					FileAccess.ReadWrite,
-					FileShare.None))
-				{
-					using (StreamReader reader = new StreamReader(file))
-					{
-						string contents = reader.ReadToEnd();
+					FileShare.None);
+				using StreamReader reader = new (file);
+				string contents = reader.ReadToEnd();
 
-						string newContents =
-							contents.Replace(oldValue, newValue);
+				string newContents =
+					contents.Replace(oldValue, newValue);
 
-						using (StreamWriter writer = new StreamWriter(file))
-						{
-							writer.Write(newContents);
+				using StreamWriter writer = new (file);
+				writer.Write(newContents);
 
-							// sw.Close();
-						}
-					}
-				}
+				// sw.Close();
 			}
 		}
 
@@ -533,15 +511,8 @@ namespace DigitalZenWorks.Common.Utilities
 				}
 				finally
 				{
-					if (streamWriter != null)
-					{
-						streamWriter.Close();
-					}
-
-					if (fileStream != null)
-					{
-						fileStream.Close();
-					}
+					streamWriter?.Close();
+					fileStream?.Close();
 				}
 			}
 
@@ -559,7 +530,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static bool SaveFileUtf8Bom(
 			string fileContents, string filePathName)
 		{
-			UTF8Encoding utf8EmitBom = new UTF8Encoding(true);
+			UTF8Encoding utf8EmitBom = new (true);
 			return SaveFile(fileContents, filePathName, utf8EmitBom);
 		}
 
@@ -668,14 +639,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="contents">The contents to copy.</param>
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
-			using (FileStream fileStream =
-				File.Open(fileName, FileMode.Create))
-			{
-				using (BinaryWriter writer = new BinaryWriter(fileStream))
-				{
-					writer.Write(contents);
-				}
-			}
+			using FileStream fileStream = File.Open(fileName, FileMode.Create);
+			using BinaryWriter writer = new (fileStream);
+
+			writer.Write(contents);
 		}
 	} // End Class
 } // End Namespace
