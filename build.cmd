@@ -21,6 +21,7 @@ CD Bin\Release\Nuget
 dotnet nuget push DigitalZenWorks.Common.Utilities.%2.nupkg --api-key %3 --source https://api.nuget.org/v3/index.json
 
 cd ..\..\..
+GOTO end
 
 :error1
 ECHO No version tag specified
