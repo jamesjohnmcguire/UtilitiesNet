@@ -9,12 +9,15 @@
 /////////////////////////////////////////////////////////////////////////////
 using Common.Logging;
 using System;
+using System.Collections;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Runtime.InteropServices;
 using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -36,6 +39,41 @@ namespace DigitalZenWorks.Common.Utilities
 				"DigitalZenWorks.Common.Utilities.Resources",
 				Assembly.GetExecutingAssembly());
 #pragma warning restore CA1823
+
+		/// <summary>
+		/// Are files the same.
+		/// </summary>
+		/// <param name="file1Path">The first file to check.</param>
+		/// <param name="file2Path">The second file to check.</param>
+		/// <returns>A value indicating whether the files are the some or have
+		/// the same content or not.</returns>
+		public static bool AreFilesTheSame(string file1Path, string file2Path)
+		{
+			bool result = false;
+
+			StringComparison compareOption =
+				StringComparison.OrdinalIgnoreCase;
+
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			{
+				compareOption = StringComparison.Ordinal;
+			}
+
+			if (file1Path.Equals(file2Path, compareOption))
+			{
+				result = true;
+			}
+			else
+			{
+				byte[] file1Hash = GetFileHash(file1Path);
+				byte[] file2Hash = GetFileHash(file2Path);
+
+				result = StructuralComparisons.
+					StructuralEqualityComparer.Equals(file1Hash, file2Hash);
+			}
+
+			return result;
+		}
 
 		/// <summary>
 		/// Create file from embedded resource.
@@ -158,6 +196,45 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return filesSame;
+		}
+
+		/// <summary>
+		/// Get file hash.
+		/// </summary>
+		/// <param name="filePath">The file to process.</param>
+		/// <returns>The SHA256 hash of the file.</returns>
+		public static byte[] GetFileHash(string filePath)
+		{
+			int megaByte = 1024 * 1024;
+			using SHA256 sha256 = SHA256.Create();
+
+			using FileStream fileStream = File.OpenRead(filePath);
+
+			using BufferedStream file1BufferedStream =
+				new (fileStream, megaByte);
+
+			byte[] fileHash;
+
+			do
+			{
+				byte[] fileBuffer = new byte[4096];
+				int fileReadCount =
+					fileStream.Read(fileBuffer, 0, fileBuffer.Length);
+
+				if (fileReadCount == 0)
+				{
+					// file1Hash = sha256.Hash;
+					// fileHash = sha256.ComputeHash(fileStream);
+					sha256.TransformFinalBlock(
+						fileBuffer, 0, fileReadCount);
+					break;
+				}
+
+				sha256.TransformBlock(
+					fileBuffer, 0, fileReadCount, null, 0);
+			} while (true);
+
+			return sha256.Hash;
 		}
 
 		/////////////////////////////////////////////////////////////////////
