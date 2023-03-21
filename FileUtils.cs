@@ -213,7 +213,7 @@ namespace DigitalZenWorks.Common.Utilities
 			using BufferedStream file1BufferedStream =
 				new (fileStream, megaByte);
 
-			byte[] fileHash;
+			bool stillReading = true;
 
 			do
 			{
@@ -223,16 +223,17 @@ namespace DigitalZenWorks.Common.Utilities
 
 				if (fileReadCount == 0)
 				{
-					// file1Hash = sha256.Hash;
-					// fileHash = sha256.ComputeHash(fileStream);
 					sha256.TransformFinalBlock(
 						fileBuffer, 0, fileReadCount);
-					break;
+					stillReading = false;
 				}
-
-				sha256.TransformBlock(
-					fileBuffer, 0, fileReadCount, null, 0);
-			} while (true);
+				else
+				{
+					sha256.TransformBlock(
+						fileBuffer, 0, fileReadCount, null, 0);
+				}
+			}
+			while (stillReading == true);
 
 			return sha256.Hash;
 		}
