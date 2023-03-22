@@ -205,37 +205,63 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>The SHA256 hash of the file.</returns>
 		public static byte[] GetFileHash(string filePath)
 		{
-			int megaByte = 1024 * 1024;
-			using SHA256 sha256 = SHA256.Create();
+			byte[] result = null;
 
-			using FileStream fileStream = File.OpenRead(filePath);
-
-			using BufferedStream file1BufferedStream =
-				new (fileStream, megaByte);
-
-			bool stillReading = true;
-
-			do
+			try
 			{
-				byte[] fileBuffer = new byte[4096];
-				int fileReadCount =
-					fileStream.Read(fileBuffer, 0, fileBuffer.Length);
+				if (!string.IsNullOrWhiteSpace(filePath) &&
+					File.Exists(filePath))
+				{
+					int megaByte = 1024 * 1024;
+					using SHA256 sha256 = SHA256.Create();
 
-				if (fileReadCount == 0)
-				{
-					sha256.TransformFinalBlock(
-						fileBuffer, 0, fileReadCount);
-					stillReading = false;
-				}
-				else
-				{
-					sha256.TransformBlock(
-						fileBuffer, 0, fileReadCount, null, 0);
+					using FileStream fileStream = File.OpenRead(filePath);
+
+					using BufferedStream file1BufferedStream =
+						new (fileStream, megaByte);
+
+					bool stillReading = true;
+
+					do
+					{
+						byte[] fileBuffer = new byte[4096];
+						int fileReadCount =
+							fileStream.Read(fileBuffer, 0, fileBuffer.Length);
+
+						if (fileReadCount == 0)
+						{
+							sha256.TransformFinalBlock(
+								fileBuffer, 0, fileReadCount);
+							stillReading = false;
+						}
+						else
+						{
+							sha256.TransformBlock(
+								fileBuffer, 0, fileReadCount, null, 0);
+						}
+					}
+					while (stillReading == true);
+
+					result = sha256.Hash;
 				}
 			}
-			while (stillReading == true);
+			catch (Exception exception) when
+				(exception is ArgumentException ||
+				exception is ArgumentNullException ||
+				exception is ArgumentOutOfRangeException ||
+				exception is DirectoryNotFoundException ||
+				exception is FileNotFoundException ||
+				exception is InvalidCastException ||
+				exception is IOException ||
+				exception is NotSupportedException ||
+				exception is OutOfMemoryException ||
+				exception is PathTooLongException ||
+				exception is UnauthorizedAccessException)
+			{
+				Log.Error(exception.ToString());
+			}
 
-			return sha256.Hash;
+			return result;
 		}
 
 		/////////////////////////////////////////////////////////////////////
