@@ -215,6 +215,21 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(title, Is.EqualTo(expected));
 		}
 
+		/// <summary>
+		/// To title case test.
+		/// </summary>
+		[Test]
+		public static void ToTitleCaseBegin()
+		{
+			string title = "THE WAY WE WERE";
+
+			title = title.ToTitleCase();
+
+			string expected = "The Way We Were";
+
+			Assert.That(title, Is.EqualTo(expected));
+		}
+
 		private static string GetXmlResourceFile(
 			string resource, string extension)
 		{
