@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DigitalZenWorks.Common.Utilities.Extensions
@@ -187,7 +188,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 				CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 				TextInfo textInfo = cultureInfo.TextInfo;
 
-				List<string> exceptions = new List<string>()
+				string[] exceptions =
 				{
 					"a", "an", "and", "any", "at", "from", "in", "into", "of",
 					"on", "or", "some", "the", "to"
@@ -198,11 +199,10 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 				unformattedText =
 					unformattedText.ToLower(CultureInfo.CurrentCulture);
 
-				string properCaseText = textInfo.ToTitleCase(unformattedText);
-
 				char[] space = new char[] { ' ' };
-				string[] words = properCaseText.Split(
+				string[] words = unformattedText.Split(
 					space, StringSplitOptions.RemoveEmptyEntries);
+
 				IList<string> updatedWords = new List<string>();
 
 				for (int index = 0; index < words.Length; index++)
