@@ -209,7 +209,8 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 				{
 					string item = words[index];
 
-					if (!exceptions.Contains(item))
+					// The first word is alway capitalized.
+					if (index == 0 || !exceptions.Contains(item))
 					{
 						item = textInfo.ToTitleCase(item);
 					}
