@@ -4,6 +4,7 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
+using DigitalZenWorks.Common.Utilities.Extensions;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -197,6 +198,21 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				File.Delete(xmlFilePath);
 				File.Delete(xsdFilePath);
 			}
+		}
+
+		/// <summary>
+		/// To title case test.
+		/// </summary>
+		[Test]
+		public static void ToTitleCase()
+		{
+			string title = "WAR AND PEACE";
+
+			title = title.ToTitleCase();
+
+			string expected = "War and Peace";
+
+			Assert.That(title, Is.EqualTo(expected));
 		}
 
 		private static string GetXmlResourceFile(
