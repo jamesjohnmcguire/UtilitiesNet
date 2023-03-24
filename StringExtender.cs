@@ -5,6 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -144,20 +145,82 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// <summary>
 		/// Convert the string to proper case.
 		/// </summary>
+		/// <remarks>Proper case is where all of the Words have their first
+		/// letter capitalized, regardless of whether the word is an article,
+		/// conjunction or preposition.</remarks>
 		/// <param name="unformattedText">The input string.</param>
 		/// <returns>The proper case string.</returns>
 		public static string ToProperCase(this string unformattedText)
 		{
-			string formattedText = null;
+			string properCaseText = null;
 
 			if (null != unformattedText)
 			{
-				formattedText = new CultureInfo("en").TextInfo.
-					ToTitleCase(unformattedText.ToLower(
-					CultureInfo.CurrentCulture));
+				CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+				TextInfo textInfo = cultureInfo.TextInfo;
+
+				// If the text is already all in upper case, no formatting
+				// changes will be applied, so make it lower case first.
+				unformattedText =
+					unformattedText.ToLower(CultureInfo.CurrentCulture);
+
+				properCaseText = textInfo.ToTitleCase(unformattedText);
 			}
 
-			return formattedText;
+			return properCaseText;
+		}
+
+		/// <summary>
+		/// Convert the string to proper case.
+		/// </summary>
+		/// <remarks>Proper case is where all of the Words have their first
+		/// letter capitalized, except if the word is an article,
+		/// conjunction or preposition.</remarks>
+		/// <param name="unformattedText">The input string.</param>
+		/// <returns>The title case string.</returns>
+		public static string ToTitleCase(this string unformattedText)
+		{
+			string titleCaseText = null;
+
+			if (null != unformattedText)
+			{
+				CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+				TextInfo textInfo = cultureInfo.TextInfo;
+
+				List<string> exceptions = new List<string>()
+				{
+					"a", "an", "and", "any", "at", "from", "in", "into", "of",
+					"on", "or", "some", "the", "to"
+				};
+
+				// If the text is already all in upper case, no formatting
+				// changes will be applied, so make it lower case first.
+				unformattedText =
+					unformattedText.ToLower(CultureInfo.CurrentCulture);
+
+				string properCaseText = textInfo.ToTitleCase(unformattedText);
+
+				char[] space = new char[] { ' ' };
+				string[] words = properCaseText.Split(
+					space, StringSplitOptions.RemoveEmptyEntries);
+				IList<string> updatedWords = new List<string>();
+
+				for (int index = 0; index < words.Length; index++)
+				{
+					string item = words[index];
+
+					if (!exceptions.Contains(item))
+					{
+						item = textInfo.ToTitleCase(item);
+					}
+
+					updatedWords.Add(item);
+				}
+
+				titleCaseText = string.Join(" ", updatedWords);
+			}
+
+			return titleCaseText;
 		}
 	}
 }
