@@ -104,7 +104,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// <returns>The digits only string.</returns>
 		public static string ToDigitsOnly(this string input)
 		{
-			Regex digitsOnly = new Regex(@"[^\d]");
+			Regex digitsOnly = new (@"[^\d]");
 			return digitsOnly.Replace(input, string.Empty);
 		}
 

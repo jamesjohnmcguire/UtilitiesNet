@@ -510,10 +510,7 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if ((setToCamelCase == true) && (first == true))
 				{
-					// Idiots!! I need the lower case text!
-#pragma warning disable CA1308 // Normalize strings to uppercase
 					newCase += part.ToLowerInvariant();
-#pragma warning restore CA1308 // Normalize strings to uppercase
 				}
 				else
 				{
