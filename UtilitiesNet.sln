@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesNET", "UtilitiesNET.csproj", "{60ED8485-F030-40B2-A9F1-09365D991595}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesNET", "UtilitiesNetLibrary\UtilitiesNET.csproj", "{60ED8485-F030-40B2-A9F1-09365D991595}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesNetTests", "UtilitiesNetTests\UtilitiesNetTests.csproj", "{4E018356-9D8A-4FFB-B093-254CC578759C}"
 EndProject
