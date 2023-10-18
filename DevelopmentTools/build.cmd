@@ -7,7 +7,7 @@ CD ..
 IF "%1"=="publish" GOTO publish
 
 :default
-dotnet build
+dotnet build --configuration Release
 
 GOTO end
 
