@@ -2,6 +2,7 @@ REM %1 - Version (such as 1.0.0.5)
 REM %2 - API key
 
 CD %~dp0
+CD ..
 
 IF "%1"=="publish" GOTO publish
 
