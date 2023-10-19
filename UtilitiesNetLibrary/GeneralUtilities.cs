@@ -44,12 +44,21 @@ namespace DigitalZenWorks.Common.Utilities
 			if (methodBase.Name.StartsWith(
 				"<", StringComparison.Ordinal))
 			{
+#if NETCOREAPP1_0_OR_GREATER
+				methodName = methodBase.Name[1..];
+				int index = methodName.IndexOf('>', StringComparison.Ordinal);
+#else
 				methodName = methodBase.Name.Substring(1);
 				int index = methodName.IndexOf('>');
+#endif
 
 				if (index > 0)
 				{
+#if NETCOREAPP1_0_OR_GREATER
+					methodName = methodName[..index];
+#else
 					methodName = methodName.Substring(0, index);
+#endif
 				}
 			}
 
@@ -472,7 +481,12 @@ namespace DigitalZenWorks.Common.Utilities
 				hexString = BitConverter.ToString(data);
 				hexString = hexString.ToLower(CultureInfo.CurrentCulture);
 
+#if NETCOREAPP1_0_OR_GREATER
+				hexString = hexString.Replace(
+					"-", string.Empty, StringComparison.Ordinal);
+#else
 				hexString = hexString.Replace("-", string.Empty);
+#endif
 			}
 
 			return hexString;

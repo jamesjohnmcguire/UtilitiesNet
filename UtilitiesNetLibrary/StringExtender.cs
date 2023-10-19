@@ -93,10 +93,18 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			for (int i = 1; i < words.Length; i++)
 			{
 				string word = words[i];
+#if NETCOREAPP1_0_OR_GREATER
+				string subWord = word[..1];
+#else
 				string subWord = word.Substring(0, 1);
+#endif
 				subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
 
+#if NETCOREAPP1_0_OR_GREATER
+				string subWord2 = word[1..];
+#else
 				string subWord2 = word.Substring(1);
+#endif
 				subWord2 = subWord2.ToLower(CultureInfo.CurrentCulture);
 
 				result += subWord + subWord2;
@@ -144,10 +152,18 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 
 			foreach (string word in words)
 			{
+#if NETCOREAPP1_0_OR_GREATER
+				string subWord = word[..1];
+#else
 				string subWord = word.Substring(0, 1);
+#endif
 				subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
 
+#if NETCOREAPP1_0_OR_GREATER
+				string word2 = word[1..];
+#else
 				string word2 = word.Substring(1);
+#endif
 				word2 = word2.ToLower(CultureInfo.CurrentCulture);
 
 				result += subWord + word2;
