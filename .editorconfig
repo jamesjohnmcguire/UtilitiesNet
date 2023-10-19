@@ -5,3 +5,6 @@ csharp_style_conditional_delegate_call = false
 
 # IDE0017: Simplify object initialization
 dotnet_style_object_initializer = false
+
+# IDE0230
+dotnet_diagnostic.IDE0230.severity = none
