@@ -11,7 +11,7 @@
 		<Copyright>Copyright © 2006 - 2023</Copyright>
 		<Description>This client library provides general functionality.</Description>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<FileVersion>1.3.66.0</FileVersion>
+		<FileVersion>1.3.67.0</FileVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<LangVersion>Latest</LangVersion>
@@ -23,7 +23,7 @@
 		<PackageTags>Digital Zen Works;Common;Utilities</PackageTags>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<SignAssembly>true</SignAssembly>
-		<Version>1.3.66</Version>
+		<Version>1.3.67</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
