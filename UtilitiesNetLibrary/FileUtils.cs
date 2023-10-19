@@ -144,12 +144,14 @@ namespace DigitalZenWorks.Common.Utilities
 			foreach (string subDirectory in Directory.GetDirectories(directory))
 			{
 				Flatten(subDirectory);
-				Directory.Delete(directory);
+				Directory.Delete(subDirectory);
 			}
 
 			foreach (string fileName in Directory.GetFiles(directory))
 			{
-				string newFileName = fileName.Replace("\\", "_");
+				FileInfo fileInfo = new FileInfo(fileName);
+
+				string newFileName = fileInfo.Directory + "_" + fileInfo.Name;
 				File.Move(fileName, newFileName);
 			}
 		}

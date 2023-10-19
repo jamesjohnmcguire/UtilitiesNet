@@ -122,6 +122,57 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		}
 
 		/// <summary>
+		/// Flatten test.
+		/// </summary>
+		[Test]
+		public static void Flatten()
+		{
+			DirectoryInfo tempDirectoryTop = Directory.CreateTempSubdirectory();
+			string tempDirectoryTopPath = tempDirectoryTop.FullName;
+
+			string subPath1 = tempDirectoryTopPath + Path.DirectorySeparatorChar +
+				"TestDirectory1" + Path.DirectorySeparatorChar + "TestSubDirectory1";
+
+			string subPath2 = tempDirectoryTopPath + Path.DirectorySeparatorChar +
+				"TestDirectory2" + Path.DirectorySeparatorChar + "TestSubDirectory2";
+
+			Directory.CreateDirectory(subPath1);
+			Directory.CreateDirectory(subPath2);
+
+			string file1 = Path.Combine(subPath1, "log1.txt");
+			File.WriteAllText(file1, "some text");
+
+			string file2 = Path.Combine(subPath2, "log2.txt");
+			File.WriteAllText(file2, "some text");
+
+			FileUtils.Flatten(tempDirectoryTopPath);
+
+			file1 = tempDirectoryTopPath + "_" + "TestDirectory1" + "_" +
+				"TestSubDirectory1" + "_log1.txt";
+
+			file2 = tempDirectoryTopPath + "_" + "TestDirectory2" + "_" +
+				"TestSubDirectory2" + "_log2.txt";
+
+			bool result = File.Exists(file1);
+			Assert.True(result);
+
+			if (result == true)
+			{
+				File.Delete(file1);
+			}
+
+			result = File.Exists(file2);
+			Assert.True(result);
+
+			if (result == true)
+			{
+				File.Delete(file2);
+			}
+
+			Directory.Delete(tempDirectoryTopPath, true);
+		}
+
+		/// <summary>
 		/// Get embedded resource test.
 		/// </summary>
 		[Test]
