@@ -16,10 +16,11 @@ GOTO end
 if "%~2"=="" GOTO error1
 if "%~3"=="" GOTO error2
 
-msbuild -property:Configuration=Release;OutputPath=Bin\Release\Nuget;Platform="Any CPU" -restore UtilitiesNET.csproj
+msbuild -property:Configuration=Release -restore -target:rebuild;pack UtilitiesNET.csproj
 
-CD Bin\Release\Nuget
-dotnet nuget push DigitalZenWorks.Common.Utilities.%2.nupkg --api-key %3 --source https://api.nuget.org/v3/index.json
+CD bin\Release
+
+nuget push DigitalZenWorks.Common.Utilities.%2.nupkg %3 -source https://api.nuget.org/v3/index.json
 
 cd ..\..\..
 GOTO end
