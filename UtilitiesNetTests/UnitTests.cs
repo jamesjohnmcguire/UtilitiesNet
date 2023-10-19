@@ -255,6 +255,34 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// To title case test.
 		/// </summary>
 		[Test]
+		public static void ToHex()
+		{
+			string result = GeneralUtilities.ToHex("2048");
+
+			string expected = "32303438";
+
+			Assert.That(result, Is.EqualTo(expected));
+		}
+
+		/// <summary>
+		/// To title case test.
+		/// </summary>
+		[Test]
+		public static void ToHexBytes()
+		{
+			byte[] input = new byte[] { 50, 48, 52, 56 };
+
+			string result = GeneralUtilities.ToHex(input);
+
+			string expected = "32303438";
+
+			Assert.That(result, Is.EqualTo(expected));
+		}
+
+		/// <summary>
+		/// To title case test.
+		/// </summary>
+		[Test]
 		public static void ToTitleCase()
 		{
 			string title = "WAR AND PEACE";

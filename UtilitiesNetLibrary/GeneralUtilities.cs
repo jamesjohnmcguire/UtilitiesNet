@@ -469,8 +469,10 @@ namespace DigitalZenWorks.Common.Utilities
 			string hexString = string.Empty;
 			if (null != data)
 			{
-				hexString = BitConverter.ToString(data).
-					ToLower(CultureInfo.CurrentCulture).Replace("-", string.Empty);
+				hexString = BitConverter.ToString(data);
+				hexString = hexString.ToLower(CultureInfo.CurrentCulture);
+
+				hexString = hexString.Replace("-", string.Empty);
 			}
 
 			return hexString;
@@ -486,9 +488,8 @@ namespace DigitalZenWorks.Common.Utilities
 			string hexString = string.Empty;
 			if (!string.IsNullOrWhiteSpace(text))
 			{
-				hexString = BitConverter.ToString(Encoding.Default.
-				GetBytes(text)).ToLower(CultureInfo.CurrentCulture).
-				Replace("-", string.Empty);
+				byte[] bytes = Encoding.Default.GetBytes(text);
+				hexString = ToHex(bytes);
 			}
 
 			return hexString;
