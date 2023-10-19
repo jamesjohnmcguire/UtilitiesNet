@@ -525,7 +525,9 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if ((setToCamelCase == true) && (first == true))
 				{
+#pragma warning disable CA1308
 					newCase += part.ToLowerInvariant();
+#pragma warning restore CA1308
 				}
 				else
 				{

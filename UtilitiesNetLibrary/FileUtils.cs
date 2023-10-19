@@ -33,12 +33,6 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log = LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-#pragma warning disable IDE0052
-		private static readonly ResourceManager StringTable = new (
-				"DigitalZenWorks.Common.Utilities.Resources",
-				Assembly.GetExecutingAssembly());
-#pragma warning restore IDE0052
-
 		/// <summary>
 		/// Are files the same.
 		/// </summary>
@@ -156,7 +150,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 			foreach (string fileName in Directory.GetFiles(directory))
 			{
-				FileInfo fileInfo = new FileInfo(fileName);
+				FileInfo fileInfo = new (fileName);
 
 				string newFileName = fileInfo.Directory + "_" + fileInfo.Name;
 				File.Move(fileName, newFileName);
@@ -478,8 +472,13 @@ namespace DigitalZenWorks.Common.Utilities
 				using StreamReader reader = new (file);
 				string contents = reader.ReadToEnd();
 
+#if NETCOREAPP1_0_OR_GREATER
+				string newContents = contents.Replace(
+					oldValue, newValue, StringComparison.Ordinal);
+#else
 				string newContents =
 					contents.Replace(oldValue, newValue);
+#endif
 
 				using StreamWriter writer = new (file);
 				writer.Write(newContents);
