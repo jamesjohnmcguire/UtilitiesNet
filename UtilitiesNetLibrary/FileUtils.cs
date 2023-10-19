@@ -48,27 +48,34 @@ namespace DigitalZenWorks.Common.Utilities
 		/// the same content or not.</returns>
 		public static bool AreFilesTheSame(string file1Path, string file2Path)
 		{
-			bool result;
+			bool result = false;
 
-			StringComparison compareOption =
-				StringComparison.OrdinalIgnoreCase;
-
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-			{
-				compareOption = StringComparison.Ordinal;
-			}
-
-			if (file1Path.Equals(file2Path, compareOption))
+			if (file1Path == null && file2Path == null)
 			{
 				result = true;
 			}
-			else
+			else if (file1Path != null)
 			{
-				byte[] file1Hash = GetFileHash(file1Path);
-				byte[] file2Hash = GetFileHash(file2Path);
+				StringComparison compareOption =
+					StringComparison.OrdinalIgnoreCase;
 
-				result = StructuralComparisons.
-					StructuralEqualityComparer.Equals(file1Hash, file2Hash);
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+				{
+					compareOption = StringComparison.Ordinal;
+				}
+
+				if (file1Path.Equals(file2Path, compareOption))
+				{
+					result = true;
+				}
+				else
+				{
+					byte[] file1Hash = GetFileHash(file1Path);
+					byte[] file2Hash = GetFileHash(file2Path);
+
+					result = StructuralComparisons.
+						StructuralEqualityComparer.Equals(file1Hash, file2Hash);
+				}
 			}
 
 			return result;
