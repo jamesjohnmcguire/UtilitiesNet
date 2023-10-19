@@ -72,6 +72,8 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// <returns>The camel case string.</returns>
 		public static string ToCamelCase(this string input)
 		{
+			string result = string.Empty;
+
 			// If there are 0 or 1 characters, just return the string.
 			if (input == null || input.Length < 2)
 			{
@@ -79,19 +81,25 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			}
 
 			// Split the string into words.
-			char[] separators = Array.Empty<char>();
+			char[] separators = new char[] { ' ', '_', '\t' };
 			string[] words =
 				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
 			// Combine the words.
-			string result = words[0].Substring(0, 1).ToLower(
-				CultureInfo.CurrentCulture) + words[0].Substring(1);
+			string beginWord = words[0];
+			beginWord = beginWord.ToLower(CultureInfo.CurrentCulture);
+			result = beginWord;
 
 			for (int i = 1; i < words.Length; i++)
 			{
-				result +=
-					words[i].Substring(0, 1).ToUpper(
-					CultureInfo.CurrentCulture) + words[i].Substring(1);
+				string word = words[i];
+				string subWord = word.Substring(0, 1);
+				subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
+
+				string subWord2 = word.Substring(1);
+				subWord2 = subWord2.ToLower(CultureInfo.CurrentCulture);
+
+				result += subWord + subWord2;
 			}
 
 			return result;
@@ -127,17 +135,22 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			}
 
 			// Split the string into words.
-			char[] separators = Array.Empty<char>();
+			char[] separators = new char[] { ' ', '_', '\t' };
 			string[] words =
 				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
 			// Combine the words.
 			string result = string.Empty;
+
 			foreach (string word in words)
 			{
-				result +=
-					word.Substring(0, 1).ToUpper(CultureInfo.CurrentCulture) +
-					word.Substring(1);
+				string subWord = word.Substring(0, 1);
+				subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
+
+				string word2 = word.Substring(1);
+				word2 = word2.ToLower(CultureInfo.CurrentCulture);
+
+				result += subWord + word2;
 			}
 
 			return result;

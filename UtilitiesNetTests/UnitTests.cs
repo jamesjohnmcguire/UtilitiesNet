@@ -252,6 +252,36 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		}
 
 		/// <summary>
+		/// To camel case test.
+		/// </summary>
+		[Test]
+		public static void ToCamelCase()
+		{
+			string title = "WAR AND PEACE";
+
+			title = title.ToCamelCase();
+
+			string expected = "warAndPeace";
+
+			Assert.That(title, Is.EqualTo(expected));
+		}
+
+		/// <summary>
+		/// To camel case test.
+		/// </summary>
+		[Test]
+		public static void ToCamelCaseFromSnakeCase()
+		{
+			string title = "war_and_peace";
+
+			title = title.ToCamelCase();
+
+			string expected = "warAndPeace";
+
+			Assert.That(title, Is.EqualTo(expected));
+		}
+
+		/// <summary>
 		/// To title case test.
 		/// </summary>
 		[Test]
@@ -277,6 +307,36 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string expected = "32303438";
 
 			Assert.That(result, Is.EqualTo(expected));
+		}
+
+		/// <summary>
+		/// To camel case test.
+		/// </summary>
+		[Test]
+		public static void ToPascalCase()
+		{
+			string title = "WAR AND PEACE";
+
+			title = title.ToPascalCase();
+
+			string expected = "WarAndPeace";
+
+			Assert.That(title, Is.EqualTo(expected));
+		}
+
+		/// <summary>
+		/// To camel case test.
+		/// </summary>
+		[Test]
+		public static void ToPascalCaseFromSnakeCase()
+		{
+			string title = "war_and_peace";
+
+			title = title.ToPascalCase();
+
+			string expected = "WarAndPeace";
+
+			Assert.That(title, Is.EqualTo(expected));
 		}
 
 		/// <summary>
