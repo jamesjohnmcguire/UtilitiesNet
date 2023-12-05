@@ -551,70 +551,27 @@ namespace DigitalZenWorks.Common.Utilities
 				// for example F = 15
 				for (int h = 0; h < 2; h++)
 				{
-					if (((char)hexData[i + h]) == '0')
+					int index = i + h;
+					char test = (char)hexData[index];
+					test = char.ToUpper(test);
+					byte asciiValue = (byte)test;
+
+					if (asciiValue > 47 && asciiValue < 58)
 					{
-						hexPairInDecimal[h] = 0;
+						asciiValue -= 48;
 					}
-					else if (((char)hexData[i + h]) == '1')
+					if (asciiValue > 64 && asciiValue < 71)
 					{
-						hexPairInDecimal[h] = 1;
+						// Adjust for the first nine.
+						asciiValue -= 55;
 					}
-					else if (((char)hexData[i + h]) == '2')
+					else
 					{
-						hexPairInDecimal[h] = 2;
+						// Error. Throw Exception?
+						asciiValue = 0;
 					}
-					else if (((char)hexData[i + h]) == '3')
-					{
-						hexPairInDecimal[h] = 3;
-					}
-					else if (((char)hexData[i + h]) == '4')
-					{
-						hexPairInDecimal[h] = 4;
-					}
-					else if (((char)hexData[i + h]) == '5')
-					{
-						hexPairInDecimal[h] = 5;
-					}
-					else if (((char)hexData[i + h]) == '6')
-					{
-						hexPairInDecimal[h] = 6;
-					}
-					else if (((char)hexData[i + h]) == '7')
-					{
-						hexPairInDecimal[h] = 7;
-					}
-					else if (((char)hexData[i + h]) == '8')
-					{
-						hexPairInDecimal[h] = 8;
-					}
-					else if (((char)hexData[i + h]) == '9')
-					{
-						hexPairInDecimal[h] = 9;
-					}
-					else if (((char)hexData[i + h]) == 'A' || ((char)hexData[i + h]) == 'a')
-					{
-						hexPairInDecimal[h] = 10;
-					}
-					else if (((char)hexData[i + h]) == 'B' || ((char)hexData[i + h]) == 'b')
-					{
-						hexPairInDecimal[h] = 11;
-					}
-					else if (((char)hexData[i + h]) == 'C' || ((char)hexData[i + h]) == 'c')
-					{
-						hexPairInDecimal[h] = 12;
-					}
-					else if (((char)hexData[i + h]) == 'D' || ((char)hexData[i + h]) == 'd')
-					{
-						hexPairInDecimal[h] = 13;
-					}
-					else if (((char)hexData[i + h]) == 'E' || ((char)hexData[i + h]) == 'e')
-					{
-						hexPairInDecimal[h] = 14;
-					}
-					else if (((char)hexData[i + h]) == 'F' || ((char)hexData[i + h]) == 'f')
-					{
-						hexPairInDecimal[h] = 15;
-					}
+
+					hexPairInDecimal[h] = asciiValue;
 				}
 
 				// Join hex 4 bit(left hex char) + 4bit(right hex char) in bytes 8 it
