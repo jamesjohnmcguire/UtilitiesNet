@@ -71,10 +71,10 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				GetXmlResourceFile("UtilitiesNetTests.test.xsd", ".xsd");
 
 			bool result = FileUtils.AreFilesTheSame(filePath, filePath2);
-			Assert.False(result);
+			Assert.That(result, Is.False);
 
 			result = File.Exists(filePath);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -82,7 +82,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			}
 
 			result = File.Exists(filePath2);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -102,10 +102,10 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.Copy(filePath, filePath2);
 
 			bool result = FileUtils.AreFilesTheSame(filePath, filePath2);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			result = File.Exists(filePath);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -113,7 +113,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			}
 
 			result = File.Exists(filePath2);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -154,7 +154,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				"TestSubDirectory2" + "_log2.txt";
 
 			bool result = File.Exists(file1);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -162,7 +162,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			}
 
 			result = File.Exists(file2);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -182,7 +182,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
 
 			bool result = File.Exists(filePath);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			if (result == true)
 			{
@@ -200,7 +200,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.WriteAllText(filePath, TestData);
 
 			byte[] hash = FileUtils.GetFileHash(filePath);
-			Assert.NotNull(hash);
+			Assert.That(hash, Is.Not.Null);
 
 			string hashText = BitConverter.ToString(hash);
 			hashText = hashText.Replace(
@@ -209,7 +209,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string compareHash = "3163EC56BAB76F5BA3C2CFAC49915EE83C10BC" +
 				"4975FD70BB01F4B30501AA9856";
 
-			Assert.AreEqual(hashText, compareHash);
+			Assert.That(compareHash, Is.EqualTo(hashText));
 
 			bool result = File.Exists(filePath);
 			if (result == true)
@@ -227,22 +227,22 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string xmlFilePath =
 				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
 			bool result = File.Exists(xmlFilePath);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			string xsdFilePath =
 				GetXmlResourceFile("UtilitiesNetTests.test.xsd", ".xsd");
 			result = File.Exists(xmlFilePath);
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			OrderedItem item = (OrderedItem)XmlUtilities.LoadWithValidation(
 				xsdFilePath, xmlFilePath, typeof(OrderedItem));
 
-			Assert.NotNull(item);
-			Assert.AreEqual(item.ItemName, "Widget");
-			Assert.AreEqual(item.Description, "Regular Widget");
-			Assert.AreEqual(item.UnitPrice, 2.3);
-			Assert.AreEqual(item.Quantity, 10);
-			Assert.AreEqual(item.LineTotal, 23);
+			Assert.That(item, Is.Not.Null);
+			Assert.That("Widget", Is.EqualTo(item.ItemName));
+			Assert.That("Regular Widget", Is.EqualTo(item.Description));
+			Assert.That(2.3, Is.EqualTo(item.UnitPrice));
+			Assert.That(10, Is.EqualTo(item.Quantity));
+			Assert.That(23, Is.EqualTo(item.LineTotal));
 
 			if (result == true)
 			{
@@ -381,7 +381,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool result = FileUtils.CreateFileFromEmbeddedResource(
 				resource, filePath);
 
-			Assert.True(result);
+			Assert.That(result, Is.True);
 
 			return filePath;
 		}
