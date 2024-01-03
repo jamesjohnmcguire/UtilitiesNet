@@ -618,7 +618,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/////////////////////////////////////////////////////////////////////
 		public static void Touch(string path, string time)
 		{
-			string[] format = { "yyyyMMddHHmmss" };
+			string[] format = ["yyyyMMddHHmmss"];
 
 			if (DateTime.TryParseExact(
 				time,
