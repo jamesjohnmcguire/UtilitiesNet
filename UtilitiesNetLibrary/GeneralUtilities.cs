@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // <copyright file="GeneralUtilities.cs" company="James John McGuire">
-// Copyright © 2006 - 2023 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2024 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
@@ -543,16 +543,16 @@ namespace DigitalZenWorks.Common.Utilities
 		private static byte[] GetHexPair(byte[] hexData, MemoryStream retVal)
 		{
 			// Loop hex value pairs
-			for (int i = 0; i < hexData.Length; i += 2)
+			for (int index = 0; index < hexData.Length; index += 2)
 			{
 				byte[] hexPairInDecimal = new byte[2];
 
 				// We need to convert hex char to decimal number,
 				// for example F = 15
-				for (int h = 0; h < 2; h++)
+				for (int subIndex = 0; subIndex < 2; subIndex++)
 				{
-					int index = i + h;
-					char test = (char)hexData[index];
+					int testIndex = index + subIndex;
+					char test = (char)hexData[testIndex];
 					test = char.ToUpper(test, CultureInfo.InvariantCulture);
 					byte asciiValue = (byte)test;
 
@@ -571,11 +571,15 @@ namespace DigitalZenWorks.Common.Utilities
 						asciiValue = 0;
 					}
 
-					hexPairInDecimal[h] = asciiValue;
+					hexPairInDecimal[subIndex] = asciiValue;
 				}
 
-				// Join hex 4 bit(left hex char) + 4bit(right hex char) in bytes 8 it
-				retVal.WriteByte((byte)((hexPairInDecimal[0] << 4) | hexPairInDecimal[1]));
+				// Join hex 4 bit(left hex char) + 4bit(right hex char)
+				// in bytes 8 it.
+				byte writeBytes = (byte)((hexPairInDecimal[0] << 4) |
+					hexPairInDecimal[1]);
+
+				retVal.WriteByte(writeBytes);
 			}
 
 			return retVal.ToArray();

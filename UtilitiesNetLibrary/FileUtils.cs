@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////
 // <copyright file="FileUtils.cs" company="James John McGuire">
-// Copyright © 2006 - 2023 James John McGuire. All Rights Reserved.
+// Copyright © 2006 - 2024 James John McGuire. All Rights Reserved.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
@@ -618,7 +618,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/////////////////////////////////////////////////////////////////////
 		public static void Touch(string path, string time)
 		{
-			string[] format = { "yyyyMMddHHmmss" };
+			string[] format = ["yyyyMMddHHmmss"];
 
 			if (DateTime.TryParseExact(
 				time,
