@@ -553,14 +553,14 @@ namespace DigitalZenWorks.Common.Utilities
 				{
 					int index = i + h;
 					char test = (char)hexData[index];
-					test = char.ToUpper(test);
+					test = char.ToUpper(test, CultureInfo.InvariantCulture);
 					byte asciiValue = (byte)test;
 
 					if (asciiValue > 47 && asciiValue < 58)
 					{
 						asciiValue -= 48;
 					}
-					if (asciiValue > 64 && asciiValue < 71)
+					else if (asciiValue > 64 && asciiValue < 71)
 					{
 						// Adjust for the first nine.
 						asciiValue -= 55;

@@ -237,12 +237,15 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			OrderedItem item = (OrderedItem)XmlUtilities.LoadWithValidation(
 				xsdFilePath, xmlFilePath, typeof(OrderedItem));
 
-			Assert.That(item, Is.Not.Null);
-			Assert.That("Widget", Is.EqualTo(item.ItemName));
-			Assert.That("Regular Widget", Is.EqualTo(item.Description));
-			Assert.That(2.3, Is.EqualTo(item.UnitPrice));
-			Assert.That(10, Is.EqualTo(item.Quantity));
-			Assert.That(23, Is.EqualTo(item.LineTotal));
+			Assert.Multiple(() =>
+			{
+				Assert.That(item, Is.Not.Null);
+				Assert.That(item.ItemName, Is.EqualTo("Widget"));
+				Assert.That(item.Description, Is.EqualTo("Regular Widget"));
+				Assert.That(item.UnitPrice, Is.EqualTo(2.3));
+				Assert.That(item.Quantity, Is.EqualTo(10));
+				Assert.That(item.LineTotal, Is.EqualTo(23));
+			});
 
 			if (result == true)
 			{
@@ -300,7 +303,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToHexBytes()
 		{
-			byte[] input = new byte[] { 50, 48, 52, 56 };
+			byte[] input = [50, 48, 52, 56];
 
 			string result = GeneralUtilities.ToHex(input);
 
