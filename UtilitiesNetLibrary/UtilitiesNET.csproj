@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<AnalysisMode>All</AnalysisMode>
 		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
 		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
