@@ -137,6 +137,31 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 
 		/// <summary>
+		/// Extracts the content.
+		/// </summary>
+		/// <param name="content">The content.</param>
+		/// <param name="beginTag">The begin tag.</param>
+		/// <param name="endTag">The end tag.</param>
+		/// <returns>The content within the tags.</returns>
+		public static string ExtractContent(
+			string content, string beginTag, string endTag)
+		{
+			string innerContent = null;
+
+			string pattern = beginTag + @"(.*?)" + endTag;
+
+			Match match =
+				Regex.Match(content, pattern, RegexOptions.Singleline);
+
+			if (match.Success)
+			{
+				innerContent = match.Groups[1].Value;
+			}
+
+			return innerContent;
+		}
+
+		/// <summary>
 		/// Flatten the given directory.
 		/// </summary>
 		/// <param name="directory">The directory to be flattened.</param>

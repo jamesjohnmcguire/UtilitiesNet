@@ -7,7 +7,9 @@
 using DigitalZenWorks.Common.Utilities.Extensions;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 [assembly: CLSCompliant(true)]
 
@@ -119,6 +121,22 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			{
 				File.Delete(filePath2);
 			}
+		}
+
+		/// <summary>
+		/// Flatten test.
+		/// </summary>
+		[Test]
+		public static void ExtractContentTest()
+		{
+			string content = "[:en]This\r\nis a\r\ntest.[:ja]<section " +
+				"class=\"slice sct-color-1 bb\">\r\n[:]";
+			string compareText = "This\r\nis a\r\ntest.";
+
+			string innerContent =
+				FileUtils.ExtractContent(content, @"\[:en\]", @"\[:ja\]");
+
+			Assert.That(innerContent, Is.EqualTo(compareText));
 		}
 
 		/// <summary>
