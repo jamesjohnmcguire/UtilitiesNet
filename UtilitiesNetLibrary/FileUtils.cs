@@ -348,7 +348,8 @@ namespace DigitalZenWorks.Common.Utilities
 					UpdateFileLineEndingUnixToWindows(d);
 				}
 			}
-			catch (Exception exception) when (exception is ArgumentException ||
+			catch (Exception exception) when
+				(exception is ArgumentException ||
 				exception is ArgumentNullException ||
 				exception is ArgumentOutOfRangeException)
 			{
@@ -395,6 +396,58 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return outputBytes;
+		}
+
+		/// <summary>
+		/// Reads the file.
+		/// </summary>
+		/// <param name="filePath">The file path.</param>
+		/// <returns>The bytes read.</returns>
+		/// <exception cref="System.IO.IOException">File size exceeds
+		/// the limit of int.MaxValue.</exception>
+		public static byte[] ReadFile(string filePath)
+		{
+			byte[] buffer = null;
+
+			try
+			{
+				using FileStream fileStream =
+					new (filePath, FileMode.Open, FileAccess.Read);
+
+				FileInfo fileInfo = new (filePath);
+				long fileSize = fileInfo.Length;
+
+				// Check if the file size is too large to fit into memory
+				if (fileSize > int.MaxValue)
+				{
+					throw new IOException(
+						"File size exceeds the limit of int.MaxValue");
+				}
+				else
+				{
+					buffer = new byte[fileSize];
+
+					int bytesRead = 0;
+					int totalBytesRead = 0;
+					long remaining = fileSize;
+
+					do
+					{
+						bytesRead = fileStream.Read(
+							buffer, totalBytesRead, (int)remaining);
+
+						totalBytesRead += bytesRead;
+						remaining = fileSize - totalBytesRead;
+					}
+					while (remaining > 0 && totalBytesRead <= fileSize);
+				}
+			}
+			catch (IOException exception)
+			{
+				Log.Error(exception.ToString());
+			}
+
+			return buffer;
 		}
 
 		/////////////////////////////////////////////////////////////////////
@@ -673,10 +726,30 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="contents">The contents to copy.</param>
 		public static void WriteExtractedFile(string fileName, byte[] contents)
 		{
-			using FileStream fileStream = File.Open(fileName, FileMode.Create);
-			using BinaryWriter writer = new (fileStream);
+			WriteFile(fileName, contents);
+		}
 
-			writer.Write(contents);
+		/// <summary>
+		/// Writes the file.
+		/// </summary>
+		/// <param name="filePath">The file path.</param>
+		/// <param name="data">The data.</param>
+		public static void WriteFile(string filePath, byte[] data)
+		{
+			try
+			{
+				if (data != null)
+				{
+					using FileStream fileStream =
+						new (filePath, FileMode.Create, FileAccess.Write);
+
+					fileStream.Write(data, 0, data.Length);
+				}
+			}
+			catch (IOException exception)
+			{
+				Log.Error(exception.ToString());
+			}
 		}
 	} // End Class
 } // End Namespace
