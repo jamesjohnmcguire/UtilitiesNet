@@ -129,12 +129,12 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ExtractContentTest()
 		{
-			string content = "[:en]This\r\nis a\r\ntest.[:ja]<section " +
+			string content = "[:en]\r\nThis\r\nis a\r\ntest.[:ja]\r\n<section " +
 				"class=\"slice sct-color-1 bb\">\r\n[:]";
 			string compareText = "This\r\nis a\r\ntest.";
 
 			string innerContent =
-				FileUtils.ExtractContent(content, @"\[:en\]", @"\[:ja\]");
+				FileUtils.ExtractContent(content, @"\[:en\]\r\n", @"\[:ja\]\r\n");
 
 			Assert.That(innerContent, Is.EqualTo(compareText));
 		}
