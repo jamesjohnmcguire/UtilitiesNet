@@ -24,11 +24,26 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log = LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-#pragma warning disable CA1823
-		private static readonly ResourceManager StringTable = new (
-			"DigitalZenWorks.Common.Utilities.Resources",
-			Assembly.GetExecutingAssembly());
-#pragma warning restore CA1823
+		/// <summary>
+		/// Converts the XML node to string.
+		/// </summary>
+		/// <param name="node">The node.</param>
+		/// <returns>The string represeentation of the node.</returns>
+		public static string ConvertXmlNodeToString(XmlNode node)
+		{
+			string nodeString = null;
+
+			if (node != null)
+			{
+				StringWriter stringWriter = new ();
+				using XmlTextWriter xmlTextWriter = new (stringWriter);
+
+				node.WriteTo(xmlTextWriter);
+				nodeString = stringWriter.ToString();
+			}
+
+			return nodeString;
+		}
 
 		/// <summary>
 		/// Load with validation.
