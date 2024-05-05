@@ -140,7 +140,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="pascalCase">The pascal case.</param>
 		/// <returns>The text in snake case.</returns>
-		/// <exception cref="System.ArgumentNullException">text</exception>
+		/// <exception cref="System.ArgumentNullException">Exception
+		/// text.</exception>
 		public static string ConvertToSnakeCaseFromPascalCase(
 			string pascalCase)
 		{
