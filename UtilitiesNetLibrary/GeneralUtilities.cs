@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 [assembly: CLSCompliant(false)]
 
@@ -108,6 +109,16 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 
 		/// <summary>
+		/// Gets the name in camel case.
+		/// </summary>
+		/// <param name="snakeCase">A string in snake case.</param>
+		/// <returns>A name in camel case.</returns>
+		public static string ConvertToCamelCaseFromSnakeCase(string snakeCase)
+		{
+			return ConvertToCamelCaseFromKnr(snakeCase);
+		}
+
+		/// <summary>
 		/// Gets the name in pascal case.
 		/// </summary>
 		/// <param name="knrName">The name of variable in knr form.</param>
@@ -120,6 +131,51 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				output = ConvertFromKnrText(knrName, false);
 			}
+
+			return output;
+		}
+
+		/// <summary>
+		/// Converts to snake case from pascal case.
+		/// </summary>
+		/// <param name="pascalCase">The pascal case.</param>
+		/// <returns>The text in snake case.</returns>
+		/// <exception cref="System.ArgumentNullException">text</exception>
+		public static string ConvertToSnakeCaseFromPascalCase(
+			string pascalCase)
+		{
+			string output = null;
+
+			if (pascalCase == null)
+			{
+				throw new ArgumentNullException(nameof(pascalCase));
+			}
+			else if (pascalCase.Length < 2)
+			{
+#pragma warning disable CA1308
+				output = pascalCase.ToLowerInvariant();
+#pragma warning restore CA1308
+			}
+
+			StringBuilder builder = new StringBuilder();
+
+			char item = char.ToLowerInvariant(pascalCase[0]);
+			builder.Append(item);
+
+			for (int i = 1; i < pascalCase.Length; ++i)
+			{
+				item = pascalCase[i];
+				item = char.ToLowerInvariant(item);
+
+				if (char.IsUpper(item))
+				{
+					builder.Append('_');
+				}
+
+				builder.Append(item);
+			}
+
+			output = builder.ToString();
 
 			return output;
 		}
