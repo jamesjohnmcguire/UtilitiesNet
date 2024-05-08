@@ -166,13 +166,13 @@ namespace DigitalZenWorks.Common.Utilities
 			for (int i = 1; i < pascalCase.Length; ++i)
 			{
 				item = pascalCase[i];
-				item = char.ToLowerInvariant(item);
 
 				if (char.IsUpper(item))
 				{
 					builder.Append('_');
 				}
 
+				item = char.ToLowerInvariant(item);
 				builder.Append(item);
 			}
 
