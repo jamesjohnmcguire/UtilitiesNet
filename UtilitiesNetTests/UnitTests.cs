@@ -4,6 +4,7 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
+using DigitalZenWorks.Common.Utilities;
 using DigitalZenWorks.Common.Utilities.Extensions;
 using NUnit.Framework;
 using System;
@@ -121,6 +122,22 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			{
 				File.Delete(filePath2);
 			}
+		}
+
+		/// <summary>
+		/// ConvertToSnakeCaseFromPascalCase test.
+		/// </summary>
+		[Test]
+		public static void ConvertToSnakeCaseFromPascalCase()
+		{
+			string name = "LandingPages";
+
+			string output =
+				GeneralUtilities.ConvertToSnakeCaseFromPascalCase(name);
+
+			string compareText = "landing_pages";
+
+			Assert.That(output, Is.EqualTo(compareText));
 		}
 
 		/// <summary>
