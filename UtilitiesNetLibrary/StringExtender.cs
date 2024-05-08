@@ -232,7 +232,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 				string[] words = unformattedText.Split(
 					space, StringSplitOptions.RemoveEmptyEntries);
 
-				IList<string> updatedWords = new List<string>();
+				List<string> updatedWords = new List<string>();
 
 				for (int index = 0; index < words.Length; index++)
 				{

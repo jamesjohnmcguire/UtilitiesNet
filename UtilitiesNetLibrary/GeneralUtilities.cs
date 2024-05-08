@@ -14,7 +14,6 @@ using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 [assembly: CLSCompliant(false)]
 
@@ -42,8 +41,11 @@ namespace DigitalZenWorks.Common.Utilities
 			MethodBase methodBase = stackFrame.GetMethod();
 
 			string methodName = methodBase.Name;
-			if (methodBase.Name.StartsWith(
-				"<", StringComparison.Ordinal))
+#if NETCOREAPP1_0_OR_GREATER
+			if (methodBase.Name.StartsWith('<'))
+#else
+			if (methodBase.Name.StartsWith("<", StringComparison.Ordinal))
+#endif
 			{
 #if NETCOREAPP1_0_OR_GREATER
 				methodName = methodBase.Name[1..];
@@ -256,10 +258,14 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[] data = null;
 
+#if NET8_0
+			ArgumentNullException.ThrowIfNull(hexData);
+#else
 			if (hexData == null)
 			{
 				throw new ArgumentNullException(nameof(hexData));
 			}
+#endif
 
 			double floor = Math.Floor(hexData.Length / 2D);
 
@@ -400,10 +406,14 @@ namespace DigitalZenWorks.Common.Utilities
 		public static byte[] QuotedPrintableDecode(byte[] data)
 		{
 			byte[] returnData = null;
+#if NET8_0
+			ArgumentNullException.ThrowIfNull(data);
+#else
 			if (data == null)
 			{
 				throw new ArgumentNullException(nameof(data));
 			}
+#endif
 
 			/* RFC 2045 6.7. Quoted-Printable Content-Transfer-Encoding
 
@@ -572,8 +582,13 @@ namespace DigitalZenWorks.Common.Utilities
 			string newCase = string.Empty;
 
 			// split at underscores
+#if NET8_0
+			char[] splitters = ['_'];
+#else
+			char[] splitters = new char[] { '_' };
+#endif
 			string[] parts = knrName.Split(
-				new char[] { '_' },
+				splitters,
 				StringSplitOptions.RemoveEmptyEntries);
 			bool first = true;
 
