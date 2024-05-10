@@ -8,6 +8,7 @@ using Common.Logging;
 using DigitalZenWorks.Common.Utilities.Extensions;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -98,16 +99,11 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="knrName">A string in knr format.</param>
 		/// <returns>A name in camel case.</returns>
+		[Obsolete("ConvertToCamelCaseFromKnr is deprecated, " +
+			"please use TextCase.ConvertToCamelCaseFromKnr instead.")]
 		public static string ConvertToCamelCaseFromKnr(string knrName)
 		{
-			string output = null;
-
-			if (!string.IsNullOrEmpty(knrName))
-			{
-				output = ConvertFromKnrText(knrName, true);
-			}
-
-			return output;
+			return TextCase.ConvertToCamelCaseFromKnr(knrName);
 		}
 
 		/// <summary>
@@ -115,9 +111,11 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="snakeCase">A string in snake case.</param>
 		/// <returns>A name in camel case.</returns>
+		[Obsolete("ConvertToCamelCaseFromSnakeCase is deprecated, " +
+			"please use TextCase.ConvertToCamelCaseFromSnakeCase instead.")]
 		public static string ConvertToCamelCaseFromSnakeCase(string snakeCase)
 		{
-			return ConvertToCamelCaseFromKnr(snakeCase);
+			return TextCase.ConvertToCamelCaseFromKnr(snakeCase);
 		}
 
 		/// <summary>
@@ -125,16 +123,11 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="knrName">The name of variable in knr form.</param>
 		/// <returns>A variable name in Pascal case form.</returns>
+		[Obsolete("ConvertToPascalCaseFromKnr is deprecated, " +
+			"please use TextCase.ConvertToPascalCaseFromKnr instead.")]
 		public static string ConvertToPascalCaseFromKnr(string knrName)
 		{
-			string output = null;
-
-			if (!string.IsNullOrEmpty(knrName))
-			{
-				output = ConvertFromKnrText(knrName, false);
-			}
-
-			return output;
+			return TextCase.ConvertToPascalCaseFromKnr(knrName);
 		}
 
 		/// <summary>
@@ -144,43 +137,12 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>The text in snake case.</returns>
 		/// <exception cref="System.ArgumentNullException">Exception
 		/// text.</exception>
+		[Obsolete("ConvertToSnakeCaseFromPascalCase is deprecated, " +
+			"please use TextCase.ConvertToSnakeCaseFromPascalCase instead.")]
 		public static string ConvertToSnakeCaseFromPascalCase(
 			string pascalCase)
 		{
-			string output = null;
-
-			if (pascalCase == null)
-			{
-				throw new ArgumentNullException(nameof(pascalCase));
-			}
-			else if (pascalCase.Length < 2)
-			{
-#pragma warning disable CA1308
-				output = pascalCase.ToLowerInvariant();
-#pragma warning restore CA1308
-			}
-
-			StringBuilder builder = new StringBuilder();
-
-			char item = char.ToLowerInvariant(pascalCase[0]);
-			builder.Append(item);
-
-			for (int i = 1; i < pascalCase.Length; ++i)
-			{
-				item = pascalCase[i];
-
-				if (char.IsUpper(item))
-				{
-					builder.Append('_');
-				}
-
-				item = char.ToLowerInvariant(item);
-				builder.Append(item);
-			}
-
-			output = builder.ToString();
-
-			return output;
+			return TextCase.ConvertToSnakeCaseFromPascalCase(pascalCase);
 		}
 
 		/// <summary>
@@ -574,42 +536,6 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return hexString;
-		}
-
-		private static string ConvertFromKnrText(
-			string knrName, bool setToCamelCase)
-		{
-			string newCase = string.Empty;
-
-			// split at underscores
-#if NET8_0
-			char[] splitters = ['_'];
-#else
-			char[] splitters = new char[] { '_' };
-#endif
-			string[] parts = knrName.Split(
-				splitters,
-				StringSplitOptions.RemoveEmptyEntries);
-			bool first = true;
-
-			// remove underscores, set parts in intended case
-			foreach (string part in parts)
-			{
-				if ((setToCamelCase == true) && (first == true))
-				{
-#pragma warning disable CA1308
-					newCase += part.ToLowerInvariant();
-#pragma warning restore CA1308
-				}
-				else
-				{
-					newCase += part.ToProperCase();
-				}
-
-				first = false;
-			}
-
-			return newCase;
 		}
 
 		private static byte[] GetHexPair(byte[] hexData, MemoryStream retVal)
