@@ -125,6 +125,22 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		}
 
 		/// <summary>
+		/// Convert to camel case from casel case test.
+		/// </summary>
+		[Test]
+		public static void ConvertToCamelCaseFromKnr()
+		{
+			string name = "name_english";
+
+			string output =
+				TextCase.ConvertToCamelCaseFromKnr(name);
+
+			string compareText = "nameEnglish";
+
+			Assert.That(output, Is.EqualTo(compareText));
+		}
+
+		/// <summary>
 		/// ConvertToSnakeCaseFromPascalCase test.
 		/// </summary>
 		[Test]
@@ -133,11 +149,139 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string name = "LandingPages";
 
 			string output =
-				GeneralUtilities.ConvertToSnakeCaseFromPascalCase(name);
+				TextCase.ConvertToSnakeCaseFromPascalCase(name);
 
 			string compareText = "landing_pages";
 
 			Assert.That(output, Is.EqualTo(compareText));
+		}
+
+		/// <summary>
+		/// get casing for camel case test.
+		/// </summary>
+		[Test]
+		public static void GetCasingCamelCase()
+		{
+			string name = "nameEnglish";
+
+			CaseTypes caseTypes = TextCase.GetCaseTypes(name);
+
+			bool isCamelCase = caseTypes.HasFlag(CaseTypes.CamelCase);
+			bool isKabobCase = caseTypes.HasFlag(CaseTypes.KabobCase);
+			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
+			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
+
+			Assert.That(isCamelCase, Is.True);
+			Assert.That(isKabobCase, Is.False);
+			Assert.That(isPascalCase, Is.False);
+			Assert.That(isSnakeCase, Is.False);
+		}
+
+		/// <summary>
+		/// get casing for single word upper first letter upper case test.
+		/// </summary>
+		[Test]
+		public static void GetCasingSingleWordFirstUpperCase()
+		{
+			string name = "Brands";
+
+			CaseTypes caseTypes = TextCase.GetCaseTypes(name);
+
+			bool isCamelCase = caseTypes.HasFlag(CaseTypes.CamelCase);
+			bool isKabobCase = caseTypes.HasFlag(CaseTypes.KabobCase);
+			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
+			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
+
+			Assert.That(isCamelCase, Is.False);
+			Assert.That(isKabobCase, Is.False);
+			Assert.That(isPascalCase, Is.True);
+			Assert.That(isSnakeCase, Is.False);
+		}
+
+		/// <summary>
+		/// get casing for single word lower case test.
+		/// </summary>
+		[Test]
+		public static void GetCasingSingleWordLowerCase()
+		{
+			string name = "brands";
+
+			CaseTypes caseTypes = TextCase.GetCaseTypes(name);
+
+			bool isCamelCase = caseTypes.HasFlag(CaseTypes.CamelCase);
+			bool isKabobCase = caseTypes.HasFlag(CaseTypes.KabobCase);
+			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
+			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
+
+			Assert.That(isCamelCase, Is.True);
+			Assert.That(isKabobCase, Is.True);
+			Assert.That(isPascalCase, Is.False);
+			Assert.That(isSnakeCase, Is.True);
+		}
+
+		/// <summary>
+		/// get casing for single word upper case test.
+		/// </summary>
+		[Test]
+		public static void GetCasingSingleWordUpperCase()
+		{
+			string name = "BRANDS";
+
+			CaseTypes caseTypes = TextCase.GetCaseTypes(name);
+
+			bool isCamelCase = caseTypes.HasFlag(CaseTypes.CamelCase);
+			bool isKabobCase = caseTypes.HasFlag(CaseTypes.KabobCase);
+			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
+			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
+			bool isOtherCase = caseTypes.HasFlag(CaseTypes.Other);
+
+			Assert.That(isCamelCase, Is.False);
+			Assert.That(isKabobCase, Is.False);
+			Assert.That(isPascalCase, Is.False);
+			Assert.That(isSnakeCase, Is.False);
+			Assert.That(isOtherCase, Is.True);
+		}
+
+		/// <summary>
+		/// get casing for pascal case test.
+		/// </summary>
+		[Test]
+		public static void GetCasingPascalCase()
+		{
+			string name = "NameEnglish";
+
+			CaseTypes caseTypes = TextCase.GetCaseTypes(name);
+
+			bool isCamelCase = caseTypes.HasFlag(CaseTypes.CamelCase);
+			bool isKabobCase = caseTypes.HasFlag(CaseTypes.KabobCase);
+			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
+			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
+
+			Assert.That(isCamelCase, Is.False);
+			Assert.That(isKabobCase, Is.False);
+			Assert.That(isPascalCase, Is.True);
+			Assert.That(isSnakeCase, Is.False);
+		}
+
+		/// <summary>
+		/// get casing for snake case test.
+		/// </summary>
+		[Test]
+		public static void GetCasingSnakeCase()
+		{
+			string name = "name_english";
+
+			CaseTypes caseTypes = TextCase.GetCaseTypes(name);
+
+			bool isCamelCase = caseTypes.HasFlag(CaseTypes.CamelCase);
+			bool isKabobCase = caseTypes.HasFlag(CaseTypes.KabobCase);
+			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
+			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
+
+			Assert.That(isCamelCase, Is.False);
+			Assert.That(isKabobCase, Is.False);
+			Assert.That(isPascalCase, Is.False);
+			Assert.That(isSnakeCase, Is.True);
 		}
 
 		/// <summary>
