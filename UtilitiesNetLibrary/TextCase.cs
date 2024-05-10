@@ -153,10 +153,15 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrWhiteSpace(variable))
 			{
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
 				bool hasUnderScore = variable.Contains(
-					'_', StringComparison.OrdinalIgnoreCase);
+				'_', StringComparison.OrdinalIgnoreCase);
 				bool hasDash = variable.Contains(
 					'-', StringComparison.OrdinalIgnoreCase);
+#else
+				bool hasUnderScore = variable.Contains("_");
+				bool hasDash = variable.Contains("-");
+#endif
 
 				char first = variable[0];
 				bool firstLower = char.IsLower(first);
@@ -183,8 +188,12 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrWhiteSpace(variable))
 			{
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
 				bool hasUnderScore = variable.Contains(
 					'_', StringComparison.OrdinalIgnoreCase);
+#else
+				bool hasUnderScore = variable.Contains("_");
+#endif
 
 				if (hasUnderScore == false)
 				{
@@ -224,10 +233,15 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrWhiteSpace(variable))
 			{
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
 				bool hasUnderScore = variable.Contains(
 					'_', StringComparison.OrdinalIgnoreCase);
 				bool hasDash = variable.Contains(
 					'-', StringComparison.OrdinalIgnoreCase);
+#else
+				bool hasUnderScore = variable.Contains("_");
+				bool hasDash = variable.Contains("-");
+#endif
 
 				char first = variable[0];
 				bool firstUpper = char.IsUpper(first);
@@ -257,8 +271,12 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrWhiteSpace(variable))
 			{
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
 				bool hasDash = variable.Contains(
 					'-', StringComparison.OrdinalIgnoreCase);
+#else
+				bool hasDash = variable.Contains("-");
+#endif
 
 				if (hasDash == false)
 				{
