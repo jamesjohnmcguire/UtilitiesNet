@@ -310,7 +310,7 @@ namespace DigitalZenWorks.Common.Utilities
 			string newCase = string.Empty;
 
 			// split at underscores
-#if NET8_0
+#if NET8_0_OR_GREATER
 			char[] splitters = ['_'];
 #else
 			char[] splitters = new char[] { '_' };

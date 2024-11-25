@@ -5,7 +5,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 using Common.Logging;
-using DigitalZenWorks.Common.Utilities.Extensions;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -219,7 +218,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[] data = null;
 
-#if NET8_0
+#if NET8_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(hexData);
 #else
 			if (hexData == null)
@@ -264,7 +263,7 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				foreach (char c in value)
 				{
-					if ((int)c > 127)
+					if (c > 127)
 					{
 						isAscii = false;
 						break;
@@ -367,7 +366,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static byte[] QuotedPrintableDecode(byte[] data)
 		{
 			byte[] returnData = null;
-#if NET8_0
+#if NET8_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(data);
 #else
 			if (data == null)
@@ -460,9 +459,8 @@ namespace DigitalZenWorks.Common.Utilities
 										destination.Write(FromHex(buffer), 0, 1);
 									}
 									catch (Exception exception) when
-										(exception is ArgumentException ||
-										exception is
-										ArgumentOutOfRangeException)
+										(exception is ArgumentException or
+											ArgumentOutOfRangeException)
 									{
 										Log.Error(exception.ToString());
 
@@ -553,11 +551,11 @@ namespace DigitalZenWorks.Common.Utilities
 					test = char.ToUpper(test, CultureInfo.InvariantCulture);
 					byte asciiValue = (byte)test;
 
-					if (asciiValue > 47 && asciiValue < 58)
+					if (asciiValue is > 47 and < 58)
 					{
 						asciiValue -= 48;
 					}
-					else if (asciiValue > 64 && asciiValue < 71)
+					else if (asciiValue is > 64 and < 71)
 					{
 						// Adjust for the first nine.
 						asciiValue -= 55;
