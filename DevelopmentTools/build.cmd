@@ -1,4 +1,4 @@
-REM %2 - Version (such as 1.0.5)
+REM %2 - Version (such as 1.5.1)
 REM %3 - API key
 
 CD %~dp0
