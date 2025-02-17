@@ -225,8 +225,9 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 
 				// If the text is already all in upper case, no formatting
 				// changes will be applied, so make it lower case first.
-				unformattedText =
-					unformattedText.ToLower(CultureInfo.CurrentCulture);
+#pragma warning disable CA1308
+				unformattedText = unformattedText.ToLowerInvariant();
+#pragma warning restore CA1308
 
 				char[] space = new char[] { ' ' };
 				string[] words = unformattedText.Split(
@@ -238,7 +239,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 				{
 					string item = words[index];
 
-					// The first word is alway capitalized.
+					// The first word is always capitalized.
 					if (index == 0 || !exceptions.Contains(item))
 					{
 						item = textInfo.ToTitleCase(item);
