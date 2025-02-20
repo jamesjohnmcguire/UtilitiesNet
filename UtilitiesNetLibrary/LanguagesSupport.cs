@@ -51,7 +51,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			// Regular expression to match English letters, numbers, spaces,
 			// and common punctuation marks.
-			Regex regex = new Regex("^[a-zA-Z0-9\\s\\p{P}]+$");
+			Regex regex = new ("^[a-zA-Z0-9\\s\\p{P}]+$");
 
 			bool isMatch = regex.IsMatch(input ?? string.Empty);
 
@@ -99,7 +99,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static bool IsJapaneseOnly(string? input)
 		{
 			// Regular expression to match Hiragana, Katakana, and Kanji.
-			Regex regex = new Regex(
+			Regex regex = new (
 				"^[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3400-\u4DBF]+$");
 
 			bool isMatch = regex.IsMatch(input ?? string.Empty);
@@ -149,7 +149,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			// Regular expression to match English letters, Western European
 			// characters, numbers, spaces, and common punctuation marks.
-			Regex regex = new Regex("^[a-zA-ZÀ-ÿ0-9\\s\\p{P}]+$");
+			Regex regex = new ("^[a-zA-ZÀ-ÿ0-9\\s\\p{P}]+$");
 
 			bool isMatch = regex.IsMatch(input ?? string.Empty);
 

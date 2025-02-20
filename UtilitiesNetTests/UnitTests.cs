@@ -20,7 +20,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 	/// Automated Tests for UtilitiesNET.
 	/// </summary>
 	[TestFixture]
-	public static class UnitTests
+	internal static class UnitTests
 	{
 		private const string TestData = "Lorem ipsum dolor sit " +
 			"amet, consectetur adipiscing elit. Proin auctor pharetra " +
@@ -68,10 +68,10 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void AreFilesTheSameFail()
 		{
-			string filePath =
-				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
-			string filePath2 =
-				GetXmlResourceFile("UtilitiesNetTests.test.xsd", ".xsd");
+			string filePath = GetXmlResourceFile(
+				"DigitalZenWorks.Common.Utilities.Tests.test.xml", ".xml");
+			string filePath2 = GetXmlResourceFile(
+				"DigitalZenWorks.Common.Utilities.Tests.test.xsd", ".xsd");
 
 			bool result = FileUtils.AreFilesTheSame(filePath, filePath2);
 			Assert.That(result, Is.False);
@@ -99,8 +99,8 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void AreFilesTheSameSuccess()
 		{
-			string filePath =
-				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
+			string filePath = GetXmlResourceFile(
+				"DigitalZenWorks.Common.Utilities.Tests.test.xml", ".xml");
 			string filePath2 = filePath + "2";
 			File.Copy(filePath, filePath2);
 
@@ -171,10 +171,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
 			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
 
-			Assert.That(isCamelCase, Is.True);
-			Assert.That(isKabobCase, Is.False);
-			Assert.That(isPascalCase, Is.False);
-			Assert.That(isSnakeCase, Is.False);
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(isCamelCase, Is.True);
+				Assert.That(isKabobCase, Is.False);
+				Assert.That(isPascalCase, Is.False);
+				Assert.That(isSnakeCase, Is.False);
+			}
 		}
 
 		/// <summary>
@@ -192,10 +195,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
 			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
 
-			Assert.That(isCamelCase, Is.False);
-			Assert.That(isKabobCase, Is.False);
-			Assert.That(isPascalCase, Is.True);
-			Assert.That(isSnakeCase, Is.False);
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(isCamelCase, Is.False);
+				Assert.That(isKabobCase, Is.False);
+				Assert.That(isPascalCase, Is.True);
+				Assert.That(isSnakeCase, Is.False);
+			}
 		}
 
 		/// <summary>
@@ -213,10 +219,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
 			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
 
-			Assert.That(isCamelCase, Is.True);
-			Assert.That(isKabobCase, Is.True);
-			Assert.That(isPascalCase, Is.False);
-			Assert.That(isSnakeCase, Is.True);
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(isCamelCase, Is.True);
+				Assert.That(isKabobCase, Is.True);
+				Assert.That(isPascalCase, Is.False);
+				Assert.That(isSnakeCase, Is.True);
+			}
 		}
 
 		/// <summary>
@@ -235,11 +244,14 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
 			bool isOtherCase = caseTypes.HasFlag(CaseTypes.Other);
 
-			Assert.That(isCamelCase, Is.False);
-			Assert.That(isKabobCase, Is.False);
-			Assert.That(isPascalCase, Is.False);
-			Assert.That(isSnakeCase, Is.False);
-			Assert.That(isOtherCase, Is.True);
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(isCamelCase, Is.False);
+				Assert.That(isKabobCase, Is.False);
+				Assert.That(isPascalCase, Is.False);
+				Assert.That(isSnakeCase, Is.False);
+				Assert.That(isOtherCase, Is.True);
+			}
 		}
 
 		/// <summary>
@@ -257,10 +269,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
 			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
 
-			Assert.That(isCamelCase, Is.False);
-			Assert.That(isKabobCase, Is.False);
-			Assert.That(isPascalCase, Is.True);
-			Assert.That(isSnakeCase, Is.False);
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(isCamelCase, Is.False);
+				Assert.That(isKabobCase, Is.False);
+				Assert.That(isPascalCase, Is.True);
+				Assert.That(isSnakeCase, Is.False);
+			}
 		}
 
 		/// <summary>
@@ -278,10 +293,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool isPascalCase = caseTypes.HasFlag(CaseTypes.PascalCase);
 			bool isSnakeCase = caseTypes.HasFlag(CaseTypes.SnakeCase);
 
-			Assert.That(isCamelCase, Is.False);
-			Assert.That(isKabobCase, Is.False);
-			Assert.That(isPascalCase, Is.False);
-			Assert.That(isSnakeCase, Is.True);
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(isCamelCase, Is.False);
+				Assert.That(isKabobCase, Is.False);
+				Assert.That(isPascalCase, Is.False);
+				Assert.That(isSnakeCase, Is.True);
+			}
 		}
 
 		/// <summary>
@@ -357,8 +375,8 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void GetEmbeddedResource()
 		{
-			string filePath =
-				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
+			string filePath = GetXmlResourceFile(
+				"DigitalZenWorks.Common.Utilities.Tests.test.xml", ".xml");
 
 			bool result = File.Exists(filePath);
 			Assert.That(result, Is.True);
@@ -403,13 +421,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ObjectFromXml()
 		{
-			string xmlFilePath =
-				GetXmlResourceFile("UtilitiesNetTests.test.xml", ".xml");
+			string xmlFilePath = GetXmlResourceFile(
+				"DigitalZenWorks.Common.Utilities.Tests.test.xml", ".xml");
 			bool result = File.Exists(xmlFilePath);
 			Assert.That(result, Is.True);
 
-			string xsdFilePath =
-				GetXmlResourceFile("UtilitiesNetTests.test.xsd", ".xsd");
+			string xsdFilePath = GetXmlResourceFile(
+				"DigitalZenWorks.Common.Utilities.Tests.test.xsd", ".xsd");
 			result = File.Exists(xmlFilePath);
 			Assert.That(result, Is.True);
 

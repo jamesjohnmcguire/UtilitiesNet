@@ -1,12 +1,18 @@
-﻿using NUnit.Framework;
+﻿/////////////////////////////////////////////////////////////////////////////
+// <copyright file="LanguagesSupportTests.cs" company="James John McGuire">
+// Copyright © 2006 - 2025 James John McGuire. All Rights Reserved.
+// </copyright>
+/////////////////////////////////////////////////////////////////////////////
 
-namespace DigitalZenWorks.Common.Utilities.LanguagesSupportTests
+using NUnit.Framework;
+
+namespace DigitalZenWorks.Common.Utilities.Tests
 {
 	/// <summary>
 	/// The languages support tests class.
 	/// </summary>
 	[TestFixture]
-	internal class LanguagesSupportTests
+	internal sealed class LanguagesSupportTests
 	{
 		// Test cases for IsEnglishOnly.
 		[Test]
@@ -33,7 +39,7 @@ namespace DigitalZenWorks.Common.Utilities.LanguagesSupportTests
 		[Test]
 		public void IsEnglishOnlyReturnsFalseForEmptyString()
 		{
-			bool result = LanguagesSupport.IsEnglishOnly("");
+			bool result = LanguagesSupport.IsEnglishOnly(string.Empty);
 			Assert.That(result, Is.False);
 		}
 
@@ -70,7 +76,7 @@ namespace DigitalZenWorks.Common.Utilities.LanguagesSupportTests
 		[Test]
 		public void IsWesternEuropeanReturnsFalseForEmptyString()
 		{
-			bool result = LanguagesSupport.IsWesternEuropean("");
+			bool result = LanguagesSupport.IsWesternEuropean(string.Empty);
 			Assert.That(result, Is.False);
 		}
 
@@ -113,7 +119,7 @@ namespace DigitalZenWorks.Common.Utilities.LanguagesSupportTests
 		[Test]
 		public void IsJapaneseOnlyReturnsFalseForEmptyString()
 		{
-			bool result = LanguagesSupport.IsJapaneseOnly("");
+			bool result = LanguagesSupport.IsJapaneseOnly(string.Empty);
 			Assert.That(result, Is.False);
 		}
 	}

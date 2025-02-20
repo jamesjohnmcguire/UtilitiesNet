@@ -4,7 +4,7 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-namespace DigitalZenWorks.Common.Utilities
+namespace DigitalZenWorks.Common.Utilities.Tests
 {
 	/// <summary>
 	/// Ordered item class.
