@@ -30,7 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\UtilitiesNetLibrary\UtilitiesNET.csproj" />
+		<ProjectReference Include="..\UtilitiesNetLibrary\DigitalZenWorks.Common.Utilities.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
