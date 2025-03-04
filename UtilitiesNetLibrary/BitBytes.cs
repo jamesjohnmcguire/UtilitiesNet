@@ -7,6 +7,7 @@
 using Common.Logging;
 using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
@@ -158,6 +159,25 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 
 			return bitValue;
+		}
+
+		/// <summary>
+		/// Get a bytes list.
+		/// </summary>
+		/// <param name="number">The number to list.</param>
+		/// <returns>A list of bytes from that number.</returns>
+		public static IList<byte> GetBytesList(ulong number)
+		{
+			List<byte> result = [];
+
+			while (number > 0)
+			{
+				byte b = (byte)(number & 0xff);
+				result.Insert(0, b);
+				number >>= 8;
+			}
+
+			return result;
 		}
 
 		/// <summary>
