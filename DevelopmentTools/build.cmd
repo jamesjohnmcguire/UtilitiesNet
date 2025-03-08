@@ -16,9 +16,9 @@ GOTO end
 if "%~2"=="" GOTO error1
 if "%~3"=="" GOTO error2
 
-msbuild -property:Configuration=Release -restore -target:rebuild;pack UtilitiesNET.csproj
+msbuild -property:Configuration=Release -restore -target:rebuild;pack DigitalZenWorks.Common.Utilities.csproj
 
-CD bin\Release
+CD bin\x64\Release
 
 nuget push DigitalZenWorks.Common.Utilities.%2.nupkg %3 -source https://api.nuget.org/v3/index.json
 
