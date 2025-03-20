@@ -9,7 +9,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 	/// <summary>
 	/// Ordered item class.
 	/// </summary>
-	public class OrderedItem
+	internal class OrderedItem
 	{
 		/// <summary>
 		/// Gets or sets the item name.
