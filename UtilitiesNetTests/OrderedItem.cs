@@ -6,6 +6,7 @@
 
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
+#pragma warning disable CA1515
 	/// <summary>
 	/// Ordered item class.
 	/// </summary>
@@ -41,4 +42,5 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// <value>The line total.</value>
 		public decimal LineTotal { get; set; }
 	}
+#pragma warning restore CA1515
 }
