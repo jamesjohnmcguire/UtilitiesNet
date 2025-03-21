@@ -4,11 +4,10 @@ REM %3 - API key
 CD %~dp0
 CD ..\UtilitiesNetLibrary
 
-IF "%1"=="publish" GOTO publish
-
 :default
-dotnet build --configuration Release
+dotnet build --configuration Release -p:PlatformTarget=AnyCPU -p:Prefer32Bit=false
 
+IF "%1"=="publish" GOTO publish
 GOTO end
 
 :publish
@@ -16,13 +15,13 @@ GOTO end
 if "%~2"=="" GOTO error1
 if "%~3"=="" GOTO error2
 
-msbuild -property:Configuration=Release -restore -target:rebuild;pack DigitalZenWorks.Common.Utilities.csproj
+dotnet pack --configuration Release --output nupkg
 
-CD bin\x64\Release
+CD nupkg
 
 nuget push DigitalZenWorks.Common.Utilities.%2.nupkg %3 -source https://api.nuget.org/v3/index.json
 
-cd ..\..\..
+cd ..
 GOTO end
 
 :error1
