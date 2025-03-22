@@ -11,6 +11,7 @@
 		<Copyright>Copyright © 2006 - 2025</Copyright>
 		<Description>This client library provides general functionality.</Description>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<FileVersion>1.4.75.0</FileVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
