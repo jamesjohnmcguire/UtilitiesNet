@@ -34,7 +34,6 @@
 
 	<ItemGroup>
 		<AdditionalFiles Include="../stylecop.json" />
-		<None Include="../.editorconfig" Link="../.editorconfig" />
 		<EmbeddedResource Include="test.xml" />
 		<EmbeddedResource Include="test.xsd" />
 	</ItemGroup>
