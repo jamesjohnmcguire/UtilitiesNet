@@ -4,15 +4,10 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using Encryption;
-using System;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-
 namespace DigitalZenWorks.Common.Utilities
 {
+	using Encryption;
+
 	/// <summary>
 	/// Simple encryption / decryption methods.
 	/// </summary>

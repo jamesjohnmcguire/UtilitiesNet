@@ -4,15 +4,16 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using Common.Logging;
-using System;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-
 namespace DigitalZenWorks.Common.Utilities
 {
+	using System;
+	using System.Buffers;
+	using System.Collections.Generic;
+	using System.Reflection;
+	using System.Text;
+
+	using global::Common.Logging;
+
 	/// <summary>
 	/// BitBytes class.
 	/// </summary>

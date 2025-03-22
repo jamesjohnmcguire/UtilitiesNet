@@ -4,18 +4,17 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using Common.Logging;
-using System;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Resources;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-
 namespace DigitalZenWorks.Common.Utilities
 {
+	using System;
+	using System.IO;
+	using System.Reflection;
+	using System.Xml;
+	using System.Xml.Schema;
+	using System.Xml.Serialization;
+
+	using global::Common.Logging;
+
 	/// <summary>
 	/// XML utilities class.
 	/// </summary>
@@ -59,7 +58,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 			try
 			{
-				if (null != type)
+				if (type != null)
 				{
 					XmlSerializer serializer = new (type);
 

@@ -14,53 +14,55 @@
  * http://creativecommons.org/publicdomain/mark/1.0/
  */
 
-using System;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
-
 namespace Encryption
 {
+	using System;
+	using System.Globalization;
+	using System.IO;
+	using System.Text;
+	using Org.BouncyCastle.Crypto;
+	using Org.BouncyCastle.Crypto.Engines;
+	using Org.BouncyCastle.Crypto.Generators;
+	using Org.BouncyCastle.Crypto.Modes;
+	using Org.BouncyCastle.Crypto.Parameters;
+	using Org.BouncyCastle.Security;
+
 	/// <summary>
 	/// Encryption support class.
 	/// </summary>
 	public static class AESGCM
 	{
-		// Preconfigured Encryption Parameters
 		/// <summary>
 		/// Default nonce bit size.
 		/// </summary>
 		public static readonly int NonceBitSize = 128;
+
 		/// <summary>
 		/// Mac bit size.
 		/// </summary>
 		public static readonly int MacBitSize = 128;
+
 		/// <summary>
 		/// Key bit size.
 		/// </summary>
 		public static readonly int KeyBitSize = 256;
 
-		// Preconfigured Password Key Derivation Parameters
 		/// <summary>
 		/// Salt bit size.
 		/// </summary>
 		public static readonly int SaltBitSize = 128;
+
 		/// <summary>
 		/// Iteractions.
 		/// </summary>
 		public static readonly int Iterations = 10000;
+
 		/// <summary>
 		/// Mininmum password length.
 		/// </summary>
 		public static readonly int MinPasswordLength = 12;
 
-		private static readonly SecureRandom Random = new SecureRandom();
+		private static readonly SecureRandom Random = new ();
 
 		/// <summary>
 		/// Helper that generates a random new key on each call.
@@ -193,7 +195,7 @@ namespace Encryption
 			}
 
 			// Non-secret Payload Optional
-			nonSecretPayload = nonSecretPayload ?? Array.Empty<byte>();
+			nonSecretPayload ??= [];
 
 			// Using random nonce large enough not to repeat
 			var nonce = new byte[NonceBitSize / 8];
@@ -209,22 +211,19 @@ namespace Encryption
 			cipher.DoFinal(cipherText, len);
 
 			// Assemble Message
-			using (var combinedStream = new MemoryStream())
-			{
-				using (var binaryWriter = new BinaryWriter(combinedStream))
-				{
-					// Prepend Authenticated Payload
-					binaryWriter.Write(nonSecretPayload);
+			using var combinedStream = new MemoryStream();
+			using var binaryWriter = new BinaryWriter(combinedStream);
 
-					// Prepend Nonce
-					binaryWriter.Write(nonce);
+			// Prepend Authenticated Payload
+			binaryWriter.Write(nonSecretPayload);
 
-					// Write Cipher Text
-					binaryWriter.Write(cipherText);
-				}
+			// Prepend Nonce
+			binaryWriter.Write(nonce);
 
-				return combinedStream.ToArray();
-			}
+			// Write Cipher Text
+			binaryWriter.Write(cipherText);
+
+			return combinedStream.ToArray();
 		}
 
 		/// <summary>
@@ -247,36 +246,35 @@ namespace Encryption
 				throw new ArgumentException("Encrypted Message Required!", nameof(encryptedMessage));
 			}
 
-			using (var cipherStream = new MemoryStream(encryptedMessage))
-			using (var cipherReader = new BinaryReader(cipherStream))
+			using var cipherStream = new MemoryStream(encryptedMessage);
+			using var cipherReader = new BinaryReader(cipherStream);
+
+			// Grab Payload
+			var nonSecretPayload = cipherReader.ReadBytes(nonSecretPayloadLength);
+
+			// Grab Nonce
+			var nonce = cipherReader.ReadBytes(NonceBitSize / 8);
+
+			var cipher = new GcmBlockCipher(new AesEngine());
+			var parameters = new AeadParameters(new KeyParameter(key), MacBitSize, nonce, nonSecretPayload);
+			cipher.Init(false, parameters);
+
+			// Decrypt Cipher Text
+			var cipherText = cipherReader.ReadBytes(encryptedMessage.Length - nonSecretPayloadLength - nonce.Length);
+			var plainText = new byte[cipher.GetOutputSize(cipherText.Length)];
+
+			try
 			{
-				// Grab Payload
-				var nonSecretPayload = cipherReader.ReadBytes(nonSecretPayloadLength);
-
-				// Grab Nonce
-				var nonce = cipherReader.ReadBytes(NonceBitSize / 8);
-
-				var cipher = new GcmBlockCipher(new AesEngine());
-				var parameters = new AeadParameters(new KeyParameter(key), MacBitSize, nonce, nonSecretPayload);
-				cipher.Init(false, parameters);
-
-				// Decrypt Cipher Text
-				var cipherText = cipherReader.ReadBytes(encryptedMessage.Length - nonSecretPayloadLength - nonce.Length);
-				var plainText = new byte[cipher.GetOutputSize(cipherText.Length)];
-
-				try
-				{
-					var len = cipher.ProcessBytes(cipherText, 0, cipherText.Length, plainText, 0);
-					cipher.DoFinal(plainText, len);
-				}
-				catch (InvalidCipherTextException)
-				{
-					// Return null if it doesn't authenticate
-					return null;
-				}
-
-				return plainText;
+				var len = cipher.ProcessBytes(cipherText, 0, cipherText.Length, plainText, 0);
+				cipher.DoFinal(plainText, len);
 			}
+			catch (InvalidCipherTextException)
+			{
+				// Return null if it doesn't authenticate
+				return null;
+			}
+
+			return plainText;
 		}
 
 		/// <summary>
@@ -294,7 +292,7 @@ namespace Encryption
 		/// </remarks>
 		public static byte[] SimpleEncryptWithPassword(byte[] secretMessage, string password, byte[] nonSecretPayload = null)
 		{
-			nonSecretPayload = nonSecretPayload ?? Array.Empty<byte>();
+			nonSecretPayload ??= [];
 
 			// User Error Checks
 			if (string.IsNullOrWhiteSpace(password) || password.Length < MinPasswordLength)

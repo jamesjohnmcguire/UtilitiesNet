@@ -4,10 +4,6 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DigitalZenWorks.Common.Utilities
 {
 	/// <summary>
@@ -15,8 +11,6 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class SourceControl
 	{
-		/////////////////////////////////////////////////////////////////////
-		// SvnSplit
 		/// <summary>
 		/// Split out a specific project from a SVN repository.
 		/// </summary>
@@ -25,7 +19,6 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="originalRepository">The original repository.</param>
 		/// <param name="originalProject">The original project.</param>
 		/// <param name="newRepository">The new repository.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void SvnSplit(
 			string originalRepository,
 			string originalProject,

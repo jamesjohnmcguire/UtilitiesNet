@@ -6,10 +6,10 @@
 
 #nullable enable
 
-using System.Text.RegularExpressions;
-
 namespace DigitalZenWorks.Common.Utilities
 {
+	using System.Text.RegularExpressions;
+
 	/// <summary>
 	/// The LanguagesSupport class support to assist with language-related
 	/// operations.

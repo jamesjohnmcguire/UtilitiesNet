@@ -4,17 +4,19 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using NUnit.Framework;
-
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
+	using NUnit.Framework;
+
 	/// <summary>
 	/// The languages support tests class.
 	/// </summary>
 	[TestFixture]
 	internal sealed class LanguagesSupportTests
 	{
-		// Test cases for IsEnglishOnly.
+		/// <summary>
+		/// Is english only returns true for english text.
+		/// </summary>
 		[Test]
 		public void IsEnglishOnlyReturnsTrueForEnglishText()
 		{
@@ -22,6 +24,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.True);
 		}
 
+		/// <summary>
+		/// Is english only returns false for non-english text.
+		/// </summary>
 		[Test]
 		public void IsEnglishOnlyReturnsFalseForNonEnglishText()
 		{
@@ -29,6 +34,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
+		/// <summary>
+		/// Is english only returns false for null input.
+		/// </summary>
 		[Test]
 		public void IsEnglishOnlyReturnsFalseForNullInput()
 		{
@@ -36,6 +44,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
+		/// <summary>
+		/// Is english only returns false for empty string.
+		/// </summary>
 		[Test]
 		public void IsEnglishOnlyReturnsFalseForEmptyString()
 		{
@@ -43,7 +54,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
-		// Test cases for IsWesternEuropean
+		/// <summary>
+		/// Is western european returns true for western european text.
+		/// </summary>
 		[Test]
 		public void IsWesternEuropeanReturnsTrueForWesternEuropeanText()
 		{
@@ -51,6 +64,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.True);
 		}
 
+		/// <summary>
+		/// Is western european returns true for english text with punctuation.
+		/// </summary>
 		[Test]
 		public void IsWesternEuropeanReturnsTrueForEnglishTextWithPunctuation()
 		{
@@ -59,6 +75,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.True);
 		}
 
+		/// <summary>
+		/// Is western european returns false for non-western european text.
+		/// </summary>
 		[Test]
 		public void IsWesternEuropeanReturnsFalseForNonWesternEuropeanText()
 		{
@@ -66,6 +85,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
+		/// <summary>
+		/// Is western european returns false for null input.
+		/// </summary>
 		[Test]
 		public void IsWesternEuropeanReturnsFalseForNullInput()
 		{
@@ -73,6 +95,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
+		/// <summary>
+		/// Is western european returns false for empty string.
+		/// </summary>
 		[Test]
 		public void IsWesternEuropeanReturnsFalseForEmptyString()
 		{
@@ -80,7 +105,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
-		// Test cases for IsJapaneseOnly
+		/// <summary>
+		/// Is japanese only returns true for hiragana text.
+		/// </summary>
 		[Test]
 		public void IsJapaneseOnlyReturnsTrueForHiraganaText()
 		{
@@ -88,6 +115,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.True);
 		}
 
+		/// <summary>
+		/// Is japanese only returns true for katakana text.
+		/// </summary>
 		[Test]
 		public void IsJapaneseOnlyReturnsTrueForKatakanaText()
 		{
@@ -95,6 +125,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.True);
 		}
 
+		/// <summary>
+		/// Is japanese only returns true for kanji text.
+		/// </summary>
 		[Test]
 		public void IsJapaneseOnlyReturnsTrueForKanjiText()
 		{
@@ -102,6 +135,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.True);
 		}
 
+		/// <summary>
+		/// Is japanese only returns false for non-japanese text.
+		/// </summary>
 		[Test]
 		public void IsJapaneseOnlyReturnsFalseForNonJapaneseText()
 		{
@@ -109,6 +145,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
+		/// <summary>
+		/// Is japanese only returns false for null input.
+		/// </summary>
 		[Test]
 		public void IsJapaneseOnlyReturnsFalseForNullInput()
 		{
@@ -116,6 +155,9 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(result, Is.False);
 		}
 
+		/// <summary>
+		/// Is japanese only returns false for empty string.
+		/// </summary>
 		[Test]
 		public void IsJapaneseOnlyReturnsFalseForEmptyString()
 		{

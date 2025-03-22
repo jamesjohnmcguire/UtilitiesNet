@@ -4,18 +4,18 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using DigitalZenWorks.Common.Utilities;
-using DigitalZenWorks.Common.Utilities.Extensions;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-
-[assembly: CLSCompliant(true)]
+[assembly: System.CLSCompliant(true)]
 
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Text.RegularExpressions;
+	using DigitalZenWorks.Common.Utilities;
+	using DigitalZenWorks.Common.Utilities.Extensions;
+	using NUnit.Framework;
+
 	/// <summary>
 	/// Automated Tests for UtilitiesNET.
 	/// </summary>
@@ -40,23 +40,21 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			"turpis ante sed lorem. Integer in fermentum lacus, quis tempor " +
 			"elit. Praesent elementum nisi vitae egestas elementum.";
 
-		/////////////////////////////////////////////////////////////////////
 		/// Method <c>Teardown.</c>
 		/// <summary>
 		/// function that is called just after each test method is called.
 		/// </summary>
-		/////////////////////////////////////////////////////////////////////
 		[TearDown]
 		public static void Teardown()
 		{
 			bool result = File.Exists("test.xml");
-			if (true == result)
+			if (result == true)
 			{
 				File.Delete("test.xml");
 			}
 
 			result = File.Exists("test.xsd");
-			if (true == result)
+			if (result == true)
 			{
 				File.Delete("test.xsd");
 			}

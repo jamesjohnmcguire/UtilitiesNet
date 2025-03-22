@@ -4,12 +4,12 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using DigitalZenWorks.Common.Utilities.Extensions;
-using System;
-using System.Text;
-
 namespace DigitalZenWorks.Common.Utilities
 {
+	using System;
+	using System.Text;
+	using DigitalZenWorks.Common.Utilities.Extensions;
+
 	/// <summary>
 	/// Text casing support class.
 	/// </summary>

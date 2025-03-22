@@ -7,27 +7,25 @@
 /////////////////////////////////////////////////////////////////////////////
 // Namespace includes
 /////////////////////////////////////////////////////////////////////////////
-using Common.Logging;
-using System;
-using System.Collections;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-
 namespace DigitalZenWorks.Common.Utilities
 {
-	/////////////////////////////////////////////////////////////////////////
+	using System;
+	using System.Collections;
+	using System.Globalization;
+	using System.IO;
+	using System.Linq;
+	using System.Reflection;
+	using System.Runtime.InteropServices;
+	using System.Security;
+	using System.Security.Cryptography;
+	using System.Text;
+	using System.Text.RegularExpressions;
+
+	using global::Common.Logging;
+
 	/// <summary>
 	/// Represents a FileUtils object.
 	/// </summary>
-	/////////////////////////////////////////////////////////////////////////
 	public static class FileUtils
 	{
 		private static readonly ILog Log = LogManager.GetLogger(
@@ -93,7 +91,7 @@ namespace DigitalZenWorks.Common.Utilities
 				Stream templateObjectStream =
 					thisAssembly.GetManifestResourceStream(resourceName);
 
-				if (null == templateObjectStream)
+				if (templateObjectStream == null)
 				{
 					Log.Error("Failed to manifest resource stream");
 				}
@@ -182,7 +180,6 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Compares two files to see if they are they same.
 		/// </summary>
@@ -190,7 +187,6 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="path2">The path of the second file to check.</param>
 		/// <returns>Return true if the file contents are the same,
 		/// otherwise returns false.</returns>
-		/////////////////////////////////////////////////////////////////////
 		[Obsolete("FileEquals(string, string) is deprecated, " +
 			"please use AreFilesTheSame(string, string) instead.")]
 		public static bool FileEquals(string path1, string path2)
@@ -216,7 +212,7 @@ namespace DigitalZenWorks.Common.Utilities
 						}
 					}
 
-					if (true == stillSame)
+					if (stillSame == true)
 					{
 						filesSame = true;
 					}
@@ -292,14 +288,12 @@ namespace DigitalZenWorks.Common.Utilities
 			return result;
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns a writable stream object.
 		/// </summary>
 		/// <param name="filePath">The file path to file.</param>
 		/// <returns>A StreamWriter object upon success,
 		/// otherwise null.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static StreamWriter GetWriteStreamObject(string filePath)
 		{
 			StreamWriter streamWriter = null;
@@ -332,26 +326,22 @@ namespace DigitalZenWorks.Common.Utilities
 			return streamWriter;
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Determines if a directory is empty or not.
 		/// </summary>
 		/// <param name="path">The path of the directory.</param>
 		/// <returns>Returns true if the directory is empty,
 		/// otherwise false.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool IsDirectoryEmpty(string path)
 		{
 			return !Directory.EnumerateFileSystemEntries(path).Any();
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// RecursiveUtf8WinFiles.
 		/// </summary>
 		/// <param name="initialPath">The initial path to begin
 		/// recursion into.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void RecursiveUtf8WinFiles(string initialPath)
 		{
 			try
@@ -404,11 +394,11 @@ namespace DigitalZenWorks.Common.Utilities
 
 				int currentByte = 0;
 
-				while (-1 != currentByte)
+				while (currentByte != -1)
 				{
 					currentByte = output.ReadByte();
 
-					if (-1 != currentByte)
+					if (currentByte != -1)
 					{
 						byte writeByte = Convert.ToByte(currentByte);
 						binaryOutput.BaseStream.WriteByte(writeByte);
@@ -475,14 +465,12 @@ namespace DigitalZenWorks.Common.Utilities
 			return buffer;
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Replace string in file by regular expression.
 		/// </summary>
 		/// <param name="filePath">The path of the file.</param>
 		/// <param name="oldValue">The value to be replaced.</param>
 		/// <param name="newValue">The value of the replacement.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void RegexStringInFile(
 			string filePath, string oldValue, string newValue)
 		{
@@ -529,14 +517,12 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Replace a string in a file.
 		/// </summary>
 		/// <param name="filePath">The path of the file.</param>
 		/// <param name="oldValue">The text to replace.</param>
 		/// <param name="newValue">The text of replacement.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void ReplaceStringInFile(
 			string filePath, string oldValue, string newValue)
 		{
@@ -565,14 +551,12 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
 		/// <param name="fileContents">The contents of the file.</param>
 		/// <param name="filePathName">The full path of the file.</param>
 		/// <returns>A value indicating success.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFile(
 			string fileContents, string filePathName)
 		{
@@ -586,7 +570,6 @@ namespace DigitalZenWorks.Common.Utilities
 			return SaveFile(fileContents, filePathName, Encoding.Default);
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
@@ -595,7 +578,6 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="encoding">The encoding to use to save
 		/// the text.</param>
 		/// <returns>A value indicating success.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFile(
 			string fileContents, string filePathName, Encoding encoding)
 		{
@@ -631,14 +613,12 @@ namespace DigitalZenWorks.Common.Utilities
 			return successCode;
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
 		/// <param name="fileContents">The contents of the file.</param>
 		/// <param name="filePathName">The full path of the file.</param>
 		/// <returns>A value indicating success.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFileUtf8Bom(
 			string fileContents, string filePathName)
 		{
@@ -646,14 +626,12 @@ namespace DigitalZenWorks.Common.Utilities
 			return SaveFile(fileContents, filePathName, utf8EmitBom);
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Saves the file.
 		/// </summary>
 		/// <param name="fileContents">The contents of the file.</param>
 		/// <param name="filePathName">The full path of the file.</param>
 		/// <returns>A value indicating success.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool SaveFileWin(
 			string fileContents, string filePathName)
 		{
@@ -687,13 +665,11 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Touch the file path with the time.
 		/// </summary>
 		/// <param name="path">The path of the file to touch.</param>
 		/// <param name="time">The time to set the file time to.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void Touch(string path, string time)
 		{
 			string[] format = ["yyyyMMddHHmmss"];
@@ -722,23 +698,19 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Update the given file so that all lines end with CRLF.
 		/// </summary>
 		/// <param name="filePath">The path of the file to update.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void UpdateFileMacToWindows(string filePath)
 		{
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Update the given file so that all lines end with CRLF.
 		/// </summary>
 		/// <param name="filePath">The path of the file to update.</param>
-		/////////////////////////////////////////////////////////////////////
 		public static void UpdateFileLineEndingUnixToWindows(string filePath)
 		{
 			RegexStringInFile(filePath, "\r\n|\r|\n", "\r\n");

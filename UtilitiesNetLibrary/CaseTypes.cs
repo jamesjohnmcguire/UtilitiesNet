@@ -4,10 +4,10 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using System;
-
 namespace DigitalZenWorks.Common.Utilities
 {
+	using System;
+
 	/// <summary>
 	/// Provides an enumeration for types of variable cases.
 	/// </summary>

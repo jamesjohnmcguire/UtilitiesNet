@@ -4,20 +4,21 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using Common.Logging;
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Text.RegularExpressions;
-
-[assembly: CLSCompliant(false)]
+[assembly: System.CLSCompliant(false)]
 
 namespace DigitalZenWorks.Common.Utilities
 {
+	using System;
+	using System.Diagnostics;
+	using System.Globalization;
+	using System.IO;
+	using System.Reflection;
+	using System.Resources;
+	using System.Text;
+	using System.Text.RegularExpressions;
+
+	using global::Common.Logging;
+
 	/// <summary>
 	/// General utilities class.
 	/// </summary>
@@ -67,20 +68,18 @@ namespace DigitalZenWorks.Common.Utilities
 			return methodName;
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Validates command line parameters.
 		/// </summary>
 		/// <param name="parameters">The command line parameters.</param>
 		/// <returns>Returns true if there is at least one parameter,
 		/// otherwise false.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool CheckCommandLineParameters(string[] parameters)
 		{
 			bool isValid = false;
 
 			// Ensure we have a valid file name
-			if ((null != parameters) && (parameters.Length < 1))
+			if (parameters != null && parameters.Length < 1)
 			{
 				// Console.WriteLine("usage: ");
 			}
@@ -178,7 +177,7 @@ namespace DigitalZenWorks.Common.Utilities
 				externalProgram.StartInfo.CreateNoWindow = true;
 				externalProgram.StartInfo.ErrorDialog = false;
 
-				if (null != standardInput)
+				if (standardInput != null)
 				{
 					externalProgram.StartInfo.RedirectStandardInput = true;
 				}
@@ -274,14 +273,12 @@ namespace DigitalZenWorks.Common.Utilities
 			return isAscii;
 		}
 
-		/////////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Is object a date.
 		/// </summary>
 		/// <param name="value">The object to check.</param>
 		/// <returns>Returns true if the object is a date,
 		/// otherwise false.</returns>
-		/////////////////////////////////////////////////////////////////////
 		public static bool IsDate(object value)
 		{
 			bool successCode = false;
@@ -349,7 +346,7 @@ namespace DigitalZenWorks.Common.Utilities
 			// checks proper syntax
 			Match match = Regex.Match(emailAddress, validEmailRegEx);
 
-			if (true == match.Success)
+			if (match.Success == true)
 			{
 				valid = true;
 			}
@@ -502,7 +499,8 @@ namespace DigitalZenWorks.Common.Utilities
 		public static string ToHex(byte[] data)
 		{
 			string hexString = string.Empty;
-			if (null != data)
+
+			if (data != null)
 			{
 				hexString = BitConverter.ToString(data);
 				hexString = hexString.ToLower(CultureInfo.CurrentCulture);

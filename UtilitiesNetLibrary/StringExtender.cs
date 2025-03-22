@@ -4,14 +4,14 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-
 namespace DigitalZenWorks.Common.Utilities.Extensions
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Globalization;
+	using System.Linq;
+	using System.Text.RegularExpressions;
+
 	/// <summary>
 	/// String extender class.
 	/// </summary>
@@ -81,7 +81,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			}
 
 			// Split the string into words.
-			char[] separators = new char[] { ' ', '_', '\t' };
+			char[] separators = [' ', '_', '\t'];
 			string[] words =
 				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -143,7 +143,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 			}
 
 			// Split the string into words.
-			char[] separators = new char[] { ' ', '_', '\t' };
+			char[] separators = [' ', '_', '\t'];
 			string[] words =
 				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -184,7 +184,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		{
 			string properCaseText = null;
 
-			if (null != unformattedText)
+			if (unformattedText != null)
 			{
 				CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 				TextInfo textInfo = cultureInfo.TextInfo;
@@ -212,16 +212,16 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		{
 			string titleCaseText = null;
 
-			if (null != unformattedText)
+			if (unformattedText != null)
 			{
 				CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 				TextInfo textInfo = cultureInfo.TextInfo;
 
 				string[] exceptions =
-				{
+				[
 					"a", "an", "and", "any", "at", "from", "in", "into", "of",
 					"on", "or", "some", "the", "to"
-				};
+				];
 
 				// If the text is already all in upper case, no formatting
 				// changes will be applied, so make it lower case first.
@@ -229,11 +229,11 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 				unformattedText = unformattedText.ToLowerInvariant();
 #pragma warning restore CA1308
 
-				char[] space = new char[] { ' ' };
+				char[] space = [' '];
 				string[] words = unformattedText.Split(
 					space, StringSplitOptions.RemoveEmptyEntries);
 
-				List<string> updatedWords = new List<string>();
+				List<string> updatedWords = [];
 
 				for (int index = 0; index < words.Length; index++)
 				{
