@@ -11,7 +11,6 @@ IF "%1"=="publish" GOTO publish
 GOTO end
 
 :publish
-
 if "%~2"=="" GOTO error1
 if "%~3"=="" GOTO error2
 
@@ -21,7 +20,7 @@ CD nupkg
 
 nuget push DigitalZenWorks.Common.Utilities.%2.nupkg %3 -source https://api.nuget.org/v3/index.json
 
-cd ..
+CD ..
 GOTO end
 
 :error1
