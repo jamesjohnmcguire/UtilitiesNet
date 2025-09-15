@@ -4,6 +4,7 @@
 		<AnalysisMode>All</AnalysisMode>
 		<AssemblyName>DigitalZenWorks.Common.Utilities</AssemblyName>
 		<AssemblyOriginatorKeyFile>UtilitiesNet.snk</AssemblyOriginatorKeyFile>
+		<AssemblyTitle>DigitalZenWorks.Common.Utilities</AssemblyTitle>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Authors>James John McGuire</Authors>
 		<Company>Digital Zen Works</Company>
