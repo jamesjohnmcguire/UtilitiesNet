@@ -15,14 +15,24 @@ namespace DigitalZenWorks.Common.Utilities
 
 	public class UnicodeNormalizer
 	{
+		/// <summary>
+		/// Checks if a line needs Unicode normalization to NFKC form.
+		/// </summary>
+		/// <param name="lineNumber">The line number for reference.</param>
+		/// <param name="line">The text to check.</param>
+		/// <param name="form">The normalization form to use.</param>
+		/// <returns>A NormalizationIssue if the line needs normalization,
+		/// otherwise null.</returns>
 		public static NormalizationIssue? CheckLine(
-			int lineNumber, string line)
+			int lineNumber,
+			string line,
+			NormalizationForm form = NormalizationForm.FormKC)
 		{
 			NormalizationIssue? issue = null;
 
-			if (!line.IsNormalized(NormalizationForm.FormKC))
+			if (!line.IsNormalized(form))
 			{
-				string normalized = line.Normalize(NormalizationForm.FormKC);
+				string normalized = line.Normalize(form);
 				var differences = FindDifferences(line, normalized);
 
 				issue = new();
@@ -40,21 +50,31 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			bool isEqual = false;
 
-			string? normalizedString1 =
-				string1!.Normalize(NormalizationForm.FormKC);
-			string? normalizedString2 =
-				string2!.Normalize(NormalizationForm.FormKC);
-
-			if (normalizedString1.Equals(
-				normalizedString2, StringComparison.Ordinal))
+			if (string1 == null || string2 == null)
 			{
-				isEqual = true;
+				if (string1 == string2)
+				{
+					isEqual = true;
+				}
+			}
+			else
+			{
+				string? normalizedString1 =
+					string1!.Normalize(NormalizationForm.FormKC);
+				string? normalizedString2 =
+					string2!.Normalize(NormalizationForm.FormKC);
+
+				if (normalizedString1.Equals(
+					normalizedString2, StringComparison.Ordinal))
+				{
+					isEqual = true;
+				}
 			}
 
 			return isEqual;
 		}
 
-		public static List<int> GetHexadecimalCodes(string text)
+		public static List<int> GetCodePoints(string text)
 		{
 			List<int> codes = [];
 
@@ -96,13 +116,35 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			int linesChanged = -1;
 			linesProcessed = 0;
+			string message;
+			string name;
 
-			if (File.Exists(inputPath))
+			if (string.IsNullOrWhiteSpace(inputPath))
 			{
+				message = "Input path cannot be null or empty";
+				name = nameof(inputPath);
+				throw new ArgumentException(message, name);
+			}
 
-				using StreamReader reader = new(inputPath, Encoding.UTF8);
+			if (string.IsNullOrWhiteSpace(outputPath))
+			{
+				message = "Output path cannot be null or empty";
+				name = nameof(outputPath);
+				throw new ArgumentException(message, name);
+			}
+
+			if (!File.Exists(inputPath))
+			{
+				message = "Input file not found";
+				throw new FileNotFoundException(message, inputPath);
+			}
+			else
+			{
+				linesChanged = 0;
+
+				using StreamReader reader = new (inputPath, Encoding.UTF8);
 				using StreamWriter writer =
-					new(outputPath, false, Encoding.UTF8);
+					new (outputPath, false, Encoding.UTF8);
 
 				string? line;
 
@@ -135,12 +177,12 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			CharDifference? difference = null;
 
-			string originalString = original.ToString();
-			string normalizedString = normalized.ToString();
-
 			if (original != normalized)
 			{
-				difference = new();
+				string originalString = original.ToString();
+				string normalizedString = normalized.ToString();
+
+				difference = new ();
 
 				difference.Position = index;
 				difference.Original = originalString;
