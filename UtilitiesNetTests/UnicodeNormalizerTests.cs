@@ -8,10 +8,11 @@
 
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
+	using NUnit.Framework;
+	using System;
 	using System.Collections.ObjectModel;
 	using System.IO;
 	using System.Text;
-	using NUnit.Framework;
 
 	/// <summary>
 	/// Provides unit tests for the <see cref="UnicodeNormalizer"/> class,
@@ -583,14 +584,11 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				Path.Combine(testDataDirectory, "nonexistent.csv");
 			string outputPath = Path.Combine(testDataDirectory, "output.csv");
 
-			int linesChanged = UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
-
-			using (Assert.EnterMultipleScope())
+			Assert.Throws<FileNotFoundException>(() =>
 			{
-				Assert.That(linesChanged, Is.Zero);
-				Assert.That(linesProcessed, Is.Zero);
-			}
+				int linesChanged = UnicodeNormalizer.NormalizeFile(
+					inputPath, outputPath, out int linesProcessed);
+			});
 		}
 
 		/// <summary>
