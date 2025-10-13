@@ -9,7 +9,6 @@
 namespace DigitalZenWorks.Common.Utilities
 {
 	using System;
-	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 	using System.IO;
 	using System.Text;
@@ -43,28 +42,27 @@ namespace DigitalZenWorks.Common.Utilities
 		/// otherwise null.</returns>
 		public static NormalizationIssue? CheckLine(
 			int lineNumber,
-			string? line,
+			string line,
 			NormalizationForm form = NormalizationForm.FormKC)
 		{
 			NormalizationIssue? issue = null;
 
-			if (line != null)
+			ArgumentNullException.ThrowIfNull(line);
+
+			bool isNormalized = line.IsNormalized(form);
+
+			if (isNormalized == false)
 			{
-				bool isNormalized = line.IsNormalized(form);
+				string normalized = line.Normalize(form);
+				Collection<CharDifference> differences =
+					FindDifferences(line, normalized);
 
-				if (isNormalized == false)
-				{
-					string normalized = line.Normalize(form);
-					Collection<CharDifference> differences =
-						FindDifferences(line, normalized);
+				issue = new ();
 
-					issue = new ();
-
-					issue.LineNumber = lineNumber;
-					issue.OriginalLine = line;
-					issue.NormalizedLine = normalized;
-					issue.Differences = differences;
-				}
+				issue.LineNumber = lineNumber;
+				issue.OriginalLine = line;
+				issue.NormalizedLine = normalized;
+				issue.Differences = differences;
 			}
 
 			return issue;
@@ -79,36 +77,27 @@ namespace DigitalZenWorks.Common.Utilities
 		/// strings with different Unicode representations are treated as
 		/// equal. The comparison is case-sensitive and
 		/// culture-invariant.</remarks>
-		/// <param name="string1">The first string to compare. Can be
-		/// <see langword="null"/>.</param>
-		/// <param name="string2">The second string to compare. Can be
-		/// <see langword="null"/>.</param>
+		/// <param name="string1">The first string to compare.</param>
+		/// <param name="string2">The second string to compare.</param>
 		/// <returns><see langword="true"/> if the strings are equal,
 		/// including when both are <see langword="null"/>; otherwise, <see
 		/// langword="false"/>.</returns>
-		public static bool CompareStrings(string? string1, string? string2)
+		public static bool CompareStrings(string string1, string string2)
 		{
 			bool isEqual = false;
 
-			if (string1 == null || string2 == null)
-			{
-				if (string1 == string2)
-				{
-					isEqual = true;
-				}
-			}
-			else
-			{
-				string? normalizedString1 =
-					string1!.Normalize(NormalizationForm.FormKC);
-				string? normalizedString2 =
-					string2!.Normalize(NormalizationForm.FormKC);
+			ArgumentNullException.ThrowIfNull(string1);
+			ArgumentNullException.ThrowIfNull(string2);
 
-				if (normalizedString1.Equals(
-					normalizedString2, StringComparison.Ordinal))
-				{
-					isEqual = true;
-				}
+			string? normalizedString1 =
+				string1!.Normalize(NormalizationForm.FormKC);
+			string? normalizedString2 =
+				string2!.Normalize(NormalizationForm.FormKC);
+
+			if (normalizedString1.Equals(
+				normalizedString2, StringComparison.Ordinal))
+			{
+				isEqual = true;
 			}
 
 			return isEqual;
@@ -120,24 +109,20 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <remarks>This method iterates through each character in the input
 		/// string and converts it to its Unicode code point value.</remarks>
-		/// <param name="text">The input string to process. If
-		/// <paramref name="text"/> is <see langword="null"/>, an empty
-		/// collection is returned.</param>
+		/// <param name="text">The input string to process.</param>
 		/// <returns>A collection of integers representing the Unicode code
 		/// points of the characters in the input string. The collection will
-		/// be empty if the input string is <see langword="null"/>
-		/// or empty.</returns>
-		public static Collection<int> GetCodePoints(string? text)
+		/// be empty if the input string is empty.</returns>
+		public static Collection<int> GetCodePoints(string text)
 		{
 			Collection<int> codes = [];
 
-			if (text != null)
+			ArgumentNullException.ThrowIfNull(text);
+
+			foreach (char character in text)
 			{
-				foreach (char character in text)
-				{
-					int bits = (int)character;
-					codes.Add(bits);
-				}
+				int bits = (int)character;
+				codes.Add(bits);
 			}
 
 			return codes;
@@ -159,6 +144,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <see langword="null"/>.</returns>
 		public static string? GetHexadecimalString(string text)
 		{
+			ArgumentNullException.ThrowIfNull(text);
+
 			Collection<string> hexadecimalTextCodes =
 				GetHexadecimalTextCodes(text);
 
@@ -185,15 +172,14 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			Collection<string> codes = [];
 
-			if (text != null)
-			{
-				foreach (char character in text)
-				{
-					int bits = (int)character;
-					string bitsText = $"{bits:X4}";
+			ArgumentNullException.ThrowIfNull(text);
 
-					codes.Add(bitsText);
-				}
+			foreach (char character in text)
+			{
+				int bits = (int)character;
+				string bitsText = $"{bits:X4}";
+
+				codes.Add(bitsText);
 			}
 
 			return codes;
