@@ -14,7 +14,7 @@
  * http://creativecommons.org/publicdomain/mark/1.0/
  */
 
-namespace Encryption
+namespace DigitalZenWorks.Common.Utilities
 {
 	using System;
 	using System.Globalization;
@@ -62,7 +62,7 @@ namespace Encryption
 		/// </summary>
 		public static readonly int MinPasswordLength = 12;
 
-		private static readonly SecureRandom Random = new ();
+		private static readonly SecureRandom Random = new();
 
 		/// <summary>
 		/// Helper that generates a random new key on each call.

@@ -27,9 +27,9 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log = LogManager.GetLogger(
 			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static readonly ResourceManager StringTable = new
-			("DigitalZenWorks.Common.Utilities.Resources",
-				Assembly.GetExecutingAssembly());
+		private static readonly ResourceManager StringTable = new(
+			"DigitalZenWorks.Common.Utilities.Resources",
+			Assembly.GetExecutingAssembly());
 
 		/// <summary>
 		/// Get the calling method.
@@ -37,7 +37,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>The calling method.</returns>
 		public static string CallingMethod()
 		{
-			StackFrame stackFrame = new (1);
+			StackFrame stackFrame = new(1);
 			MethodBase methodBase = stackFrame.GetMethod();
 
 			string methodName = methodBase.Name;
@@ -171,7 +171,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[] outputBytes;
 
-			using (Process externalProgram = new ())
+			using (Process externalProgram = new())
 			{
 				externalProgram.StartInfo.UseShellExecute = false;
 				externalProgram.StartInfo.CreateNoWindow = true;
@@ -237,7 +237,7 @@ namespace DigitalZenWorks.Common.Utilities
 				throw new ArgumentException(message);
 			}
 
-			using (MemoryStream retVal = new (hexData.Length / 2))
+			using (MemoryStream retVal = new(hexData.Length / 2))
 			{
 				data = GetHexPair(hexData, retVal);
 			}
@@ -430,9 +430,9 @@ namespace DigitalZenWorks.Common.Utilities
 					with the Quoted-Printable encoding, "soft" line breaks
 			*/
 
-			using (MemoryStream destination = new ())
+			using (MemoryStream destination = new())
 			{
-				using (MemoryStream sourceStream = new (data))
+				using (MemoryStream sourceStream = new(data))
 				{
 					int b = sourceStream.ReadByte();
 					while (b > -1)

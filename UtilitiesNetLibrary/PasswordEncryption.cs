@@ -6,8 +6,6 @@
 
 namespace DigitalZenWorks.Common.Utilities
 {
-	using Encryption;
-
 	/// <summary>
 	/// Simple encryption / decryption methods.
 	/// </summary>
