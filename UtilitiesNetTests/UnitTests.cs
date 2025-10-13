@@ -432,7 +432,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			OrderedItem item = (OrderedItem)XmlUtilities.LoadWithValidation(
 				xsdFilePath, xmlFilePath, typeof(OrderedItem));
 
-			Assert.Multiple(() =>
+			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(item, Is.Not.Null);
 				Assert.That(item.ItemName, Is.EqualTo("Widget"));
@@ -440,7 +440,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				Assert.That(item.UnitPrice, Is.EqualTo(2.3));
 				Assert.That(item.Quantity, Is.EqualTo(10));
 				Assert.That(item.LineTotal, Is.EqualTo(23));
-			});
+			}
 
 			if (result == true)
 			{
