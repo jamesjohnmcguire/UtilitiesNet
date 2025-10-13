@@ -34,8 +34,8 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (node != null)
 			{
-				StringWriter stringWriter = new ();
-				using XmlTextWriter xmlTextWriter = new (stringWriter);
+				StringWriter stringWriter = new();
+				using XmlTextWriter xmlTextWriter = new(stringWriter);
 
 				node.WriteTo(xmlTextWriter);
 				nodeString = stringWriter.ToString();
@@ -60,11 +60,11 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if (type != null)
 				{
-					XmlSerializer serializer = new (type);
+					XmlSerializer serializer = new(type);
 
 					if (File.Exists(schemaFile))
 					{
-						XmlReaderSettings settings = new ();
+						XmlReaderSettings settings = new();
 						settings.ValidationType = ValidationType.Schema;
 						settings.Schemas.Add(null, schemaFile);
 

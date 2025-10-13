@@ -77,7 +77,7 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 			else if (!string.IsNullOrWhiteSpace(pascalCase))
 			{
-				StringBuilder builder = new ();
+				StringBuilder builder = new();
 
 				char item = char.ToLowerInvariant(pascalCase[0]);
 				builder.Append(item);
@@ -108,7 +108,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>The set of case types.</returns>
 		public static CaseTypes GetCaseTypes(string variable)
 		{
-			CaseTypes caseTypes = new ();
+			CaseTypes caseTypes = default;
 
 			bool isCase = IsCamelCase(variable);
 
