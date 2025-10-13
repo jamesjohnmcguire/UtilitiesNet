@@ -424,7 +424,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			int linesChanged = UnicodeNormalizer.NormalizeFile(
 				inputPath, outputPath, out int linesProcessed);
 
-			Assert.That(linesChanged, Is.EqualTo(-1));
+			Assert.That(linesChanged, Is.EqualTo(0));
 			Assert.That(linesProcessed, Is.EqualTo(0));
 		}
 
@@ -446,7 +446,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(linesProcessed, Is.EqualTo(2));
 
 			// No changes made
-			Assert.That(linesChanged, Is.EqualTo(-1));
+			Assert.That(linesChanged, Is.EqualTo(0));
 			Assert.That(File.Exists(outputPath), Is.True);
 		}
 
@@ -468,7 +468,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.That(linesProcessed, Is.EqualTo(2));
 
 			// One line changed (0-indexed)
-			Assert.That(linesChanged, Is.EqualTo(0));
+			Assert.That(linesChanged, Is.EqualTo(1));
 
 			// Verify output content
 			var outputLines = File.ReadAllLines(outputPath, Encoding.UTF8);
@@ -491,7 +491,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				inputPath, outputPath, out int linesProcessed);
 
 			Assert.That(linesProcessed, Is.EqualTo(0));
-			Assert.That(linesChanged, Is.EqualTo(-1));
+			Assert.That(linesChanged, Is.EqualTo(0));
 		}
 
 		/// <summary>
@@ -509,9 +509,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				inputPath, outputPath, out int linesProcessed);
 
 			Assert.That(linesProcessed, Is.EqualTo(3));
-
-			// 3 lines changed, 0-indexed = 2
-			Assert.That(linesChanged, Is.EqualTo(2));
+			Assert.That(linesChanged, Is.EqualTo(3));
 		}
 
 		/// <summary>
