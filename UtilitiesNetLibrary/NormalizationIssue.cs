@@ -22,15 +22,17 @@ namespace DigitalZenWorks.Common.Utilities
 	public class NormalizationIssue
 	{
 		/// <summary>
+		/// Gets or sets the collection of character differences between two
+		/// compared strings.
+		/// </summary>
+#pragma warning disable CA2227
+		public Collection<CharDifference>? Differences { get; set; }
+#pragma warning restore CA2227
+
+		/// <summary>
 		/// Gets or sets the line number associated with the current instance.
 		/// </summary>
 		public int LineNumber { get; set; }
-
-		/// <summary>
-		/// Gets or sets the original line of text associated with
-		/// this instance.
-		/// </summary>
-		public string? OriginalLine { get; set; }
 
 		/// <summary>
 		/// Gets or sets the normalized version of the line.
@@ -38,9 +40,9 @@ namespace DigitalZenWorks.Common.Utilities
 		public string? NormalizedLine { get; set; }
 
 		/// <summary>
-		/// Gets or sets the collection of character differences between two
-		/// compared strings.
+		/// Gets or sets the original line of text associated with
+		/// this instance.
 		/// </summary>
-		public Collection<CharDifference>? Differences { get; set; }
+		public string? OriginalLine { get; set; }
 	}
 }
