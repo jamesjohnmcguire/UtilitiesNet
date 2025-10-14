@@ -285,6 +285,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 				difference = new ();
 
+				index++;
 				difference.Position = index;
 				difference.Original = originalString;
 				difference.Normalized = normalizedString;
