@@ -143,6 +143,8 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
 				lineNumber, lineWithRadical, NormalizationForm.FormKC);
 
+			CharDifference difference = result!.Differences![0];
+
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(result, Is.Not.Null);
@@ -150,7 +152,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				Assert.That(result.OriginalLine, Is.EqualTo(lineWithRadical));
 				Assert.That(result.NormalizedLine, Is.EqualTo("人は人"));
 				Assert.That(result.Differences, Has.Count.EqualTo(1));
-				Assert.That(result.Differences![0].Position, Is.Zero);
+				Assert.That(difference.Position, Is.Zero);
 			}
 		}
 
@@ -728,12 +730,10 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(linesProcessed, Is.EqualTo(2));
-
-				// One line changed (0-indexed)
 				Assert.That(linesChanged, Is.Zero);
 
-				// Verify output content
-				var outputLines = File.ReadAllLines(outputPath, Encoding.UTF8);
+				string[] outputLines =
+					File.ReadAllLines(outputPath, Encoding.UTF8);
 
 				// Expects Kangxi to remain
 				Assert.That(outputLines[0], Is.EqualTo("⼈,Person"));
@@ -759,15 +759,14 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				out int linesProcessed,
 				NormalizationForm.FormKC);
 
+			string[] outputLines =
+				File.ReadAllLines(outputPath, Encoding.UTF8);
+
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(linesProcessed, Is.EqualTo(2));
-
-				// One line changed (0-indexed)
 				Assert.That(linesChanged, Is.EqualTo(1));
 
-				// Verify output content
-				var outputLines = File.ReadAllLines(outputPath, Encoding.UTF8);
 				Assert.That(outputLines[0], Is.EqualTo("人,Person"));
 				Assert.That(outputLines[1], Is.EqualTo("人,Person"));
 			}
@@ -882,18 +881,16 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(linesProcessed, Is.EqualTo(2));
-
-				// No changes made
 				Assert.That(linesChanged, Is.Zero);
 				Assert.That(File.Exists(outputPath), Is.True);
 			}
 		}
 
 		/// <summary>
-		/// Test NormalizeFile with normalized content, retursn zero changes.
+		/// Test NormalizeFile with normalized content, no changes.
 		/// </summary>
 		[Test]
-		public void NormalizeFileWithNormalizedContentReturnsZeroChangesFormKC()
+		public void NormalizeFileWithNormalizedContentNoChangesFormKC()
 		{
 			string inputPath =
 				Path.Combine(testDataDirectory, "normalized.csv");
@@ -910,8 +907,6 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(linesProcessed, Is.EqualTo(2));
-
-				// No changes made
 				Assert.That(linesChanged, Is.Zero);
 				Assert.That(File.Exists(outputPath), Is.True);
 			}

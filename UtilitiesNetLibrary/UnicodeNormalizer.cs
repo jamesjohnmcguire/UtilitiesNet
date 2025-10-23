@@ -254,26 +254,22 @@ namespace DigitalZenWorks.Common.Utilities
 				using StreamWriter writer =
 					new(outputPath, false, Encoding.UTF8);
 
-				string? line;
+				string? line = reader.ReadLine();
 
-				do
+				while (line != null)
 				{
-					line = reader.ReadLine();
+					string normalized = line.Normalize(form);
 
-					if (line != null)
+					writer.WriteLine(normalized);
+					linesProcessed++;
+
+					if (line != normalized)
 					{
-						string normalized = line.Normalize(form);
-
-						writer.WriteLine(normalized);
-						linesProcessed++;
-
-						if (line != normalized)
-						{
-							linesChanged++;
-						}
+						linesChanged++;
 					}
+
+					line = reader.ReadLine();
 				}
-				while (line != null);
 			}
 
 			return linesChanged;
@@ -289,7 +285,7 @@ namespace DigitalZenWorks.Common.Utilities
 				string originalString = original.ToString();
 				string normalizedString = normalized.ToString();
 
-				difference = new();
+				difference = new ();
 
 				index++;
 				difference.Position = index;
@@ -303,7 +299,7 @@ namespace DigitalZenWorks.Common.Utilities
 		private static Collection<CharDifference> FindDifferences(
 			string original, string normalized)
 		{
-			var differences = new Collection<CharDifference>();
+			Collection<CharDifference> differences = new ();
 
 			TextElementEnumerator originalElements =
 				StringInfo.GetTextElementEnumerator(original);
