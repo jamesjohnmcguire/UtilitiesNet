@@ -95,8 +95,8 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string emptyLine = string.Empty;
 			int lineNumber = 1;
 
-			NormalizationIssue? result =
-				UnicodeNormalizer.CheckLine(lineNumber, emptyLine);
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+				lineNumber, emptyLine, NormalizationForm.FormC);
 
 			Assert.That(result, Is.Null);
 		}
@@ -112,14 +112,37 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// information about the differences, including
 		/// their positions.</remarks>
 		[Test]
-		public void CheckLineWithKangxiRadicalReturnsIssue()
+		public void CheckLineWithKangxiRadicalReturnsIssueFormC()
 		{
 			// ⼈ (Kangxi) vs 人 (standard)
 			string lineWithRadical = "⼈は人";
 			int lineNumber = 5;
 
-			NormalizationIssue? result =
-				UnicodeNormalizer.CheckLine(lineNumber, lineWithRadical);
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+				lineNumber, lineWithRadical, NormalizationForm.FormC);
+
+			Assert.That(result, Is.Null);
+		}
+
+		/// <summary>
+		/// Tests the <see cref="UnicodeNormalizer.CheckLine"/> method to
+		/// ensure it identifies and normalizes lines containing Kangxi
+		/// Radicals, returning the appropriate issue details.
+		/// </summary>
+		/// <remarks>This test verifies that the method correctly detects
+		/// differences between Kangxi Radicals and their standard Unicode
+		/// equivalents, normalizes the input line, and provides detailed
+		/// information about the differences, including
+		/// their positions.</remarks>
+		[Test]
+		public void CheckLineWithKangxiRadicalReturnsIssueFormKC()
+		{
+			// ⼈ (Kangxi) vs 人 (standard)
+			string lineWithRadical = "⼈は人";
+			int lineNumber = 5;
+
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+				lineNumber, lineWithRadical, NormalizationForm.FormKC);
 
 			using (Assert.EnterMultipleScope())
 			{
@@ -136,14 +159,30 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test CheckLine with multiple Issues, returns all differences.
 		/// </summary>
 		[Test]
-		public void CheckLineWithMultipleIssuesReturnsAllDifferences()
+		public void CheckLineWithMultipleIssuesReturnsAllDifferencesFormC()
 		{
 			// Multiple Kangxi radicals
 			string lineWithMultiple = "⼆⼈⼉";
 			int lineNumber = 10;
 
-			NormalizationIssue? result =
-				UnicodeNormalizer.CheckLine(lineNumber, lineWithMultiple);
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+				lineNumber, lineWithMultiple, NormalizationForm.FormC);
+
+			Assert.That(result, Is.Null);
+		}
+
+		/// <summary>
+		/// Test CheckLine with multiple Issues, returns all differences.
+		/// </summary>
+		[Test]
+		public void CheckLineWithMultipleIssuesReturnsAllDifferencesFormKC()
+		{
+			// Multiple Kangxi radicals
+			string lineWithMultiple = "⼆⼈⼉";
+			int lineNumber = 10;
+
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+				lineNumber, lineWithMultiple, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result!.Differences, Has.Count.EqualTo(3));
@@ -161,15 +200,38 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// characters, and the result is asserted to be
 		/// <see langword="null"/>.</remarks>
 		[Test]
-		public void CheckLineWithNormalizedTextReturnsNull()
+		public void CheckLineWithNormalizedTextReturnsNullFormC()
 		{
 			// Standard characters
 			string normalizedLine = "人は人";
 			int lineNumber = 1;
 
-			NormalizationIssue? result =
-				UnicodeNormalizer.CheckLine(
-					lineNumber, normalizedLine);
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+					lineNumber, normalizedLine, NormalizationForm.FormC);
+
+			Assert.That(result, Is.Null);
+		}
+
+		/// <summary>
+		/// Verifies that the <see cref="UnicodeNormalizer.CheckLine"/> method
+		/// returns <see langword="null"/>  when provided with a line of text
+		/// that does not contain any normalization issues.
+		/// </summary>
+		/// <remarks>This test ensures that the
+		/// <see cref="UnicodeNormalizer.CheckLine"/> method behaves as
+		/// expected when the input text is already normalized. The method is
+		/// called with a valid line number and a  string containing standard
+		/// characters, and the result is asserted to be
+		/// <see langword="null"/>.</remarks>
+		[Test]
+		public void CheckLineWithNormalizedTextReturnsNullFormKC()
+		{
+			// Standard characters
+			string normalizedLine = "人は人";
+			int lineNumber = 1;
+
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+					lineNumber, normalizedLine, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.Null);
 		}
@@ -178,13 +240,28 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test CheckLine with only whitespace, returns null.
 		/// </summary>
 		[Test]
-		public void CheckLineWithOnlyWhitespaceReturnsNull()
+		public void CheckLineWithOnlyWhitespaceReturnsNullFormC()
 		{
 			string whitespaceLine = "   \t  ";
 			int lineNumber = 1;
 
-			NormalizationIssue? result =
-				UnicodeNormalizer.CheckLine(lineNumber, whitespaceLine);
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+					lineNumber, whitespaceLine, NormalizationForm.FormC);
+
+			Assert.That(result, Is.Null);
+		}
+
+		/// <summary>
+		/// Test CheckLine with only whitespace, returns null.
+		/// </summary>
+		[Test]
+		public void CheckLineWithOnlyWhitespaceReturnsNullFormKC()
+		{
+			string whitespaceLine = "   \t  ";
+			int lineNumber = 1;
+
+			NormalizationIssue? result = UnicodeNormalizer.CheckLine(
+					lineNumber, whitespaceLine, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.Null);
 		}
@@ -193,12 +270,28 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test CompareStrings with different characters, return false.
 		/// </summary>
 		[Test]
-		public void CompareStringsWithDifferentCharactersReturnsFalse()
+		public void CompareStringsWithDifferentCharactersReturnsFalseFormC()
 		{
 			string string1 = "人";
 			string string2 = "木";
 
-			bool result = UnicodeNormalizer.CompareStrings(string1, string2);
+			bool result = UnicodeNormalizer.CompareStrings(
+				string1, string2, NormalizationForm.FormC);
+
+			Assert.That(result, Is.False);
+		}
+
+		/// <summary>
+		/// Test CompareStrings with different characters, return false.
+		/// </summary>
+		[Test]
+		public void CompareStringsWithDifferentCharactersReturnsFalseFormKC()
+		{
+			string string1 = "人";
+			string string2 = "木";
+
+			bool result = UnicodeNormalizer.CompareStrings(
+				string1, string2, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.False);
 		}
@@ -212,7 +305,8 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string string1 = string.Empty;
 			string string2 = string.Empty;
 
-			bool result = UnicodeNormalizer.CompareStrings(string1, string2);
+			bool result = UnicodeNormalizer.CompareStrings(
+				string1, string2, NormalizationForm.FormC);
 
 			Assert.That(result, Is.True);
 		}
@@ -226,7 +320,8 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string string1 = "人";
 			string string2 = "人";
 
-			bool result = UnicodeNormalizer.CompareStrings(string1, string2);
+			bool result = UnicodeNormalizer.CompareStrings(
+				string1, string2, NormalizationForm.FormC);
 
 			Assert.That(result, Is.True);
 		}
@@ -235,7 +330,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test CompareStrings with kangxi and standard, returns true.
 		/// </summary>
 		[Test]
-		public void CompareStringsWithKangxiAndStandardReturnsTrue()
+		public void CompareStringsWithKangxiAndStandardReturnsTrueFormC()
 		{
 			// U+2F08
 			string kangxi = "⼈";
@@ -243,7 +338,26 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			// U+4EBA
 			string standard = "人";
 
-			bool result = UnicodeNormalizer.CompareStrings(kangxi, standard);
+			bool result = UnicodeNormalizer.CompareStrings(
+				kangxi, standard, NormalizationForm.FormC);
+
+			Assert.That(result, Is.True);
+		}
+
+		/// <summary>
+		/// Test CompareStrings with kangxi and standard, returns true.
+		/// </summary>
+		[Test]
+		public void CompareStringsWithKangxiAndStandardReturnsTrueFormKC()
+		{
+			// U+2F08
+			string kangxi = "⼈";
+
+			// U+4EBA
+			string standard = "人";
+
+			bool result = UnicodeNormalizer.CompareStrings(
+				kangxi, standard, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.True);
 		}
@@ -252,7 +366,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test CompareStrings with mixed content, handles correctly.
 		/// </summary>
 		[Test]
-		public void CompareStringsWithMixedContentHandlesCorrectly()
+		public void CompareStringsWithMixedContentHandlesCorrectlyFormC()
 		{
 			// Mixed Kangxi and standard
 			string string1 = "⼈は人です";
@@ -260,7 +374,26 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			// All standard
 			string string2 = "人は人です";
 
-			bool result = UnicodeNormalizer.CompareStrings(string1, string2);
+			bool result = UnicodeNormalizer.CompareStrings(
+				string1, string2, NormalizationForm.FormC);
+
+			Assert.That(result, Is.True);
+		}
+
+		/// <summary>
+		/// Test CompareStrings with mixed content, handles correctly.
+		/// </summary>
+		[Test]
+		public void CompareStringsWithMixedContentHandlesCorrectlyFormKC()
+		{
+			// Mixed Kangxi and standard
+			string string1 = "⼈は人です";
+
+			// All standard
+			string string2 = "人は人です";
+
+			bool result = UnicodeNormalizer.CompareStrings(
+				string1, string2, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.True);
 		}
@@ -269,13 +402,28 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test CompareStrings with multiple kangxi radicals, returns true.
 		/// </summary>
 		[Test]
-		public void CompareStringsWithMultipleKangxiRadicalsReturnsTrue()
+		public void CompareStringsWithMultipleKangxiRadicalsReturnsTrueFormC()
 		{
 			string kangxiString = "⼆⼈⼉";
 			string standardString = "二人儿";
 
 			bool result = UnicodeNormalizer.CompareStrings(
-				kangxiString, standardString);
+				kangxiString, standardString, NormalizationForm.FormC);
+
+			Assert.That(result, Is.True);
+		}
+
+		/// <summary>
+		/// Test CompareStrings with multiple kangxi radicals, returns true.
+		/// </summary>
+		[Test]
+		public void CompareStringsWithMultipleKangxiRadicalsReturnsTrueFormKC()
+		{
+			string kangxiString = "⼆⼈⼉";
+			string standardString = "二人儿";
+
+			bool result = UnicodeNormalizer.CompareStrings(
+				kangxiString, standardString, NormalizationForm.FormKC);
 
 			Assert.That(result, Is.True);
 		}
@@ -482,7 +630,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test NormalizeFile, preserves encoding.
 		/// </summary>
 		[Test]
-		public void NormalizeFilePreservesUtf8Encoding()
+		public void NormalizeFilePreservesUtf8EncodingFormC()
 		{
 			string inputPath = Path.Combine(testDataDirectory, "utf8.csv");
 			string outputPath = Path.Combine(testDataDirectory, "output.csv");
@@ -490,7 +638,38 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.WriteAllLines(inputPath, languagesData, Encoding.UTF8);
 
 			UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormC);
+
+			string[] outputLines =
+				File.ReadAllLines(outputPath, Encoding.UTF8);
+
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(outputLines[0], Is.EqualTo("日本語,Japanese"));
+				Assert.That(outputLines[1], Is.EqualTo("中文,Chinese"));
+				Assert.That(outputLines[2], Is.EqualTo("한글,Korean"));
+			}
+		}
+
+		/// <summary>
+		/// Test NormalizeFile, preserves encoding.
+		/// </summary>
+		[Test]
+		public void NormalizeFilePreservesUtf8EncodingFormKC()
+		{
+			string inputPath = Path.Combine(testDataDirectory, "utf8.csv");
+			string outputPath = Path.Combine(testDataDirectory, "output.csv");
+
+			File.WriteAllLines(inputPath, languagesData, Encoding.UTF8);
+
+			UnicodeNormalizer.NormalizeFile(
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormKC);
 
 			string[] outputLines =
 				File.ReadAllLines(outputPath, Encoding.UTF8);
@@ -515,7 +694,10 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.WriteAllText(inputPath, string.Empty, Encoding.UTF8);
 
 			int linesChanged = UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormC);
 
 			using (Assert.EnterMultipleScope())
 			{
@@ -528,7 +710,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test NormalizeFile with kangxi radicals, normalizes content.
 		/// </summary>
 		[Test]
-		public void NormalizeFileWithKangxiRadicalsNormalizesContent()
+		public void NormalizeFileWithKangxiRadicalsNormalizesContentFormC()
 		{
 			string inputPath =
 				Path.Combine(testDataDirectory, "unnormalized.csv");
@@ -537,7 +719,42 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.WriteAllLines(inputPath, mixedData, Encoding.UTF8);
 
 			int linesChanged = UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormC);
+
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(linesProcessed, Is.EqualTo(2));
+
+				// One line changed (0-indexed)
+				Assert.That(linesChanged, Is.EqualTo(1));
+
+				// Verify output content
+				var outputLines = File.ReadAllLines(outputPath, Encoding.UTF8);
+				Assert.That(outputLines[0], Is.EqualTo("人,Person"));
+				Assert.That(outputLines[1], Is.EqualTo("人,Person"));
+			}
+		}
+
+		/// <summary>
+		/// Test NormalizeFile with kangxi radicals, normalizes content.
+		/// </summary>
+		[Test]
+		public void NormalizeFileWithKangxiRadicalsNormalizesContentFormKC()
+		{
+			string inputPath =
+				Path.Combine(testDataDirectory, "unnormalized.csv");
+			string outputPath = Path.Combine(testDataDirectory, "output.csv");
+
+			File.WriteAllLines(inputPath, mixedData, Encoding.UTF8);
+
+			int linesChanged = UnicodeNormalizer.NormalizeFile(
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormKC);
 
 			using (Assert.EnterMultipleScope())
 			{
@@ -557,7 +774,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test NormalizeFile with multiple kangxi lines, counts all changed.
 		/// </summary>
 		[Test]
-		public void NormalizeFileWithMultipleKangxiLinesCountsAllChanges()
+		public void NormalizeFileWithMultipleKangxiLinesCountsAllChangesFormC()
 		{
 			string inputPath = Path.Combine(testDataDirectory, "multiple.csv");
 			string outputPath = Path.Combine(testDataDirectory, "output.csv");
@@ -565,7 +782,34 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.WriteAllLines(inputPath, radicalsData, Encoding.UTF8);
 
 			int linesChanged = UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormC);
+
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(linesProcessed, Is.EqualTo(3));
+				Assert.That(linesChanged, Is.EqualTo(3));
+			}
+		}
+
+		/// <summary>
+		/// Test NormalizeFile with multiple kangxi lines, counts all changed.
+		/// </summary>
+		[Test]
+		public void NormalizeFileWithMultipleKangxiLinesCountsAllChangesFormKC()
+		{
+			string inputPath = Path.Combine(testDataDirectory, "multiple.csv");
+			string outputPath = Path.Combine(testDataDirectory, "output.csv");
+
+			File.WriteAllLines(inputPath, radicalsData, Encoding.UTF8);
+
+			int linesChanged = UnicodeNormalizer.NormalizeFile(
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormKC);
 
 			using (Assert.EnterMultipleScope())
 			{
@@ -578,7 +822,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test NormalizeFile with non-existant file, returns negative one.
 		/// </summary>
 		[Test]
-		public void NormalizeFileWithNonExistentFileReturnsNegativeOne()
+		public void NormalizeFileWithNonExistentFileReturnsNegativeOneFormC()
 		{
 			string inputPath =
 				Path.Combine(testDataDirectory, "nonexistent.csv");
@@ -587,7 +831,30 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			Assert.Throws<FileNotFoundException>(() =>
 			{
 				int linesChanged = UnicodeNormalizer.NormalizeFile(
-					inputPath, outputPath, out int linesProcessed);
+					inputPath,
+					outputPath,
+					out int linesProcessed,
+					NormalizationForm.FormC);
+			});
+		}
+
+		/// <summary>
+		/// Test NormalizeFile with non-existant file, returns negative one.
+		/// </summary>
+		[Test]
+		public void NormalizeFileWithNonExistentFileReturnsNegativeOneFormKC()
+		{
+			string inputPath =
+				Path.Combine(testDataDirectory, "nonexistent.csv");
+			string outputPath = Path.Combine(testDataDirectory, "output.csv");
+
+			Assert.Throws<FileNotFoundException>(() =>
+			{
+				int linesChanged = UnicodeNormalizer.NormalizeFile(
+					inputPath,
+					outputPath,
+					out int linesProcessed,
+					NormalizationForm.FormKC);
 			});
 		}
 
@@ -595,7 +862,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Test NormalizeFile with normalized content, retursn zero changes.
 		/// </summary>
 		[Test]
-		public void NormalizeFileWithNormalizedContentReturnsZeroChanges()
+		public void NormalizeFileWithNormalizedContentReturnsZeroChangesFormC()
 		{
 			string inputPath =
 				Path.Combine(testDataDirectory, "normalized.csv");
@@ -604,7 +871,38 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			File.WriteAllLines(inputPath, someData, Encoding.UTF8);
 
 			int linesChanged = UnicodeNormalizer.NormalizeFile(
-				inputPath, outputPath, out int linesProcessed);
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormC);
+
+			using (Assert.EnterMultipleScope())
+			{
+				Assert.That(linesProcessed, Is.EqualTo(2));
+
+				// No changes made
+				Assert.That(linesChanged, Is.Zero);
+				Assert.That(File.Exists(outputPath), Is.True);
+			}
+		}
+
+		/// <summary>
+		/// Test NormalizeFile with normalized content, retursn zero changes.
+		/// </summary>
+		[Test]
+		public void NormalizeFileWithNormalizedContentReturnsZeroChangesFormKC()
+		{
+			string inputPath =
+				Path.Combine(testDataDirectory, "normalized.csv");
+			string outputPath = Path.Combine(testDataDirectory, "output.csv");
+
+			File.WriteAllLines(inputPath, someData, Encoding.UTF8);
+
+			int linesChanged = UnicodeNormalizer.NormalizeFile(
+				inputPath,
+				outputPath,
+				out int linesProcessed,
+				NormalizationForm.FormKC);
 
 			using (Assert.EnterMultipleScope())
 			{

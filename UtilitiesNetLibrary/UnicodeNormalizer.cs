@@ -10,6 +10,7 @@ namespace DigitalZenWorks.Common.Utilities
 {
 	using System;
 	using System.Collections.ObjectModel;
+	using System.Globalization;
 	using System.IO;
 	using System.Text;
 
@@ -43,7 +44,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static NormalizationIssue? CheckLine(
 			int lineNumber,
 			string line,
-			NormalizationForm form = NormalizationForm.FormKC)
+			NormalizationForm form)
 		{
 			NormalizationIssue? issue = null;
 
@@ -82,7 +83,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns><see langword="true"/> if the strings are equal,
 		/// including when both are <see langword="null"/>; otherwise, <see
 		/// langword="false"/>.</returns>
-		public static bool CompareStrings(string string1, string string2)
+		public static bool CompareStrings(
+			string string1,
+			string string2,
+			NormalizationForm form)
 		{
 			bool isEqual = false;
 
@@ -213,7 +217,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// specified by <paramref name="inputPath"/> does
 		/// not exist.</exception>
 		public static int NormalizeFile(
-			string inputPath, string outputPath, out int linesProcessed)
+			string inputPath,
+			string outputPath,
+			out int linesProcessed,
+			NormalizationForm form)
 		{
 			int linesChanged;
 			linesProcessed = 0;
@@ -299,20 +306,32 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			var differences = new Collection<CharDifference>();
 
-			int minLength = Math.Min(original.Length, normalized.Length);
+			TextElementEnumerator originalElements =
+				StringInfo.GetTextElementEnumerator(original);
+			TextElementEnumerator normalizedElements =
+				StringInfo.GetTextElementEnumerator(normalized);
 
-			for (int index = 0; index < minLength; index++)
+			int position = 0;
+
+			while (originalElements.MoveNext() &&
+				normalizedElements.MoveNext())
 			{
-				char originalChar = original[index];
-				char normalizedChar = normalized[index];
+				string originalElement = originalElements.GetTextElement();
+				string normalizedElement = normalizedElements.GetTextElement();
 
-				CharDifference? difference =
-					CheckDifferences(index, originalChar, normalizedChar);
-
-				if (difference != null)
+				if (originalElement != normalizedElement)
 				{
+					CharDifference difference = new CharDifference
+					{
+						Position = position,
+						Original = originalElement,
+						Normalized = normalizedElement
+					};
+
 					differences.Add(difference);
 				}
+
+				position++;
 			}
 
 			return differences;
