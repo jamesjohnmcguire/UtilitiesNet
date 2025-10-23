@@ -16,25 +16,25 @@ namespace DigitalZenWorks.Common.Utilities
 
 	/// <summary>
 	/// Provides utility methods for working with Unicode text, including
-	/// normalization, comparison,  and analysis of character differences.
-	/// This class is designed to assist with ensuring text  conforms to
+	/// normalization, comparison, and analysis of character differences.
+	/// This class is designed to assist with ensuring text conforms to
 	/// specific Unicode normalization forms and to facilitate operations on
 	/// Unicode strings.
 	/// </summary>
 	/// <remarks>The <see cref="UnicodeNormalizer"/> class includes methods
 	/// for checking and applying Unicode normalization, comparing strings in
-	/// a normalization-insensitive manner, extracting Unicode  code points,
+	/// a normalization-insensitive manner, extracting Unicode code points,
 	/// and converting text to hexadecimal representations. It also provides
-	/// functionality  for normalizing entire files while tracking changes.
-	/// <para> All methods in this class are static and can be used without
-	/// instantiating the class.  The class primarily targets normalization
-	/// form NFKC (Compatibility Composition), but other forms can be specified
-	/// where applicable. </para> <para> This class is thread-safe as it
-	/// does not maintain any internal state.</para></remarks>
+	/// functionality for normalizing entire files while tracking changes.
+	/// <para>All methods in this class are static and can be used without
+	/// instantiating the class.  The normalization form  can be specified
+	/// where applicable.</para>
+	/// <para> This class is thread-safe as it does not maintain any
+	/// internal state.</para></remarks>
 	public static class UnicodeNormalizer
 	{
 		/// <summary>
-		/// Checks if a line needs Unicode normalization to NFKC form.
+		/// Checks if a line needs Unicode normalization.
 		/// </summary>
 		/// <param name="lineNumber">The line number for reference.</param>
 		/// <param name="line">The text to check.</param>
@@ -58,7 +58,7 @@ namespace DigitalZenWorks.Common.Utilities
 				Collection<CharDifference> differences =
 					FindDifferences(line, normalized);
 
-				issue = new();
+				issue = new ();
 
 				issue.LineNumber = lineNumber;
 				issue.OriginalLine = line;
@@ -80,6 +80,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// culture-invariant.</remarks>
 		/// <param name="string1">The first string to compare.</param>
 		/// <param name="string2">The second string to compare.</param>
+		/// <param name="form">The normalization form to use.</param>
 		/// <returns><see langword="true"/> if the strings are equal,
 		/// including when both are <see langword="null"/>; otherwise, <see
 		/// langword="false"/>.</returns>
@@ -93,10 +94,8 @@ namespace DigitalZenWorks.Common.Utilities
 			ArgumentNullException.ThrowIfNull(string1);
 			ArgumentNullException.ThrowIfNull(string2);
 
-			string? normalizedString1 =
-				string1!.Normalize(NormalizationForm.FormKC);
-			string? normalizedString2 =
-				string2!.Normalize(NormalizationForm.FormKC);
+			string? normalizedString1 = string1!.Normalize(form);
+			string? normalizedString2 = string2!.Normalize(form);
 
 			if (normalizedString1.Equals(
 				normalizedString2, StringComparison.Ordinal))
@@ -208,6 +207,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="linesProcessed">When this method returns, contains
 		/// the total number of lines processed from the input file. This
 		/// parameter is passed uninitialized.</param>
+		/// <param name="form">The normalization form to use.</param>
 		/// <returns>The number of lines that were changed during
 		/// normalization.</returns>
 		/// <exception cref="ArgumentException">Thrown if
@@ -262,8 +262,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 					if (line != null)
 					{
-						string normalized =
-							line.Normalize(NormalizationForm.FormKC);
+						string normalized = line.Normalize(form);
 
 						writer.WriteLine(normalized);
 						linesProcessed++;
@@ -321,7 +320,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 				if (originalElement != normalizedElement)
 				{
-					CharDifference difference = new CharDifference
+					CharDifference difference = new ()
 					{
 						Position = position,
 						Original = originalElement,

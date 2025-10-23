@@ -8,11 +8,10 @@
 
 namespace DigitalZenWorks.Common.Utilities.Tests
 {
-	using NUnit.Framework;
-	using System;
 	using System.Collections.ObjectModel;
 	using System.IO;
 	using System.Text;
+	using NUnit.Framework;
 
 	/// <summary>
 	/// Provides unit tests for the <see cref="UnicodeNormalizer"/> class,
@@ -341,7 +340,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool result = UnicodeNormalizer.CompareStrings(
 				kangxi, standard, NormalizationForm.FormC);
 
-			Assert.That(result, Is.True);
+			Assert.That(result, Is.False);
 		}
 
 		/// <summary>
@@ -377,7 +376,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool result = UnicodeNormalizer.CompareStrings(
 				string1, string2, NormalizationForm.FormC);
 
-			Assert.That(result, Is.True);
+			Assert.That(result, Is.False);
 		}
 
 		/// <summary>
@@ -410,7 +409,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			bool result = UnicodeNormalizer.CompareStrings(
 				kangxiString, standardString, NormalizationForm.FormC);
 
-			Assert.That(result, Is.True);
+			Assert.That(result, Is.False);
 		}
 
 		/// <summary>
@@ -648,6 +647,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 
 			using (Assert.EnterMultipleScope())
 			{
+				Assert.That(linesProcessed, Is.EqualTo(3));
 				Assert.That(outputLines[0], Is.EqualTo("日本語,Japanese"));
 				Assert.That(outputLines[1], Is.EqualTo("中文,Chinese"));
 				Assert.That(outputLines[2], Is.EqualTo("한글,Korean"));
@@ -676,6 +676,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 
 			using (Assert.EnterMultipleScope())
 			{
+				Assert.That(linesProcessed, Is.EqualTo(3));
 				Assert.That(outputLines[0], Is.EqualTo("日本語,Japanese"));
 				Assert.That(outputLines[1], Is.EqualTo("中文,Chinese"));
 				Assert.That(outputLines[2], Is.EqualTo("한글,Korean"));
@@ -729,11 +730,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 				Assert.That(linesProcessed, Is.EqualTo(2));
 
 				// One line changed (0-indexed)
-				Assert.That(linesChanged, Is.EqualTo(1));
+				Assert.That(linesChanged, Is.Zero);
 
 				// Verify output content
 				var outputLines = File.ReadAllLines(outputPath, Encoding.UTF8);
-				Assert.That(outputLines[0], Is.EqualTo("人,Person"));
+
+				// Expects Kangxi to remain
+				Assert.That(outputLines[0], Is.EqualTo("⼈,Person"));
 				Assert.That(outputLines[1], Is.EqualTo("人,Person"));
 			}
 		}
@@ -790,7 +793,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(linesProcessed, Is.EqualTo(3));
-				Assert.That(linesChanged, Is.EqualTo(3));
+				Assert.That(linesChanged, Is.Zero);
 			}
 		}
 
