@@ -305,37 +305,40 @@ namespace DigitalZenWorks.Common.Utilities
 			return isSnakeCase;
 		}
 
-		private static string ConvertFromKnrText(
-			string knrName, bool setToCamelCase)
+		private static string? ConvertFromKnrText(
+			string? knrName, bool setToCamelCase)
 		{
-			string newCase = string.Empty;
+			string? newCase = string.Empty;
 
-			// split at underscores
-#if NET8_0_OR_GREATER
-			char[] splitters = ['_'];
-#else
-			char[] splitters = new char[] { '_' };
-#endif
-			string[] parts = knrName.Split(
-				splitters,
-				StringSplitOptions.RemoveEmptyEntries);
-			bool first = true;
-
-			// remove underscores, set parts in intended case
-			foreach (string part in parts)
+			if (knrName != null)
 			{
-				if ((setToCamelCase == true) && (first == true))
-				{
-#pragma warning disable CA1308
-					newCase += part.ToLowerInvariant();
-#pragma warning restore CA1308
-				}
-				else
-				{
-					newCase += part.ToProperCase();
-				}
+				// split at underscores
+#if NET8_0_OR_GREATER
+				char[] splitters = ['_'];
+#else
+				char[] splitters = new char[] { '_' };
+#endif
+				string[] parts = knrName.Split(
+					splitters,
+					StringSplitOptions.RemoveEmptyEntries);
+				bool first = true;
 
-				first = false;
+				// remove underscores, set parts in intended case
+				foreach (string part in parts)
+				{
+					if ((setToCamelCase == true) && (first == true))
+					{
+#pragma warning disable CA1308
+						newCase += part.ToLowerInvariant();
+#pragma warning restore CA1308
+					}
+					else
+					{
+						newCase += part.ToProperCase();
+					}
+
+					first = false;
+				}
 			}
 
 			return newCase;
