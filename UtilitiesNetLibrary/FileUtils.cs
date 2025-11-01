@@ -104,11 +104,10 @@ namespace DigitalZenWorks.Common.Utilities
 					{
 						Directory.CreateDirectory(path);
 
-						using (FileStream file = new (
-							filePath, FileMode.Create, FileAccess.Write))
-						{
-							templateObjectStream.CopyTo(file);
-						}
+						using FileStream file = new(
+							filePath, FileMode.Create, FileAccess.Write);
+
+						templateObjectStream.CopyTo(file);
 
 						success = true;
 					}

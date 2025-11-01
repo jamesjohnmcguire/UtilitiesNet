@@ -179,38 +179,37 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[]? outputBytes;
 
-			using (Process externalProgram = new ())
+			using Process externalProgram = new ();
+
+			externalProgram.StartInfo.UseShellExecute = false;
+			externalProgram.StartInfo.CreateNoWindow = true;
+			externalProgram.StartInfo.ErrorDialog = false;
+
+			if (standardInput != null)
 			{
-				externalProgram.StartInfo.UseShellExecute = false;
-				externalProgram.StartInfo.CreateNoWindow = true;
-				externalProgram.StartInfo.ErrorDialog = false;
-
-				if (standardInput != null)
-				{
-					externalProgram.StartInfo.RedirectStandardInput = true;
-				}
-
-				externalProgram.StartInfo.RedirectStandardOutput = true;
-
-				externalProgram.StartInfo.FileName = filename;
-				externalProgram.StartInfo.Arguments = arguments;
-				externalProgram.Start();
-
-				if (standardInput != null)
-				{
-					// Prepare incoming binary stream to stdin
-					// hook up stdin
-					StreamWriter input = externalProgram.StandardInput;
-
-					// write bytes
-					input.BaseStream.Write(
-						standardInput, 0, standardInput.Length);
-				}
-
-				Stream outputStream =
-					externalProgram.StandardOutput.BaseStream;
-				outputBytes = FileUtils.ReadBinaryOutput(outputStream);
+				externalProgram.StartInfo.RedirectStandardInput = true;
 			}
+
+			externalProgram.StartInfo.RedirectStandardOutput = true;
+
+			externalProgram.StartInfo.FileName = filename;
+			externalProgram.StartInfo.Arguments = arguments;
+			externalProgram.Start();
+
+			if (standardInput != null)
+			{
+				// Prepare incoming binary stream to stdin
+				// hook up stdin
+				StreamWriter input = externalProgram.StandardInput;
+
+				// write bytes
+				input.BaseStream.Write(
+					standardInput, 0, standardInput.Length);
+			}
+
+			Stream outputStream =
+				externalProgram.StandardOutput.BaseStream;
+			outputBytes = FileUtils.ReadBinaryOutput(outputStream);
 
 			return outputBytes;
 		}
@@ -245,10 +244,9 @@ namespace DigitalZenWorks.Common.Utilities
 				throw new ArgumentException(message);
 			}
 
-			using (MemoryStream retVal = new (hexData.Length / 2))
-			{
-				data = GetHexPair(hexData, retVal);
-			}
+			using MemoryStream retVal = new (hexData.Length / 2);
+
+			data = GetHexPair(hexData, retVal);
 
 			return data;
 		}
@@ -441,9 +439,9 @@ namespace DigitalZenWorks.Common.Utilities
 					with the Quoted-Printable encoding, "soft" line breaks
 			*/
 
-			using (MemoryStream destination = new ())
+			using MemoryStream destination = new ();
 			{
-				using (MemoryStream sourceStream = new (data))
+				using MemoryStream sourceStream = new (data);
 				{
 					int b = sourceStream.ReadByte();
 					while (b > -1)
