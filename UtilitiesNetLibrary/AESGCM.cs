@@ -86,16 +86,20 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <remarks>
 		/// Adds overhead of (Optional-Payload + BlockSize(16) + Message +  HMac-Tag(16)) * 1.33 Base64.
 		/// </remarks>
-		public static string SimpleEncrypt(string secretMessage, byte[] key, byte[] nonSecretPayload = null)
+		public static string SimpleEncrypt(
+			string secretMessage, byte[] key, byte[]? nonSecretPayload = null)
 		{
 			if (string.IsNullOrEmpty(secretMessage))
 			{
-				throw new ArgumentException("Secret Message Required!", nameof(secretMessage));
+				throw new ArgumentException(
+					"Secret Message Required!", nameof(secretMessage));
 			}
 
-			var plainText = Encoding.UTF8.GetBytes(secretMessage);
-			var cipherText = SimpleEncrypt(plainText, key, nonSecretPayload);
-			return Convert.ToBase64String(cipherText);
+			byte[] plainText = Encoding.UTF8.GetBytes(secretMessage);
+			byte[] cipherText = SimpleEncrypt(plainText, key, nonSecretPayload);
+
+			string result = Convert.ToBase64String(cipherText);
+			return result;
 		}
 
 		/// <summary>
@@ -105,16 +109,26 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="key">The key.</param>
 		/// <param name="nonSecretPayloadLength">Length of the optional non-secret payload.</param>
 		/// <returns>Decrypted Message.</returns>
-		public static string SimpleDecrypt(string encryptedMessage, byte[] key, int nonSecretPayloadLength = 0)
+		public static string? SimpleDecrypt(string encryptedMessage, byte[] key, int nonSecretPayloadLength = 0)
 		{
+			string? result = null;
+
 			if (string.IsNullOrEmpty(encryptedMessage))
 			{
-				throw new ArgumentException("Encrypted Message Required!", nameof(encryptedMessage));
+				throw new ArgumentException(
+					"Encrypted Message Required!", nameof(encryptedMessage));
 			}
 
 			var cipherText = Convert.FromBase64String(encryptedMessage);
-			var plainText = SimpleDecrypt(cipherText, key, nonSecretPayloadLength);
-			return plainText == null ? null : Encoding.UTF8.GetString(plainText);
+			var plainText =
+				SimpleDecrypt(cipherText, key, nonSecretPayloadLength);
+
+			if (plainText != null)
+			{
+				result = Encoding.UTF8.GetString(plainText);
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -132,15 +146,17 @@ namespace DigitalZenWorks.Common.Utilities
 		public static string SimpleEncryptWithPassword(
 			string secretMessage,
 			string password,
-			byte[] nonSecretPayload = null)
+			byte[]? nonSecretPayload = null)
 		{
 			if (string.IsNullOrEmpty(secretMessage))
 			{
-				throw new ArgumentException("Secret Message Required!", nameof(secretMessage));
+				throw new ArgumentException(
+					"Secret Message Required!", nameof(secretMessage));
 			}
 
 			var plainText = Encoding.UTF8.GetBytes(secretMessage);
-			var cipherText = SimpleEncryptWithPassword(plainText, password, nonSecretPayload);
+			var cipherText = SimpleEncryptWithPassword(
+				plainText, password, nonSecretPayload);
 			return Convert.ToBase64String(cipherText);
 		}
 
@@ -156,19 +172,29 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <remarks>
 		/// Significantly less secure than using random binary keys.
 		/// </remarks>
-		public static string SimpleDecryptWithPassword(
+		public static string? SimpleDecryptWithPassword(
 			string encryptedMessage,
 			string password,
 			int nonSecretPayloadLength = 0)
 		{
+			string? result = null;
+
 			if (string.IsNullOrWhiteSpace(encryptedMessage))
 			{
-				throw new ArgumentException("Encrypted Message Required!", nameof(encryptedMessage));
+				throw new ArgumentException(
+					"Encrypted Message Required!", nameof(encryptedMessage));
 			}
 
 			var cipherText = Convert.FromBase64String(encryptedMessage);
-			var plainText = SimpleDecryptWithPassword(cipherText, password, nonSecretPayloadLength);
-			return plainText == null ? null : Encoding.UTF8.GetString(plainText);
+			var plainText = SimpleDecryptWithPassword(
+				cipherText, password, nonSecretPayloadLength);
+
+			if (plainText != null)
+			{
+				result = Encoding.UTF8.GetString(plainText);
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -181,7 +207,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <remarks>
 		/// Adds overhead of (Optional-Payload + BlockSize(16) + Message +  HMac-Tag(16)) * 1.33 Base64.
 		/// </remarks>
-		public static byte[] SimpleEncrypt(byte[] secretMessage, byte[] key, byte[] nonSecretPayload = null)
+		public static byte[] SimpleEncrypt(
+			byte[] secretMessage, byte[] key, byte[]? nonSecretPayload = null)
 		{
 			// User Error Checks
 			if (key == null || key.Length != KeyBitSize / 8)
@@ -233,39 +260,56 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="key">The key.</param>
 		/// <param name="nonSecretPayloadLength">Length of the optional non-secret payload.</param>
 		/// <returns>Decrypted Message.</returns>
-		public static byte[] SimpleDecrypt(byte[] encryptedMessage, byte[] key, int nonSecretPayloadLength = 0)
+		public static byte[]? SimpleDecrypt(byte[] encryptedMessage, byte[] key, int nonSecretPayloadLength = 0)
 		{
+			byte[]? plainText = null;
+
 			// User Error Checks
 			if (key == null || key.Length != KeyBitSize / 8)
 			{
-				throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Key needs to be {0} bit!", KeyBitSize), nameof(key));
+				throw new ArgumentException(
+					string.Format(
+						CultureInfo.InvariantCulture,
+						"Key needs to be {0} bit!",
+						KeyBitSize),
+					nameof(key));
 			}
 
 			if (encryptedMessage == null || encryptedMessage.Length == 0)
 			{
-				throw new ArgumentException("Encrypted Message Required!", nameof(encryptedMessage));
+				throw new ArgumentException(
+					"Encrypted Message Required!",
+					nameof(encryptedMessage));
 			}
 
 			using var cipherStream = new MemoryStream(encryptedMessage);
 			using var cipherReader = new BinaryReader(cipherStream);
 
 			// Grab Payload
-			var nonSecretPayload = cipherReader.ReadBytes(nonSecretPayloadLength);
+			var nonSecretPayload =
+				cipherReader.ReadBytes(nonSecretPayloadLength);
 
 			// Grab Nonce
 			var nonce = cipherReader.ReadBytes(NonceBitSize / 8);
 
 			var cipher = new GcmBlockCipher(new AesEngine());
-			var parameters = new AeadParameters(new KeyParameter(key), MacBitSize, nonce, nonSecretPayload);
+			var parameters = new AeadParameters(
+				new KeyParameter(key),
+				MacBitSize,
+				nonce,
+				nonSecretPayload);
 			cipher.Init(false, parameters);
 
 			// Decrypt Cipher Text
-			var cipherText = cipherReader.ReadBytes(encryptedMessage.Length - nonSecretPayloadLength - nonce.Length);
-			var plainText = new byte[cipher.GetOutputSize(cipherText.Length)];
+			var cipherText = cipherReader.ReadBytes(
+				encryptedMessage.Length - nonSecretPayloadLength - nonce.Length);
+			int length = cipher.GetOutputSize(cipherText.Length);
+			plainText = new byte[length];
 
 			try
 			{
-				var len = cipher.ProcessBytes(cipherText, 0, cipherText.Length, plainText, 0);
+				var len = cipher.ProcessBytes(
+					cipherText, 0, cipherText.Length, plainText, 0);
 				cipher.DoFinal(plainText, len);
 			}
 			catch (InvalidCipherTextException)
@@ -290,19 +334,29 @@ namespace DigitalZenWorks.Common.Utilities
 		/// Significantly less secure than using random binary keys.
 		/// Adds additional non secret payload for key generation parameters.
 		/// </remarks>
-		public static byte[] SimpleEncryptWithPassword(byte[] secretMessage, string password, byte[] nonSecretPayload = null)
+		public static byte[] SimpleEncryptWithPassword(
+			byte[] secretMessage,
+			string password,
+			byte[]? nonSecretPayload = null)
 		{
 			nonSecretPayload ??= [];
 
 			// User Error Checks
-			if (string.IsNullOrWhiteSpace(password) || password.Length < MinPasswordLength)
+			if (string.IsNullOrWhiteSpace(password) ||
+				password.Length < MinPasswordLength)
 			{
-				throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Must have a password of at least {0} characters!", MinPasswordLength), nameof(password));
+				throw new ArgumentException(
+					string.Format(
+						CultureInfo.InvariantCulture,
+						"Must have a password of at least {0} characters!",
+						MinPasswordLength),
+					nameof(password));
 			}
 
 			if (secretMessage == null || secretMessage.Length == 0)
 			{
-				throw new ArgumentException("Secret Message Required!", nameof(secretMessage));
+				throw new ArgumentException(
+					"Secret Message Required!", nameof(secretMessage));
 			}
 
 			var generator = new Pkcs5S2ParametersGenerator();
@@ -339,12 +393,21 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <remarks>
 		/// Significantly less secure than using random binary keys.
 		/// </remarks>
-		public static byte[] SimpleDecryptWithPassword(byte[] encryptedMessage, string password, int nonSecretPayloadLength = 0)
+		public static byte[]? SimpleDecryptWithPassword(
+			byte[] encryptedMessage,
+			string password,
+			int nonSecretPayloadLength = 0)
 		{
 			// User Error Checks
-			if (string.IsNullOrWhiteSpace(password) || password.Length < MinPasswordLength)
+			if (string.IsNullOrWhiteSpace(password) ||
+				password.Length < MinPasswordLength)
 			{
-				throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Must have a password of at least {0} characters!", MinPasswordLength), nameof(password));
+				throw new ArgumentException(
+					string.Format(
+						CultureInfo.InvariantCulture,
+						"Must have a password of at least {0} characters!",
+						MinPasswordLength),
+					nameof(password));
 			}
 
 			if (encryptedMessage == null || encryptedMessage.Length == 0)
@@ -366,7 +429,11 @@ namespace DigitalZenWorks.Common.Utilities
 			// Generate Key
 			var key = (KeyParameter)generator.GenerateDerivedMacParameters(KeyBitSize);
 
-			return SimpleDecrypt(encryptedMessage, key.GetKey(), salt.Length + nonSecretPayloadLength);
+			int payLoad = salt.Length + nonSecretPayloadLength;
+			byte[]? result =
+				SimpleDecrypt(encryptedMessage, key.GetKey(), payLoad);
+
+			return result;
 		}
 	}
 }

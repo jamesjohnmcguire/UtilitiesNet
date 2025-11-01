@@ -20,22 +20,23 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class XmlUtilities
 	{
-		private static readonly ILog Log = LogManager.GetLogger(
-			MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly Type ClassType = typeof(XmlUtilities);
+		private static readonly ILog Log =
+			LogManager.GetLogger(ClassType);
 
 		/// <summary>
 		/// Converts the XML node to string.
 		/// </summary>
 		/// <param name="node">The node.</param>
 		/// <returns>The string represeentation of the node.</returns>
-		public static string ConvertXmlNodeToString(XmlNode node)
+		public static string? ConvertXmlNodeToString(XmlNode node)
 		{
-			string nodeString = null;
+			string? nodeString = null;
 
 			if (node != null)
 			{
-				StringWriter stringWriter = new();
-				using XmlTextWriter xmlTextWriter = new(stringWriter);
+				StringWriter stringWriter = new ();
+				using XmlTextWriter xmlTextWriter = new (stringWriter);
 
 				node.WriteTo(xmlTextWriter);
 				nodeString = stringWriter.ToString();
@@ -51,10 +52,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="xmlFile">The XML file.</param>
 		/// <param name="type">The serializer type.</param>
 		/// <returns>The XML object.</returns>
-		public static object LoadWithValidation(
-			string schemaFile, string xmlFile, Type type)
+		public static object? LoadWithValidation(
+			string schemaFile, string xmlFile, Type? type)
 		{
-			object deserializedObject = null;
+			object? deserializedObject = null;
 
 			try
 			{

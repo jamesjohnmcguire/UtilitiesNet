@@ -4,6 +4,7 @@
 		<AnalysisMode>All</AnalysisMode>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Nullable>enable</Nullable>
 		<IsTestProject>true</IsTestProject>
 		<TargetFramework>net9.0</TargetFramework>
 	</PropertyGroup>

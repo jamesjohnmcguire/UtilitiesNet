@@ -70,7 +70,7 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// </summary>
 		/// <param name="input">The input string.</param>
 		/// <returns>The camel case string.</returns>
-		public static string ToCamelCase(this string input)
+		public static string? ToCamelCase(this string? input)
 		{
 			string result = string.Empty;
 
@@ -129,47 +129,51 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// </summary>
 		/// <param name="input">The input string.</param>
 		/// <returns>The Pascal case string.</returns>
-		public static string ToPascalCase(this string input)
+		public static string? ToPascalCase(this string? input)
 		{
+			string? pascalCase = null;
+
 			// If there are 0 or 1 characters, just return the string.
 			if (input == null)
 			{
-				return input;
+				pascalCase = input;
 			}
-
-			if (input.Length < 2)
+			else
 			{
-				return input.ToUpper(CultureInfo.CurrentCulture);
+				if (input.Length < 2)
+				{
+					pascalCase = input.ToUpper(CultureInfo.CurrentCulture);
+				}
+				else
+				{
+					// Split the string into words.
+					char[] separators = [' ', '_', '\t'];
+					string[] words = input.Split(
+						separators, StringSplitOptions.RemoveEmptyEntries);
+
+					// Combine the words.
+					foreach (string word in words)
+					{
+#if NETCOREAPP1_0_OR_GREATER
+						string subWord = word[..1];
+#else
+						string subWord = word.Substring(0, 1);
+#endif
+						subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
+
+#if NETCOREAPP1_0_OR_GREATER
+						string word2 = word[1..];
+#else
+						string word2 = word.Substring(1);
+#endif
+						word2 = word2.ToLower(CultureInfo.CurrentCulture);
+
+						pascalCase += subWord + word2;
+					}
+				}
 			}
 
-			// Split the string into words.
-			char[] separators = [' ', '_', '\t'];
-			string[] words =
-				input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-			// Combine the words.
-			string result = string.Empty;
-
-			foreach (string word in words)
-			{
-#if NETCOREAPP1_0_OR_GREATER
-				string subWord = word[..1];
-#else
-				string subWord = word.Substring(0, 1);
-#endif
-				subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
-
-#if NETCOREAPP1_0_OR_GREATER
-				string word2 = word[1..];
-#else
-				string word2 = word.Substring(1);
-#endif
-				word2 = word2.ToLower(CultureInfo.CurrentCulture);
-
-				result += subWord + word2;
-			}
-
-			return result;
+			return pascalCase;
 		}
 
 		/// <summary>
@@ -180,9 +184,9 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// conjunction or preposition.</remarks>
 		/// <param name="unformattedText">The input string.</param>
 		/// <returns>The proper case string.</returns>
-		public static string ToProperCase(this string unformattedText)
+		public static string? ToProperCase(this string? unformattedText)
 		{
-			string properCaseText = null;
+			string? properCaseText = null;
 
 			if (unformattedText != null)
 			{
@@ -208,9 +212,9 @@ namespace DigitalZenWorks.Common.Utilities.Extensions
 		/// conjunction or preposition.</remarks>
 		/// <param name="unformattedText">The input string.</param>
 		/// <returns>The title case string.</returns>
-		public static string ToTitleCase(this string unformattedText)
+		public static string? ToTitleCase(this string? unformattedText)
 		{
-			string titleCaseText = null;
+			string? titleCaseText = null;
 
 			if (unformattedText != null)
 			{
