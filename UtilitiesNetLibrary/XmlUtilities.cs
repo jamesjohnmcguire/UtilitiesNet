@@ -61,11 +61,11 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if (type != null)
 				{
-					XmlSerializer serializer = new(type);
+					XmlSerializer serializer = new (type);
 
 					if (File.Exists(schemaFile))
 					{
-						XmlReaderSettings settings = new();
+						XmlReaderSettings settings = new ();
 						settings.ValidationType = ValidationType.Schema;
 						settings.Schemas.Add(null, schemaFile);
 

@@ -62,7 +62,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		public static readonly int MinPasswordLength = 12;
 
-		private static readonly SecureRandom Random = new();
+		private static readonly SecureRandom Random = new ();
 
 		/// <summary>
 		/// Helper that generates a random new key on each call.

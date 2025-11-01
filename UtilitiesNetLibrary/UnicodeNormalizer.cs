@@ -288,9 +288,9 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				linesChanged = 0;
 
-				using StreamReader reader = new(inputPath, Encoding.UTF8);
+				using StreamReader reader = new (inputPath, Encoding.UTF8);
 				using StreamWriter writer =
-					new(outputPath, false, Encoding.UTF8);
+					new (outputPath, false, Encoding.UTF8);
 
 				string? line = reader.ReadLine();
 
