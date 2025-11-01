@@ -12,7 +12,7 @@
 		<Description>This client library provides general functionality.</Description>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<FileVersion>1.4.75.0</FileVersion>
+		<FileVersion>1.5.78.0</FileVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<LangVersion>Latest</LangVersion>
@@ -24,7 +24,7 @@
 		<PackageTags>Digital Zen Works;Common;Utilities</PackageTags>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<SignAssembly>true</SignAssembly>
-		<Version>1.4.75</Version>
+		<Version>1.5.78</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
