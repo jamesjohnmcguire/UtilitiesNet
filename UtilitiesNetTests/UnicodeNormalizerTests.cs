@@ -26,7 +26,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 	/// such as empty strings, mixed content, and special Unicode characters
 	/// like Kangxi radicals.</remarks>
 	[TestFixture]
-	internal class UnicodeNormalizerTests
+	internal sealed class UnicodeNormalizerTests
 	{
 		private readonly string[] languagesData =
 		[

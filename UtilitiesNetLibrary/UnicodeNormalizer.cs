@@ -337,7 +337,7 @@ namespace DigitalZenWorks.Common.Utilities
 		private static Collection<CharDifference> FindDifferences(
 			string original, string normalized)
 		{
-			Collection<CharDifference> differences = new ();
+			Collection<CharDifference> differences = [];
 
 			TextElementEnumerator originalElements =
 				StringInfo.GetTextElementEnumerator(original);
