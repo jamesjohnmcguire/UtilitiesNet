@@ -20,7 +20,6 @@ namespace DigitalZenWorks.Common.Utilities
 	using System.Security.Cryptography;
 	using System.Text;
 	using System.Text.RegularExpressions;
-
 	using global::Common.Logging;
 
 	/// <summary>
@@ -28,8 +27,9 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class FileUtils
 	{
-		private static readonly ILog Log = LogManager.GetLogger(
-			MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly Type ClassType = typeof(FileUtils);
+		private static readonly ILog Log =
+			LogManager.GetLogger(ClassType);
 
 		/// <summary>
 		/// Are files the same.
@@ -62,11 +62,12 @@ namespace DigitalZenWorks.Common.Utilities
 				}
 				else
 				{
-					byte[] file1Hash = GetFileHash(file1Path);
-					byte[] file2Hash = GetFileHash(file2Path);
+					byte[]? file1Hash = GetFileHash(file1Path);
+					byte[]? file2Hash = GetFileHash(file2Path);
 
 					result = StructuralComparisons.
-						StructuralEqualityComparer.Equals(file1Hash, file2Hash);
+						StructuralEqualityComparer.Equals(
+						file1Hash, file2Hash);
 				}
 			}
 
@@ -86,9 +87,9 @@ namespace DigitalZenWorks.Common.Utilities
 
 			try
 			{
-				Assembly thisAssembly = Assembly.GetCallingAssembly();
+				Assembly? thisAssembly = Assembly.GetCallingAssembly();
 
-				Stream templateObjectStream =
+				Stream? templateObjectStream =
 					thisAssembly.GetManifestResourceStream(resourceName);
 
 				if (templateObjectStream == null)
@@ -97,16 +98,20 @@ namespace DigitalZenWorks.Common.Utilities
 				}
 				else
 				{
-					string path = Path.GetDirectoryName(filePath);
-					Directory.CreateDirectory(path);
+					string? path = Path.GetDirectoryName(filePath);
 
-					using (FileStream file = new(
-						filePath, FileMode.Create, FileAccess.Write))
+					if (path != null)
 					{
-						templateObjectStream.CopyTo(file);
-					}
+						Directory.CreateDirectory(path);
 
-					success = true;
+						using (FileStream file = new(
+							filePath, FileMode.Create, FileAccess.Write))
+						{
+							templateObjectStream.CopyTo(file);
+						}
+
+						success = true;
+					}
 				}
 			}
 			catch (Exception exception) when
@@ -141,19 +146,22 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="beginTag">The begin tag.</param>
 		/// <param name="endTag">The end tag.</param>
 		/// <returns>The content within the tags.</returns>
-		public static string ExtractContent(
-			string content, string beginTag, string endTag)
+		public static string? ExtractContent(
+			string? content, string? beginTag, string? endTag)
 		{
-			string innerContent = null;
+			string? innerContent = null;
 
-			string pattern = beginTag + @"(.*?)" + endTag;
-
-			Match match =
-				Regex.Match(content, pattern, RegexOptions.Singleline);
-
-			if (match.Success)
+			if (content != null)
 			{
-				innerContent = match.Groups[1].Value;
+				string pattern = beginTag + @"(.*?)" + endTag;
+
+				Match match =
+					Regex.Match(content, pattern, RegexOptions.Singleline);
+
+				if (match.Success)
+				{
+					innerContent = match.Groups[1].Value;
+				}
 			}
 
 			return innerContent;
@@ -227,9 +235,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="filePath">The file to process.</param>
 		/// <returns>The SHA256 hash of the file.</returns>
-		public static byte[] GetFileHash(string filePath)
+		public static byte[]? GetFileHash(string? filePath)
 		{
-			byte[] result = null;
+			byte[]? result = null;
 
 			try
 			{
@@ -294,10 +302,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="filePath">The file path to file.</param>
 		/// <returns>A StreamWriter object upon success,
 		/// otherwise null.</returns>
-		public static StreamWriter GetWriteStreamObject(string filePath)
+		public static StreamWriter? GetWriteStreamObject(string filePath)
 		{
-			StreamWriter streamWriter = null;
-			FileStream fileStream = null;
+			StreamWriter? streamWriter = null;
+			FileStream? fileStream = null;
 
 			try
 			{
@@ -383,9 +391,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="output">The output to be read.</param>
 		/// <returns>The bytes of the output.</returns>
-		public static byte[] ReadBinaryOutput(Stream output)
+		public static byte[]? ReadBinaryOutput(Stream output)
 		{
-			byte[] outputBytes = null;
+			byte[]? outputBytes = null;
 
 			if (output != null)
 			{
@@ -420,9 +428,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>The bytes read.</returns>
 		/// <exception cref="System.IO.IOException">File size exceeds
 		/// the limit of int.MaxValue.</exception>
-		public static byte[] ReadFile(string filePath)
+		public static byte[]? ReadFile(string filePath)
 		{
-			byte[] buffer = null;
+			byte[]? buffer = null;
 
 			try
 			{
@@ -560,14 +568,20 @@ namespace DigitalZenWorks.Common.Utilities
 		public static bool SaveFile(
 			string fileContents, string filePathName)
 		{
-			string folder = Path.GetDirectoryName(filePathName);
+			string? folder = Path.GetDirectoryName(filePathName);
 
-			if (!Directory.Exists(folder))
+			if (folder != null)
 			{
-				Directory.CreateDirectory(folder);
+				if (!Directory.Exists(folder))
+				{
+					Directory.CreateDirectory(folder);
+				}
 			}
 
-			return SaveFile(fileContents, filePathName, Encoding.Default);
+			bool result =
+				SaveFile(fileContents, filePathName, Encoding.Default);
+
+			return result;
 		}
 
 		/// <summary>
@@ -585,8 +599,9 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (!string.IsNullOrWhiteSpace(filePathName))
 			{
-				FileStream fileStream = null;
-				StreamWriter streamWriter = null;
+				FileStream? fileStream = null;
+				StreamWriter? streamWriter = null;
+
 				try
 				{
 					fileStream = new FileStream(

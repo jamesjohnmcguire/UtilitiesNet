@@ -28,7 +28,7 @@ namespace DigitalZenWorks.Common.Utilities
 				!string.IsNullOrWhiteSpace(originalProject))
 			{
 				string arguments = "dump " + originalRepository;
-				byte[] output = GeneralUtilities.Execute(
+				byte[]? output = GeneralUtilities.Execute(
 					"svnadmin.exe", arguments, null);
 
 				// Filter out project
@@ -36,22 +36,26 @@ namespace DigitalZenWorks.Common.Utilities
 				output = GeneralUtilities.Execute(
 					"svndumpfilter.exe", arguments, output);
 
-				byte[] replacedOutput = RemoveProject(originalProject, output);
-
-				replacedOutput =
-					ReplaceProject(originalProject, replacedOutput);
-
-				if (!string.IsNullOrWhiteSpace(newRepository))
+				if (output != null)
 				{
-					// Create new repository
-					arguments = "create " + newRepository;
-					GeneralUtilities.Execute(
-						"svnadmin.exe", arguments, null);
+					byte[] replacedOutput =
+						RemoveProject(originalProject, output);
 
-					// Load project
-					arguments = "load " + newRepository;
-					GeneralUtilities.Execute(
-						"svnadmin.exe", arguments, replacedOutput);
+					replacedOutput =
+						ReplaceProject(originalProject, replacedOutput);
+
+					if (!string.IsNullOrWhiteSpace(newRepository))
+					{
+						// Create new repository
+						arguments = "create " + newRepository;
+						GeneralUtilities.Execute(
+							"svnadmin.exe", arguments, null);
+
+						// Load project
+						arguments = "load " + newRepository;
+						GeneralUtilities.Execute(
+							"svnadmin.exe", arguments, replacedOutput);
+					}
 				}
 			}
 		}

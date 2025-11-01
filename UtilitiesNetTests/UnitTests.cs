@@ -130,7 +130,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		{
 			string name = "name_english";
 
-			string output =
+			string? output =
 				TextCase.ConvertToCamelCaseFromKnr(name);
 
 			string compareText = "nameEnglish";
@@ -146,7 +146,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		{
 			string name = "LandingPages";
 
-			string output =
+			string? output =
 				TextCase.ConvertToSnakeCaseFromPascalCase(name);
 
 			string compareText = "landing_pages";
@@ -306,12 +306,12 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ExtractContentTest()
 		{
-			string content = "[:en]\r\nThis\r\nis a\r\ntest.[:ja]\r\n<section " +
-				"class=\"slice sct-color-1 bb\">\r\n[:]";
+			string content = "[:en]\r\nThis\r\nis a\r\ntest.[:ja]\r\n" +
+				"<section class=\"slice sct-color-1 bb\">\r\n[:]";
 			string compareText = "This\r\nis a\r\ntest.";
 
-			string innerContent =
-				FileUtils.ExtractContent(content, @"\[:en\]\r\n", @"\[:ja\]\r\n");
+			string? innerContent = FileUtils.ExtractContent(
+				content, @"\[:en\]\r\n", @"\[:ja\]\r\n");
 
 			Assert.That(innerContent, Is.EqualTo(compareText));
 		}
@@ -394,7 +394,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			string filePath = Path.GetTempFileName();
 			File.WriteAllText(filePath, TestData);
 
-			byte[] hash = FileUtils.GetFileHash(filePath);
+			byte[]? hash = FileUtils.GetFileHash(filePath);
 			Assert.That(hash, Is.Not.Null);
 
 			string hashText = BitConverter.ToString(hash);
@@ -429,13 +429,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 			result = File.Exists(xmlFilePath);
 			Assert.That(result, Is.True);
 
-			OrderedItem item = (OrderedItem)XmlUtilities.LoadWithValidation(
+			OrderedItem? item = (OrderedItem?)XmlUtilities.LoadWithValidation(
 				xsdFilePath, xmlFilePath, typeof(OrderedItem));
 
 			using (Assert.EnterMultipleScope())
 			{
 				Assert.That(item, Is.Not.Null);
-				Assert.That(item.ItemName, Is.EqualTo("Widget"));
+				Assert.That(item!.ItemName, Is.EqualTo("Widget"));
 				Assert.That(item.Description, Is.EqualTo("Regular Widget"));
 				Assert.That(item.UnitPrice, Is.EqualTo(2.3));
 				Assert.That(item.Quantity, Is.EqualTo(10));
@@ -455,7 +455,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToCamelCase()
 		{
-			string title = "WAR AND PEACE";
+			string? title = "WAR AND PEACE";
 
 			title = title.ToCamelCase();
 
@@ -470,7 +470,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToCamelCaseFromSnakeCase()
 		{
-			string title = "war_and_peace";
+			string? title = "war_and_peace";
 
 			title = title.ToCamelCase();
 
@@ -513,7 +513,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToPascalCase()
 		{
-			string title = "WAR AND PEACE";
+			string? title = "WAR AND PEACE";
 
 			title = title.ToPascalCase();
 
@@ -528,7 +528,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToPascalCaseFromSnakeCase()
 		{
-			string title = "war_and_peace";
+			string? title = "war_and_peace";
 
 			title = title.ToPascalCase();
 
@@ -543,7 +543,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToTitleCase()
 		{
-			string title = "WAR AND PEACE";
+			string? title = "WAR AND PEACE";
 
 			title = title.ToTitleCase();
 
@@ -558,7 +558,7 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		[Test]
 		public static void ToTitleCaseBegin()
 		{
-			string title = "THE WAY WE WERE";
+			string? title = "THE WAY WE WERE";
 
 			title = title.ToTitleCase();
 

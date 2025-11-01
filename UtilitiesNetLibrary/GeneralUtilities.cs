@@ -24,8 +24,9 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class GeneralUtilities
 	{
-		private static readonly ILog Log = LogManager.GetLogger(
-			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly Type ClassType = typeof(GeneralUtilities);
+		private static readonly ILog Log =
+			LogManager.GetLogger(ClassType);
 
 		private static readonly ResourceManager StringTable = new(
 			"DigitalZenWorks.Common.Utilities.Resources",
@@ -35,33 +36,39 @@ namespace DigitalZenWorks.Common.Utilities
 		/// Get the calling method.
 		/// </summary>
 		/// <returns>The calling method.</returns>
-		public static string CallingMethod()
+		public static string? CallingMethod()
 		{
-			StackFrame stackFrame = new(1);
-			MethodBase methodBase = stackFrame.GetMethod();
+			string? methodName = null;
 
-			string methodName = methodBase.Name;
-#if NETCOREAPP1_0_OR_GREATER
-			if (methodBase.Name.StartsWith('<'))
-#else
-			if (methodBase.Name.StartsWith("<", StringComparison.Ordinal))
-#endif
+			StackFrame stackFrame = new (1);
+			MethodBase? methodBase = stackFrame.GetMethod();
+
+			if (methodBase != null)
 			{
+				methodName = methodBase.Name;
 #if NETCOREAPP1_0_OR_GREATER
-				methodName = methodBase.Name[1..];
-				int index = methodName.IndexOf('>', StringComparison.Ordinal);
+				if (methodBase.Name.StartsWith('<'))
 #else
-				methodName = methodBase.Name.Substring(1);
-				int index = methodName.IndexOf('>');
+				if (methodBase.Name.StartsWith("<", StringComparison.Ordinal))
 #endif
-
-				if (index > 0)
 				{
 #if NETCOREAPP1_0_OR_GREATER
-					methodName = methodName[..index];
+					methodName = methodBase.Name[1..];
+					int index =
+						methodName.IndexOf('>', StringComparison.Ordinal);
+#else
+					methodName = methodBase.Name.Substring(1);
+					int index = methodName.IndexOf('>');
+#endif
+
+					if (index > 0)
+					{
+#if NETCOREAPP1_0_OR_GREATER
+						methodName = methodName[..index];
 #else
 					methodName = methodName.Substring(0, index);
 #endif
+					}
 				}
 			}
 
@@ -98,7 +105,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A name in camel case.</returns>
 		[Obsolete("ConvertToCamelCaseFromKnr is deprecated, " +
 			"please use TextCase.ConvertToCamelCaseFromKnr instead.")]
-		public static string ConvertToCamelCaseFromKnr(string knrName)
+		public static string? ConvertToCamelCaseFromKnr(string? knrName)
 		{
 			return TextCase.ConvertToCamelCaseFromKnr(knrName);
 		}
@@ -110,7 +117,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A name in camel case.</returns>
 		[Obsolete("ConvertToCamelCaseFromSnakeCase is deprecated, " +
 			"please use TextCase.ConvertToCamelCaseFromSnakeCase instead.")]
-		public static string ConvertToCamelCaseFromSnakeCase(string snakeCase)
+		public static string? ConvertToCamelCaseFromSnakeCase(
+			string? snakeCase)
 		{
 			return TextCase.ConvertToCamelCaseFromKnr(snakeCase);
 		}
@@ -122,7 +130,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>A variable name in Pascal case form.</returns>
 		[Obsolete("ConvertToPascalCaseFromKnr is deprecated, " +
 			"please use TextCase.ConvertToPascalCaseFromKnr instead.")]
-		public static string ConvertToPascalCaseFromKnr(string knrName)
+		public static string? ConvertToPascalCaseFromKnr(string? knrName)
 		{
 			return TextCase.ConvertToPascalCaseFromKnr(knrName);
 		}
@@ -136,8 +144,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// text.</exception>
 		[Obsolete("ConvertToSnakeCaseFromPascalCase is deprecated, " +
 			"please use TextCase.ConvertToSnakeCaseFromPascalCase instead.")]
-		public static string ConvertToSnakeCaseFromPascalCase(
-			string pascalCase)
+		public static string? ConvertToSnakeCaseFromPascalCase(
+			string? pascalCase)
 		{
 			return TextCase.ConvertToSnakeCaseFromPascalCase(pascalCase);
 		}
@@ -166,10 +174,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="arguments">The arguments to the file.</param>
 		/// <param name="standardInput">The input to file.</param>
 		/// <returns>The ouput of the file.</returns>
-		public static byte[] Execute(
-			string filename, string arguments, byte[] standardInput)
+		public static byte[]? Execute(
+			string filename, string arguments, byte[]? standardInput)
 		{
-			byte[] outputBytes;
+			byte[]? outputBytes;
 
 			using (Process externalProgram = new())
 			{
@@ -213,9 +221,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="hexData">Hex data.</param>
 		/// <returns>Returns decoded data.</returns>
-		public static byte[] FromHex(byte[] hexData)
+		public static byte[]? FromHex(byte[]? hexData)
 		{
-			byte[] data = null;
+			byte[]? data = null;
 
 #if NET8_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(hexData);
@@ -230,7 +238,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (hexData.Length < 2 || (hexData.Length / 2D != floor))
 			{
-				string message = StringTable.GetString(
+				string? message = StringTable.GetString(
 					"ILLEGAL_HEX_DATA",
 					CultureInfo.InstalledUICulture);
 
@@ -249,7 +257,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// Gets if the specified string is ASCII string.
 		/// </summary>
 		/// <param name="value">String value.</param>
-		/// <returns>Returns true if specified string is ASCII string, otherwise false.</returns>
+		/// <returns>Returns true if specified string is ASCII string,
+		/// otherwise false.</returns>
 		public static bool IsAscii(string value)
 		{
 			bool isAscii = true;
@@ -279,13 +288,13 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="value">The object to check.</param>
 		/// <returns>Returns true if the object is a date,
 		/// otherwise false.</returns>
-		public static bool IsDate(object value)
+		public static bool IsDate(object? value)
 		{
 			bool successCode = false;
 
 			if (value != null)
 			{
-				string dateString = value.ToString();
+				string? dateString = value.ToString();
 
 				if (DateTime.TryParse(dateString, out DateTime date))
 				{
@@ -359,10 +368,12 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="data">Data which to encode.</param>
 		/// <returns>Returns decoded data.</returns>
-		/// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
-		public static byte[] QuotedPrintableDecode(byte[] data)
+		/// <exception cref="ArgumentNullException">Is raised when
+		/// <b>data</b> is null reference.</exception>
+		public static byte[]? QuotedPrintableDecode(byte[]? data)
 		{
-			byte[] returnData = null;
+			byte[]? returnData = null;
+
 #if NET8_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(data);
 #else
@@ -444,7 +455,8 @@ namespace DigitalZenWorks.Common.Utilities
 							int bufferCount = sourceStream.Read(buffer, 0, 2);
 							if (bufferCount == 2)
 							{
-								// Soft line break, line spitted, just skip CRLF
+								// Soft line break, line spitted,
+								// just skip CRLF
 								if (buffer[0] == '\r' && buffer[1] == '\n')
 								{
 								}
@@ -453,7 +465,8 @@ namespace DigitalZenWorks.Common.Utilities
 									// This must be encoded 8-bit byte
 									try
 									{
-										destination.Write(FromHex(buffer), 0, 1);
+										byte[]? newBuffer = FromHex(buffer);
+										destination.Write(newBuffer!, 0, 1);
 									}
 									catch (Exception exception) when
 										(exception is ArgumentException or

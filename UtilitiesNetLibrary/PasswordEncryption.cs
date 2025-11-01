@@ -35,11 +35,13 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="encryptedText">Encrypted text.</param>
 		/// <param name="encryptionPassword">Encryption password.</param>
 		/// <returns>The decrypted text.</returns>
-		public static string Decrypt(
+		public static string? Decrypt(
 			string encryptedText, string encryptionPassword)
 		{
-			return AESGCM.SimpleDecryptWithPassword(
+			string? result = AESGCM.SimpleDecryptWithPassword(
 				encryptedText, encryptionPassword);
+
+			return result;
 		}
 	}
 }

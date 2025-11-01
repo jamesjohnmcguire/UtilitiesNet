@@ -17,13 +17,13 @@ namespace DigitalZenWorks.Common.Utilities.Tests
 		/// Gets or sets the item name.
 		/// </summary>
 		/// <value>The item name.</value>
-		public string ItemName { get; set; }
+		public string? ItemName { get; set; }
 
 		/// <summary>
 		/// Gets or sets the description.
 		/// </summary>
 		/// <value>The description.</value>
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		/// <summary>
 		/// Gets or sets the unit price.

@@ -19,8 +19,9 @@ namespace DigitalZenWorks.Common.Utilities
 	/// </summary>
 	public static class BitBytes
 	{
-		private static readonly ILog Log = LogManager.GetLogger(
-			MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly Type ClassType = typeof(BitBytes);
+		private static readonly ILog Log =
+			LogManager.GetLogger(ClassType);
 
 		/// <summary>
 		/// Copies the array if existent.
@@ -53,8 +54,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="index">The index to copy at.</param>
 		/// <param name="value">The integer value.</param>
 		/// <returns>The updated byte array.</returns>
-		public static byte[] CopyIntToByteArray(
-			byte[] bytes, long index, int value)
+		public static byte[]? CopyIntToByteArray(
+			byte[]? bytes, long index, int value)
 		{
 			byte byteValue1 = (byte)value;
 			byte byteValue2 = (byte)(value >> 8);
@@ -82,8 +83,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="index">The index to copy at.</param>
 		/// <param name="value">The unsigned short value.</param>
 		/// <returns>The updated byte array.</returns>
-		public static byte[] CopyUshortToByteArray(
-			byte[] bytes, long index, ushort value)
+		public static byte[]? CopyUshortToByteArray(
+			byte[]? bytes, long index, ushort value)
 		{
 			byte byteValue1 = (byte)value;
 			byte byteValue2 = (byte)(value >> 8);
@@ -187,49 +188,49 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="buffer1">The first buffer to merge.</param>
 		/// <param name="buffer2">The second buffer to merge.</param>
 		/// <returns>The merged byte array.</returns>
-		public static byte[] MergeByteArrays(byte[] buffer1, byte[] buffer2)
+		public static byte[] MergeByteArrays(byte[]? buffer1, byte[]? buffer2)
 		{
-			byte[] newBuffer = null;
+			byte[] newBuffer;
 
 			try
 			{
-				if (buffer1 != null || buffer2 != null)
+				if (buffer1 == null && buffer2 == null)
 				{
-					if (buffer1 == null)
-					{
-						newBuffer = buffer2;
-					}
-					else if (buffer2 == null)
-					{
-						newBuffer = buffer1;
-					}
-					else
-					{
-						long bufferSize =
-							buffer1.LongLength + buffer2.LongLength;
-						newBuffer = new byte[bufferSize];
+					newBuffer = Array.Empty<byte>();
+				}
+				else if (buffer1 == null)
+				{
+					newBuffer = buffer2 ?? Array.Empty<byte>();
+				}
+				else if (buffer2 == null)
+				{
+					newBuffer = buffer1;
+				}
+				else
+				{
+					// combine the parts
+					long bufferSize =
+						buffer1.LongLength + buffer2.LongLength;
+					newBuffer = new byte[bufferSize];
 
-						// combine the parts
-						Array.Copy(buffer1, newBuffer, buffer1.LongLength);
+					Array.Copy(buffer1, newBuffer, buffer1.LongLength);
 
-						Array.Copy(
-							buffer2,
-							0,
-							newBuffer,
-							buffer1.LongLength,
-							buffer2.LongLength);
-					}
+					Array.Copy(
+						buffer2,
+						0,
+						newBuffer,
+						buffer1.LongLength,
+						buffer2.LongLength);
 				}
 			}
-			catch (System.Exception exception) when
+			catch (Exception exception) when
 				(exception is ArgumentException ||
-				exception is ArgumentNullException ||
 				exception is ArgumentOutOfRangeException ||
 				exception is ArrayTypeMismatchException ||
-				exception is InvalidCastException ||
 				exception is RankException)
 			{
 				Log.Error(exception.ToString());
+				newBuffer = Array.Empty<byte>();
 			}
 
 			return newBuffer;
@@ -244,49 +245,49 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <param name="buffer2">The second buffer to merge.</param>
 		/// <returns>The merged byte array.</returns>
 		public static byte[] MergeByteArraysPooled(
-			byte[] buffer1, byte[] buffer2)
+			byte[]? buffer1, byte[]? buffer2)
 		{
-			byte[] newBuffer = null;
+			byte[] newBuffer;
 
 			try
 			{
-				if (buffer1 != null || buffer2 != null)
+				if (buffer1 == null && buffer2 == null)
 				{
-					if (buffer1 == null)
-					{
-						newBuffer = buffer2;
-					}
-					else if (buffer2 == null)
-					{
-						newBuffer = buffer1;
-					}
-					else
-					{
-						int bufferSize =
-							buffer1.Length + buffer2.Length;
-						newBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+					newBuffer = Array.Empty<byte>();
+				}
+				else if (buffer1 == null)
+				{
+					newBuffer = buffer2 ?? Array.Empty<byte>();
+				}
+				else if (buffer2 == null)
+				{
+					newBuffer = buffer1;
+				}
+				else
+				{
+					// combine the parts
+					int bufferSize =
+						buffer1.Length + buffer2.Length;
+					newBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
 
-						// combine the parts
-						Array.Copy(buffer1, newBuffer, buffer1.LongLength);
+					Array.Copy(buffer1, newBuffer, buffer1.LongLength);
 
-						Array.Copy(
-							buffer2,
-							0,
-							newBuffer,
-							buffer1.LongLength,
-							buffer2.LongLength);
-					}
+					Array.Copy(
+						buffer2,
+						0,
+						newBuffer,
+						buffer1.LongLength,
+						buffer2.LongLength);
 				}
 			}
-			catch (System.Exception exception) when
+			catch (Exception exception) when
 				(exception is ArgumentException ||
-				exception is ArgumentNullException ||
 				exception is ArgumentOutOfRangeException ||
 				exception is ArrayTypeMismatchException ||
-				exception is InvalidCastException ||
 				exception is RankException)
 			{
 				Log.Error(exception.ToString());
+				newBuffer = Array.Empty<byte>();
 			}
 
 			return newBuffer;
@@ -449,9 +450,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="bytes">The source bytes.</param>
 		/// <returns>An integer array of the bytes values.</returns>
-		public static uint[] ToIntegerArray(byte[] bytes)
+		public static uint[] ToIntegerArray(byte[]? bytes)
 		{
-			uint[] integerArray = null;
+			uint[] integerArray = Array.Empty<uint>();
 
 			if (bytes != null)
 			{

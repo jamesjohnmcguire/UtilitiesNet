@@ -20,9 +20,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="knrName">A string in knr format.</param>
 		/// <returns>A name in camel case.</returns>
-		public static string ConvertToCamelCaseFromKnr(string knrName)
+		public static string? ConvertToCamelCaseFromKnr(string? knrName)
 		{
-			string output = null;
+			string? output = null;
 
 			if (!string.IsNullOrEmpty(knrName))
 			{
@@ -37,7 +37,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="snakeCase">A string in snake case.</param>
 		/// <returns>A name in camel case.</returns>
-		public static string ConvertToCamelCaseFromSnakeCase(string snakeCase)
+		public static string? ConvertToCamelCaseFromSnakeCase(
+			string? snakeCase)
 		{
 			return ConvertToCamelCaseFromKnr(snakeCase);
 		}
@@ -47,9 +48,9 @@ namespace DigitalZenWorks.Common.Utilities
 		/// </summary>
 		/// <param name="knrName">The name of variable in knr form.</param>
 		/// <returns>A variable name in Pascal case form.</returns>
-		public static string ConvertToPascalCaseFromKnr(string knrName)
+		public static string? ConvertToPascalCaseFromKnr(string? knrName)
 		{
-			string output = null;
+			string? output = null;
 
 			if (!string.IsNullOrEmpty(knrName))
 			{
@@ -66,10 +67,10 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>The text in snake case.</returns>
 		/// <exception cref="System.ArgumentNullException">Exception
 		/// text.</exception>
-		public static string ConvertToSnakeCaseFromPascalCase(
-			string pascalCase)
+		public static string? ConvertToSnakeCaseFromPascalCase(
+			string? pascalCase)
 		{
-			string output = null;
+			string? output = null;
 
 			if (pascalCase == null)
 			{
@@ -304,37 +305,40 @@ namespace DigitalZenWorks.Common.Utilities
 			return isSnakeCase;
 		}
 
-		private static string ConvertFromKnrText(
-			string knrName, bool setToCamelCase)
+		private static string? ConvertFromKnrText(
+			string? knrName, bool setToCamelCase)
 		{
-			string newCase = string.Empty;
+			string? newCase = string.Empty;
 
-			// split at underscores
-#if NET8_0_OR_GREATER
-			char[] splitters = ['_'];
-#else
-			char[] splitters = new char[] { '_' };
-#endif
-			string[] parts = knrName.Split(
-				splitters,
-				StringSplitOptions.RemoveEmptyEntries);
-			bool first = true;
-
-			// remove underscores, set parts in intended case
-			foreach (string part in parts)
+			if (knrName != null)
 			{
-				if ((setToCamelCase == true) && (first == true))
-				{
-#pragma warning disable CA1308
-					newCase += part.ToLowerInvariant();
-#pragma warning restore CA1308
-				}
-				else
-				{
-					newCase += part.ToProperCase();
-				}
+				// split at underscores
+#if NET8_0_OR_GREATER
+				char[] splitters = ['_'];
+#else
+				char[] splitters = new char[] { '_' };
+#endif
+				string[] parts = knrName.Split(
+					splitters,
+					StringSplitOptions.RemoveEmptyEntries);
+				bool first = true;
 
-				first = false;
+				// remove underscores, set parts in intended case
+				foreach (string part in parts)
+				{
+					if ((setToCamelCase == true) && (first == true))
+					{
+#pragma warning disable CA1308
+						newCase += part.ToLowerInvariant();
+#pragma warning restore CA1308
+					}
+					else
+					{
+						newCase += part.ToProperCase();
+					}
+
+					first = false;
+				}
 			}
 
 			return newCase;

@@ -4,8 +4,6 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 namespace DigitalZenWorks.Common.Utilities
 {
 	using System;
@@ -48,7 +46,14 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			NormalizationIssue? issue = null;
 
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(line);
+#else
+			if (line == null)
+			{
+				throw new ArgumentNullException(nameof(line));
+			}
+#endif
 
 			bool isNormalized = line.IsNormalized(form);
 
@@ -91,8 +96,20 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			bool isEqual = false;
 
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(string1);
 			ArgumentNullException.ThrowIfNull(string2);
+#else
+			if (string1 == null)
+			{
+				throw new ArgumentNullException(nameof(string1));
+			}
+
+			if (string2 == null)
+			{
+				throw new ArgumentNullException(nameof(string2));
+			}
+#endif
 
 			string? normalizedString1 = string1!.Normalize(form);
 			string? normalizedString2 = string2!.Normalize(form);
@@ -120,7 +137,14 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			Collection<int> codes = [];
 
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(text);
+#else
+			if (text == null)
+			{
+				throw new ArgumentNullException(nameof(text));
+			}
+#endif
 
 			foreach (char character in text)
 			{
@@ -147,7 +171,14 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <see langword="null"/>.</returns>
 		public static string? GetHexadecimalString(string text)
 		{
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(text);
+#else
+			if (text == null)
+			{
+				throw new ArgumentNullException(nameof(text));
+			}
+#endif
 
 			Collection<string> hexadecimalTextCodes =
 				GetHexadecimalTextCodes(text);
@@ -175,7 +206,14 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			Collection<string> codes = [];
 
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(text);
+#else
+			if (text == null)
+			{
+				throw new ArgumentNullException(nameof(text));
+			}
+#endif
 
 			foreach (char character in text)
 			{

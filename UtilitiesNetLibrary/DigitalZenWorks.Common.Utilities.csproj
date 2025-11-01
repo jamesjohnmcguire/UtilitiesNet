@@ -17,6 +17,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<LangVersion>Latest</LangVersion>
 		<NeutralLanguage>en</NeutralLanguage>
+		<Nullable>enable</Nullable>
 		<PackageId>DigitalZenWorks.Common.Utilities</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
