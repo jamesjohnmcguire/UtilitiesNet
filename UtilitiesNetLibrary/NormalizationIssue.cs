@@ -23,6 +23,8 @@ namespace DigitalZenWorks.Common.Utilities
 		/// Gets or sets the collection of character differences between two
 		/// compared strings.
 		/// </summary>
+		/// <value>The collection of character differences between two
+		/// compared strings.</value>
 #pragma warning disable CA2227
 		public Collection<CharDifference>? Differences { get; set; }
 #pragma warning restore CA2227
@@ -30,17 +32,21 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <summary>
 		/// Gets or sets the line number associated with the current instance.
 		/// </summary>
+		/// <value>The line number associated with the current instance.</value>
 		public int LineNumber { get; set; }
 
 		/// <summary>
 		/// Gets or sets the normalized version of the line.
 		/// </summary>
+		/// <value>The normalized version of the line.</value>
 		public string? NormalizedLine { get; set; }
 
 		/// <summary>
 		/// Gets or sets the original line of text associated with
 		/// this instance.
 		/// </summary>
+		/// <value>The original line of text associated with
+		/// this instance.</value>
 		public string? OriginalLine { get; set; }
 	}
 }
