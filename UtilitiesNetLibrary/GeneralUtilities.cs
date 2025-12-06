@@ -28,7 +28,7 @@ namespace DigitalZenWorks.Common.Utilities
 		private static readonly ILog Log =
 			LogManager.GetLogger(ClassType);
 
-		private static readonly ResourceManager StringTable = new (
+		private static readonly ResourceManager StringTable = new(
 			"DigitalZenWorks.Common.Utilities.Resources",
 			Assembly.GetExecutingAssembly());
 
@@ -40,7 +40,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			string? methodName = null;
 
-			StackFrame stackFrame = new (1);
+			StackFrame stackFrame = new(1);
 			MethodBase? methodBase = stackFrame.GetMethod();
 
 			if (methodBase != null)
@@ -179,7 +179,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[]? outputBytes;
 
-			using Process externalProgram = new ();
+			using Process externalProgram = new();
 
 			externalProgram.StartInfo.UseShellExecute = false;
 			externalProgram.StartInfo.CreateNoWindow = true;
@@ -244,7 +244,7 @@ namespace DigitalZenWorks.Common.Utilities
 				throw new ArgumentException(message);
 			}
 
-			using MemoryStream retVal = new (hexData.Length / 2);
+			using MemoryStream retVal = new(hexData.Length / 2);
 
 			data = GetHexPair(hexData, retVal);
 
@@ -439,9 +439,9 @@ namespace DigitalZenWorks.Common.Utilities
 					with the Quoted-Printable encoding, "soft" line breaks
 			*/
 
-			using MemoryStream destination = new ();
+			using MemoryStream destination = new();
 			{
-				using MemoryStream sourceStream = new (data);
+				using MemoryStream sourceStream = new(data);
 				{
 					int b = sourceStream.ReadByte();
 					while (b > -1)

@@ -63,7 +63,7 @@ namespace DigitalZenWorks.Common.Utilities
 				Collection<CharDifference> differences =
 					FindDifferences(line, normalized);
 
-				issue = new ();
+				issue = new();
 
 				issue.LineNumber = lineNumber;
 				issue.OriginalLine = line;
@@ -288,9 +288,9 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				linesChanged = 0;
 
-				using StreamReader reader = new (inputPath, Encoding.UTF8);
+				using StreamReader reader = new(inputPath, Encoding.UTF8);
 				using StreamWriter writer =
-					new (outputPath, false, Encoding.UTF8);
+					new(outputPath, false, Encoding.UTF8);
 
 				string? line = reader.ReadLine();
 
@@ -323,7 +323,7 @@ namespace DigitalZenWorks.Common.Utilities
 				string originalString = original.ToString();
 				string normalizedString = normalized.ToString();
 
-				difference = new ();
+				difference = new();
 
 				index++;
 				difference.Position = index;

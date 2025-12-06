@@ -78,7 +78,7 @@ namespace DigitalZenWorks.Common.Utilities
 			}
 			else if (!string.IsNullOrWhiteSpace(pascalCase))
 			{
-				StringBuilder builder = new ();
+				StringBuilder builder = new();
 
 				char item = char.ToLowerInvariant(pascalCase[0]);
 				builder.Append(item);

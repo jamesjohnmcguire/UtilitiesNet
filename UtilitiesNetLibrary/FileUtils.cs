@@ -180,7 +180,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 			foreach (string fileName in Directory.GetFiles(directory))
 			{
-				FileInfo fileInfo = new (fileName);
+				FileInfo fileInfo = new(fileName);
 
 				string newFileName = fileInfo.Directory + "_" + fileInfo.Name;
 				File.Move(fileName, newFileName);
@@ -249,7 +249,7 @@ namespace DigitalZenWorks.Common.Utilities
 					using FileStream fileStream = File.OpenRead(filePath);
 
 					using BufferedStream file1BufferedStream =
-						new (fileStream, megaByte);
+						new(fileStream, megaByte);
 
 					bool stillReading = true;
 
@@ -397,7 +397,7 @@ namespace DigitalZenWorks.Common.Utilities
 			if (output != null)
 			{
 				using Stream writeStream = new MemoryStream();
-				using BinaryWriter binaryOutput = new (writeStream);
+				using BinaryWriter binaryOutput = new(writeStream);
 
 				int currentByte = 0;
 
@@ -434,9 +434,9 @@ namespace DigitalZenWorks.Common.Utilities
 			try
 			{
 				using FileStream fileStream =
-					new (filePath, FileMode.Open, FileAccess.Read);
+					new(filePath, FileMode.Open, FileAccess.Read);
 
-				FileInfo fileInfo = new (filePath);
+				FileInfo fileInfo = new(filePath);
 				long fileSize = fileInfo.Length;
 
 				// Check if the file size is too large to fit into memory
@@ -485,14 +485,14 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (File.Exists(filePath))
 			{
-				using StreamReader sr = new (filePath);
+				using StreamReader sr = new(filePath);
 				contents = sr.ReadToEnd();
 
 				using FileStream stream =
-					new (filePath, FileMode.Open, FileAccess.ReadWrite);
-				using StreamWriter writer = new (stream);
-				contents = Regex.Replace(
-					contents, oldValue, newValue);
+					new(filePath, FileMode.Open, FileAccess.ReadWrite);
+				using StreamWriter writer = new(stream);
+
+				contents = Regex.Replace(contents, oldValue, newValue);
 
 				writer.Write(contents);
 			}
@@ -540,7 +540,7 @@ namespace DigitalZenWorks.Common.Utilities
 					FileMode.Open,
 					FileAccess.ReadWrite,
 					FileShare.None);
-				using StreamReader reader = new (file);
+				using StreamReader reader = new(file);
 				string contents = reader.ReadToEnd();
 
 #if NETCOREAPP1_0_OR_GREATER
@@ -551,7 +551,7 @@ namespace DigitalZenWorks.Common.Utilities
 					contents.Replace(oldValue, newValue);
 #endif
 
-				using StreamWriter writer = new (file);
+				using StreamWriter writer = new(file);
 				writer.Write(newContents);
 
 				// sw.Close();
@@ -636,7 +636,7 @@ namespace DigitalZenWorks.Common.Utilities
 		public static bool SaveFileUtf8Bom(
 			string fileContents, string filePathName)
 		{
-			UTF8Encoding utf8EmitBom = new (true);
+			UTF8Encoding utf8EmitBom = new(true);
 			return SaveFile(fileContents, filePathName, utf8EmitBom);
 		}
 
@@ -752,7 +752,7 @@ namespace DigitalZenWorks.Common.Utilities
 				if (data != null)
 				{
 					using FileStream fileStream =
-						new (filePath, FileMode.Create, FileAccess.Write);
+						new(filePath, FileMode.Create, FileAccess.Write);
 
 					fileStream.Write(data, 0, data.Length);
 				}
