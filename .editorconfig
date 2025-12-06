@@ -14,6 +14,8 @@ dotnet_style_object_initializer = false
 # IDE0028: Use collection initializers
 # dotnet_style_collection_initializer = false:suggestion
 
+dotnet_diagnostic.SA1000.severity = warning
+
 # SA1010: Opening square brackets should be spaced correctly
 dotnet_diagnostic.SA1010.severity = none
 
@@ -22,5 +24,3 @@ dotnet_diagnostic.SA1101.severity = none
 
 # SA1413: Use Trailing Commas In MultiLine Initializers
 dotnet_diagnostic.SA1413.severity = none
-
-dotnet_diagnostic.SA1000.severity = warning
