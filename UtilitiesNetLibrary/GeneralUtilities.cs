@@ -224,7 +224,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[]? data = null;
 
-#if NET8_0_OR_GREATER
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(hexData);
 #else
 			if (hexData == null)
@@ -372,7 +372,7 @@ namespace DigitalZenWorks.Common.Utilities
 		{
 			byte[]? returnData = null;
 
-#if NET8_0_OR_GREATER
+#if NET6_0_OR_GREATER
 			ArgumentNullException.ThrowIfNull(data);
 #else
 			if (data == null)

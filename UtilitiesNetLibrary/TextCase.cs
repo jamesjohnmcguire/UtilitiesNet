@@ -313,7 +313,7 @@ namespace DigitalZenWorks.Common.Utilities
 			if (knrName != null)
 			{
 				// split at underscores
-#if NET8_0_OR_GREATER
+#if NET6_0_OR_GREATER
 				char[] splitters = ['_'];
 #else
 				char[] splitters = new char[] { '_' };
