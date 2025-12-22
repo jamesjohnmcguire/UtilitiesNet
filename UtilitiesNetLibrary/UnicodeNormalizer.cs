@@ -354,7 +354,7 @@ namespace DigitalZenWorks.Common.Utilities
 
 				if (originalElement != normalizedElement)
 				{
-					CharDifference difference = new ()
+					CharDifference difference = new()
 					{
 						Position = position,
 						Original = originalElement,
