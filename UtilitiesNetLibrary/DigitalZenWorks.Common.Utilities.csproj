@@ -8,7 +8,7 @@
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Authors>James John McGuire</Authors>
 		<Company>Digital Zen Works</Company>
-		<Copyright>Copyright © 2006 - 2025</Copyright>
+		<Copyright>Copyright © 2006 - 2026</Copyright>
 		<Description>This client library provides general functionality.</Description>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
