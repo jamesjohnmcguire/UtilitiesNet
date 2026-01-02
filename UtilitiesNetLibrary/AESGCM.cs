@@ -262,8 +262,6 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>Decrypted Message.</returns>
 		public static byte[]? SimpleDecrypt(byte[] encryptedMessage, byte[] key, int nonSecretPayloadLength = 0)
 		{
-			byte[]? plainText = null;
-
 			// User Error Checks
 			if (key == null || key.Length != KeyBitSize / 8)
 			{
@@ -304,7 +302,8 @@ namespace DigitalZenWorks.Common.Utilities
 			var cipherText = cipherReader.ReadBytes(
 				encryptedMessage.Length - nonSecretPayloadLength - nonce.Length);
 			int length = cipher.GetOutputSize(cipherText.Length);
-			plainText = new byte[length];
+
+			byte[]? plainText = new byte[length];
 
 			try
 			{

@@ -35,8 +35,8 @@ namespace DigitalZenWorks.Common.Utilities
 
 			if (node != null)
 			{
-				StringWriter stringWriter = new ();
-				using XmlTextWriter xmlTextWriter = new (stringWriter);
+				StringWriter stringWriter = new();
+				using XmlTextWriter xmlTextWriter = new(stringWriter);
 
 				node.WriteTo(xmlTextWriter);
 				nodeString = stringWriter.ToString();
@@ -97,4 +97,3 @@ namespace DigitalZenWorks.Common.Utilities
 		}
 	}
 }
-

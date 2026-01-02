@@ -196,11 +196,11 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if (buffer1 == null && buffer2 == null)
 				{
-					newBuffer = Array.Empty<byte>();
+					newBuffer = [];
 				}
 				else if (buffer1 == null)
 				{
-					newBuffer = buffer2 ?? Array.Empty<byte>();
+					newBuffer = buffer2 ?? [];
 				}
 				else if (buffer2 == null)
 				{
@@ -230,7 +230,7 @@ namespace DigitalZenWorks.Common.Utilities
 				exception is RankException)
 			{
 				Log.Error(exception.ToString());
-				newBuffer = Array.Empty<byte>();
+				newBuffer = [];
 			}
 
 			return newBuffer;
@@ -253,11 +253,11 @@ namespace DigitalZenWorks.Common.Utilities
 			{
 				if (buffer1 == null && buffer2 == null)
 				{
-					newBuffer = Array.Empty<byte>();
+					newBuffer = [];
 				}
 				else if (buffer1 == null)
 				{
-					newBuffer = buffer2 ?? Array.Empty<byte>();
+					newBuffer = buffer2 ?? [];
 				}
 				else if (buffer2 == null)
 				{
@@ -287,7 +287,7 @@ namespace DigitalZenWorks.Common.Utilities
 				exception is RankException)
 			{
 				Log.Error(exception.ToString());
-				newBuffer = Array.Empty<byte>();
+				newBuffer = [];
 			}
 
 			return newBuffer;
@@ -452,7 +452,7 @@ namespace DigitalZenWorks.Common.Utilities
 		/// <returns>An integer array of the bytes values.</returns>
 		public static uint[] ToIntegerArray(byte[]? bytes)
 		{
-			uint[] integerArray = Array.Empty<uint>();
+			uint[] integerArray = [];
 
 			if (bytes != null)
 			{

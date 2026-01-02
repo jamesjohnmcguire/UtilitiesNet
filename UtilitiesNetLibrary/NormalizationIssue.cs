@@ -50,4 +50,3 @@ namespace DigitalZenWorks.Common.Utilities
 		public string? OriginalLine { get; set; }
 	}
 }
-
