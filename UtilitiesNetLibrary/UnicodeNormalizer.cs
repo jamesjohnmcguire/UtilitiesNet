@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// <copyright file="UnicodeNormalizer.cs" company="James John McGuire">
-// Copyright © 2006 - 2026 James John McGuire. All Rights Reserved.
+// <copyright file="UnicodeNormalizer.cs" company="Digital Zen Works">
+// Copyright © 2006 - 2026 Digital Zen Works.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 

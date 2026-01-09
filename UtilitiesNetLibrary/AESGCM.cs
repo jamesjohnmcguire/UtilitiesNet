@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// <copyright file="AESGCM.cs" company="James John McGuire">
-// Copyright © 2006 - 2026 James John McGuire. All Rights Reserved.
+// <copyright file="AESGCM.cs" company="Digital Zen Works">
+// Copyright © 2006 - 2026 Digital Zen Works.
 // </copyright>
 //
 // This file has been slightly modified from its source in order to elimate

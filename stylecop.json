@@ -4,8 +4,8 @@
 	{
 		"documentationRules":
 		{
-			"companyName": "James John McGuire",
-			"copyrightText": "Copyright © 2006 - 2026 {companyName}. All Rights Reserved.",
+			"companyName": "Digital Zen Works",
+			"copyrightText": "Copyright © 2006 - 2026 {companyName}.",
 			"xmlHeader": true,
 			"fileNamingConvention": "metadata"
 		},

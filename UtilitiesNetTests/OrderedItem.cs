@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// <copyright file="OrderedItem.cs" company="James John McGuire">
-// Copyright © 2006 - 2026 James John McGuire. All Rights Reserved.
+// <copyright file="OrderedItem.cs" company="Digital Zen Works">
+// Copyright © 2006 - 2026 Digital Zen Works.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 

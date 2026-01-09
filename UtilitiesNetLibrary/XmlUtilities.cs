@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// <copyright file="XmlUtilities.cs" company="James John McGuire">
-// Copyright © 2006 - 2026 James John McGuire. All Rights Reserved.
+// <copyright file="XmlUtilities.cs" company="Digital Zen Works">
+// Copyright © 2006 - 2026 Digital Zen Works.
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
