@@ -4,344 +4,343 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-namespace DigitalZenWorks.Common.Utilities
+namespace DigitalZenWorks.Common.Utilities;
+
+using System;
+using System.Text;
+using DigitalZenWorks.Common.Utilities.Extensions;
+
+/// <summary>
+/// Text casing support class.
+/// </summary>
+public static class TextCase
 {
-	using System;
-	using System.Text;
-	using DigitalZenWorks.Common.Utilities.Extensions;
+	/// <summary>
+	/// Gets the name in camel case.
+	/// </summary>
+	/// <param name="knrName">A string in knr format.</param>
+	/// <returns>A name in camel case.</returns>
+	public static string? ConvertToCamelCaseFromKnr(string? knrName)
+	{
+		string? output = null;
+
+		if (!string.IsNullOrEmpty(knrName))
+		{
+			output = ConvertFromKnrText(knrName, true);
+		}
+
+		return output;
+	}
 
 	/// <summary>
-	/// Text casing support class.
+	/// Gets the name in camel case.
 	/// </summary>
-	public static class TextCase
+	/// <param name="snakeCase">A string in snake case.</param>
+	/// <returns>A name in camel case.</returns>
+	public static string? ConvertToCamelCaseFromSnakeCase(
+		string? snakeCase)
 	{
-		/// <summary>
-		/// Gets the name in camel case.
-		/// </summary>
-		/// <param name="knrName">A string in knr format.</param>
-		/// <returns>A name in camel case.</returns>
-		public static string? ConvertToCamelCaseFromKnr(string? knrName)
+		return ConvertToCamelCaseFromKnr(snakeCase);
+	}
+
+	/// <summary>
+	/// Gets the name in pascal case.
+	/// </summary>
+	/// <param name="knrName">The name of variable in knr form.</param>
+	/// <returns>A variable name in Pascal case form.</returns>
+	public static string? ConvertToPascalCaseFromKnr(string? knrName)
+	{
+		string? output = null;
+
+		if (!string.IsNullOrEmpty(knrName))
 		{
-			string? output = null;
-
-			if (!string.IsNullOrEmpty(knrName))
-			{
-				output = ConvertFromKnrText(knrName, true);
-			}
-
-			return output;
+			output = ConvertFromKnrText(knrName, false);
 		}
 
-		/// <summary>
-		/// Gets the name in camel case.
-		/// </summary>
-		/// <param name="snakeCase">A string in snake case.</param>
-		/// <returns>A name in camel case.</returns>
-		public static string? ConvertToCamelCaseFromSnakeCase(
-			string? snakeCase)
+		return output;
+	}
+
+	/// <summary>
+	/// Converts to snake case from pascal case.
+	/// </summary>
+	/// <param name="pascalCase">The pascal case.</param>
+	/// <returns>The text in snake case.</returns>
+	/// <exception cref="System.ArgumentNullException">Exception
+	/// text.</exception>
+	public static string? ConvertToSnakeCaseFromPascalCase(
+		string? pascalCase)
+	{
+		string? output = null;
+
+		if (pascalCase == null)
 		{
-			return ConvertToCamelCaseFromKnr(snakeCase);
+			throw new ArgumentNullException(nameof(pascalCase));
 		}
-
-		/// <summary>
-		/// Gets the name in pascal case.
-		/// </summary>
-		/// <param name="knrName">The name of variable in knr form.</param>
-		/// <returns>A variable name in Pascal case form.</returns>
-		public static string? ConvertToPascalCaseFromKnr(string? knrName)
+		else if (!string.IsNullOrWhiteSpace(pascalCase))
 		{
-			string? output = null;
+			StringBuilder builder = new();
 
-			if (!string.IsNullOrEmpty(knrName))
+			char item = char.ToLowerInvariant(pascalCase[0]);
+			builder.Append(item);
+
+			for (int i = 1; i < pascalCase.Length; ++i)
 			{
-				output = ConvertFromKnrText(knrName, false);
-			}
+				item = pascalCase[i];
 
-			return output;
-		}
+				if (char.IsUpper(item))
+				{
+					builder.Append('_');
+				}
 
-		/// <summary>
-		/// Converts to snake case from pascal case.
-		/// </summary>
-		/// <param name="pascalCase">The pascal case.</param>
-		/// <returns>The text in snake case.</returns>
-		/// <exception cref="System.ArgumentNullException">Exception
-		/// text.</exception>
-		public static string? ConvertToSnakeCaseFromPascalCase(
-			string? pascalCase)
-		{
-			string? output = null;
-
-			if (pascalCase == null)
-			{
-				throw new ArgumentNullException(nameof(pascalCase));
-			}
-			else if (!string.IsNullOrWhiteSpace(pascalCase))
-			{
-				StringBuilder builder = new();
-
-				char item = char.ToLowerInvariant(pascalCase[0]);
+				item = char.ToLowerInvariant(item);
 				builder.Append(item);
-
-				for (int i = 1; i < pascalCase.Length; ++i)
-				{
-					item = pascalCase[i];
-
-					if (char.IsUpper(item))
-					{
-						builder.Append('_');
-					}
-
-					item = char.ToLowerInvariant(item);
-					builder.Append(item);
-				}
-
-				output = builder.ToString();
 			}
 
-			return output;
+			output = builder.ToString();
 		}
 
-		/// <summary>
-		/// Gets the case types.
-		/// </summary>
-		/// <param name="variable">The variable.</param>
-		/// <returns>The set of case types.</returns>
-		public static CaseTypes GetCaseTypes(string variable)
+		return output;
+	}
+
+	/// <summary>
+	/// Gets the case types.
+	/// </summary>
+	/// <param name="variable">The variable.</param>
+	/// <returns>The set of case types.</returns>
+	public static CaseTypes GetCaseTypes(string variable)
+	{
+		CaseTypes caseTypes = default;
+
+		bool isCase = IsCamelCase(variable);
+
+		if (isCase == true)
 		{
-			CaseTypes caseTypes = default;
-
-			bool isCase = IsCamelCase(variable);
-
-			if (isCase == true)
-			{
-				caseTypes |= CaseTypes.CamelCase;
-			}
-
-			isCase = IsKabobCase(variable);
-
-			if (isCase == true)
-			{
-				caseTypes |= CaseTypes.KabobCase;
-			}
-
-			isCase = IsPascalCase(variable);
-
-			if (isCase == true)
-			{
-				caseTypes |= CaseTypes.PascalCase;
-			}
-
-			isCase = IsSnakeCase(variable);
-
-			if (isCase == true)
-			{
-				caseTypes |= CaseTypes.SnakeCase;
-			}
-
-			return caseTypes;
+			caseTypes |= CaseTypes.CamelCase;
 		}
 
-		/// <summary>
-		/// Determines whether the specified variable is in camel case.
-		/// </summary>
-		/// <param name="variable">The variable.</param>
-		/// <returns><c>true</c> if [is camel case] [the specified variable];
-		/// otherwise, <c>false</c>.</returns>
-		public static bool IsCamelCase(string variable)
-		{
-			bool isCamelCase = false;
+		isCase = IsKabobCase(variable);
 
-			if (!string.IsNullOrWhiteSpace(variable))
-			{
+		if (isCase == true)
+		{
+			caseTypes |= CaseTypes.KabobCase;
+		}
+
+		isCase = IsPascalCase(variable);
+
+		if (isCase == true)
+		{
+			caseTypes |= CaseTypes.PascalCase;
+		}
+
+		isCase = IsSnakeCase(variable);
+
+		if (isCase == true)
+		{
+			caseTypes |= CaseTypes.SnakeCase;
+		}
+
+		return caseTypes;
+	}
+
+	/// <summary>
+	/// Determines whether the specified variable is in camel case.
+	/// </summary>
+	/// <param name="variable">The variable.</param>
+	/// <returns><c>true</c> if [is camel case] [the specified variable];
+	/// otherwise, <c>false</c>.</returns>
+	public static bool IsCamelCase(string variable)
+	{
+		bool isCamelCase = false;
+
+		if (!string.IsNullOrWhiteSpace(variable))
+		{
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
-				bool hasUnderScore = variable.Contains(
+			bool hasUnderScore = variable.Contains(
+			'_', StringComparison.OrdinalIgnoreCase);
+			bool hasDash = variable.Contains(
+				'-', StringComparison.OrdinalIgnoreCase);
+#else
+			bool hasUnderScore = variable.Contains("_");
+			bool hasDash = variable.Contains("-");
+#endif
+
+			char first = variable[0];
+			bool firstLower = char.IsLower(first);
+
+			if (firstLower == true && hasUnderScore == false &&
+				hasDash == false)
+			{
+				isCamelCase = true;
+			}
+		}
+
+		return isCamelCase;
+	}
+
+	/// <summary>
+	/// Determines whether the specified variable is in kabob case.
+	/// </summary>
+	/// <param name="variable">The variable.</param>
+	/// <returns><c>true</c> if [is kabob case] [the specified variable];
+	/// otherwise, <c>false</c>.</returns>
+	public static bool IsKabobCase(string variable)
+	{
+		bool isKabobCase = false;
+
+		if (!string.IsNullOrWhiteSpace(variable))
+		{
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+			bool hasUnderScore = variable.Contains(
 				'_', StringComparison.OrdinalIgnoreCase);
-				bool hasDash = variable.Contains(
-					'-', StringComparison.OrdinalIgnoreCase);
 #else
-				bool hasUnderScore = variable.Contains("_");
-				bool hasDash = variable.Contains("-");
+			bool hasUnderScore = variable.Contains("_");
 #endif
 
-				char first = variable[0];
-				bool firstLower = char.IsLower(first);
+			if (hasUnderScore == false)
+			{
+				bool hasUppers = false;
 
-				if (firstLower == true && hasUnderScore == false &&
-					hasDash == false)
+				for (int index = 0; index < variable.Length; index++)
 				{
-					isCamelCase = true;
+					char item = variable[index];
+
+					hasUppers = char.IsUpper(item);
+
+					if (hasUppers == true)
+					{
+						break;
+					}
+				}
+
+				if (hasUppers == false)
+				{
+					isKabobCase = true;
 				}
 			}
-
-			return isCamelCase;
 		}
 
-		/// <summary>
-		/// Determines whether the specified variable is in kabob case.
-		/// </summary>
-		/// <param name="variable">The variable.</param>
-		/// <returns><c>true</c> if [is kabob case] [the specified variable];
-		/// otherwise, <c>false</c>.</returns>
-		public static bool IsKabobCase(string variable)
-		{
-			bool isKabobCase = false;
+		return isKabobCase;
+	}
 
-			if (!string.IsNullOrWhiteSpace(variable))
-			{
+	/// <summary>
+	/// Determines whether the specified variable is in pascal case.
+	/// </summary>
+	/// <param name="variable">The variable.</param>
+	/// <returns><c>true</c> if [is pascal case] [the specified variable];
+	/// otherwise, <c>false</c>.</returns>
+	public static bool IsPascalCase(string variable)
+	{
+		bool isPascalCase = false;
+
+		if (!string.IsNullOrWhiteSpace(variable))
+		{
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
-				bool hasUnderScore = variable.Contains(
-					'_', StringComparison.OrdinalIgnoreCase);
+			bool hasUnderScore = variable.Contains(
+				'_', StringComparison.OrdinalIgnoreCase);
+			bool hasDash = variable.Contains(
+				'-', StringComparison.OrdinalIgnoreCase);
 #else
-				bool hasUnderScore = variable.Contains("_");
+			bool hasUnderScore = variable.Contains("_");
+			bool hasDash = variable.Contains("-");
 #endif
 
-				if (hasUnderScore == false)
-				{
-					bool hasUppers = false;
+			char first = variable[0];
+			bool firstUpper = char.IsUpper(first);
 
-					for (int index = 0; index < variable.Length; index++)
-					{
-						char item = variable[index];
+			char second = variable[1];
+			bool secondLower = char.IsLower(second);
 
-						hasUppers = char.IsUpper(item);
-
-						if (hasUppers == true)
-						{
-							break;
-						}
-					}
-
-					if (hasUppers == false)
-					{
-						isKabobCase = true;
-					}
-				}
+			if (firstUpper == true && secondLower == true &&
+				hasUnderScore == false && hasDash == false)
+			{
+				isPascalCase = true;
 			}
-
-			return isKabobCase;
 		}
 
-		/// <summary>
-		/// Determines whether the specified variable is in pascal case.
-		/// </summary>
-		/// <param name="variable">The variable.</param>
-		/// <returns><c>true</c> if [is pascal case] [the specified variable];
-		/// otherwise, <c>false</c>.</returns>
-		public static bool IsPascalCase(string variable)
-		{
-			bool isPascalCase = false;
+		return isPascalCase;
+	}
 
-			if (!string.IsNullOrWhiteSpace(variable))
-			{
+	/// <summary>
+	/// Determines whether the specified variable is in snake case.
+	/// </summary>
+	/// <param name="variable">The variable.</param>
+	/// <returns><c>true</c> if [is snake case] [the specified variable];
+	/// otherwise, <c>false</c>.</returns>
+	public static bool IsSnakeCase(string variable)
+	{
+		bool isSnakeCase = false;
+
+		if (!string.IsNullOrWhiteSpace(variable))
+		{
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
-				bool hasUnderScore = variable.Contains(
-					'_', StringComparison.OrdinalIgnoreCase);
-				bool hasDash = variable.Contains(
-					'-', StringComparison.OrdinalIgnoreCase);
+			bool hasDash = variable.Contains(
+				'-', StringComparison.OrdinalIgnoreCase);
 #else
-				bool hasUnderScore = variable.Contains("_");
-				bool hasDash = variable.Contains("-");
+			bool hasDash = variable.Contains("-");
 #endif
 
-				char first = variable[0];
-				bool firstUpper = char.IsUpper(first);
-
-				char second = variable[1];
-				bool secondLower = char.IsLower(second);
-
-				if (firstUpper == true && secondLower == true &&
-					hasUnderScore == false && hasDash == false)
-				{
-					isPascalCase = true;
-				}
-			}
-
-			return isPascalCase;
-		}
-
-		/// <summary>
-		/// Determines whether the specified variable is in snake case.
-		/// </summary>
-		/// <param name="variable">The variable.</param>
-		/// <returns><c>true</c> if [is snake case] [the specified variable];
-		/// otherwise, <c>false</c>.</returns>
-		public static bool IsSnakeCase(string variable)
-		{
-			bool isSnakeCase = false;
-
-			if (!string.IsNullOrWhiteSpace(variable))
+			if (hasDash == false)
 			{
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
-				bool hasDash = variable.Contains(
-					'-', StringComparison.OrdinalIgnoreCase);
-#else
-				bool hasDash = variable.Contains("-");
-#endif
+				bool hasUppers = false;
 
-				if (hasDash == false)
+				for (int index = 0; index < variable.Length; index++)
 				{
-					bool hasUppers = false;
+					char item = variable[index];
 
-					for (int index = 0; index < variable.Length; index++)
+					hasUppers = char.IsUpper(item);
+
+					if (hasUppers == true)
 					{
-						char item = variable[index];
-
-						hasUppers = char.IsUpper(item);
-
-						if (hasUppers == true)
-						{
-							break;
-						}
-					}
-
-					if (hasUppers == false)
-					{
-						isSnakeCase = true;
+						break;
 					}
 				}
-			}
 
-			return isSnakeCase;
+				if (hasUppers == false)
+				{
+					isSnakeCase = true;
+				}
+			}
 		}
 
-		private static string? ConvertFromKnrText(
-			string? knrName, bool setToCamelCase)
-		{
-			string? newCase = string.Empty;
+		return isSnakeCase;
+	}
 
-			if (knrName != null)
-			{
-				// split at underscores
+	private static string? ConvertFromKnrText(
+		string? knrName, bool setToCamelCase)
+	{
+		string? newCase = string.Empty;
+
+		if (knrName != null)
+		{
+			// split at underscores
 #if NET6_0_OR_GREATER
-				char[] splitters = ['_'];
+			char[] splitters = ['_'];
 #else
-				char[] splitters = new char[] { '_' };
+			char[] splitters = new char[] { '_' };
 #endif
-				string[] parts = knrName.Split(
-					splitters,
-					StringSplitOptions.RemoveEmptyEntries);
-				bool first = true;
+			string[] parts = knrName.Split(
+				splitters,
+				StringSplitOptions.RemoveEmptyEntries);
+			bool first = true;
 
-				// remove underscores, set parts in intended case
-				foreach (string part in parts)
+			// remove underscores, set parts in intended case
+			foreach (string part in parts)
+			{
+				if ((setToCamelCase == true) && (first == true))
 				{
-					if ((setToCamelCase == true) && (first == true))
-					{
 #pragma warning disable CA1308
-						newCase += part.ToLowerInvariant();
+					newCase += part.ToLowerInvariant();
 #pragma warning restore CA1308
-					}
-					else
-					{
-						newCase += part.ToProperCase();
-					}
-
-					first = false;
 				}
-			}
+				else
+				{
+					newCase += part.ToProperCase();
+				}
 
-			return newCase;
+				first = false;
+			}
 		}
+
+		return newCase;
 	}
 }

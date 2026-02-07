@@ -4,29 +4,28 @@
 // </copyright>
 /////////////////////////////////////////////////////////////////////////////
 
-namespace DigitalZenWorks.Common.Utilities
+namespace DigitalZenWorks.Common.Utilities;
+
+/// <summary>
+/// Char difference class.
+/// </summary>
+public class CharDifference
 {
 	/// <summary>
-	/// Char difference class.
+	/// Gets or sets the current position within the sequence.
 	/// </summary>
-	public class CharDifference
-	{
-		/// <summary>
-		/// Gets or sets the current position within the sequence.
-		/// </summary>
-		/// <value>The current position within the sequence.</value>
-		public int Position { get; set; }
+	/// <value>The current position within the sequence.</value>
+	public int Position { get; set; }
 
-		/// <summary>
-		/// Gets or sets the original string value.
-		/// </summary>
-		/// <value>The original string value.</value>
-		public string? Original { get; set; }
+	/// <summary>
+	/// Gets or sets the original string value.
+	/// </summary>
+	/// <value>The original string value.</value>
+	public string? Original { get; set; }
 
-		/// <summary>
-		/// Gets or sets the normalized representation of the string value.
-		/// </summary>
-		/// <value>The normalized representation of the string value.</value>
-		public string? Normalized { get; set; }
-	}
+	/// <summary>
+	/// Gets or sets the normalized representation of the string value.
+	/// </summary>
+	/// <value>The normalized representation of the string value.</value>
+	public string? Normalized { get; set; }
 }
