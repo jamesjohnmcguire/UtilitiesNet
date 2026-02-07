@@ -759,5 +759,5 @@ namespace DigitalZenWorks.Common.Utilities;
 				Log.Error(exception.ToString());
 			}
 		}
-	} // End Class
-} // End Namespace
+	}
+}

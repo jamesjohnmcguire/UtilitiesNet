@@ -588,5 +588,5 @@ namespace DigitalZenWorks.Common.Utilities
 
 			return retVal.ToArray();
 		}
-	} // End Class
-} // End Namespace
+	}
+}
