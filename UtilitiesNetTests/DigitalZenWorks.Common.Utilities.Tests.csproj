@@ -33,7 +33,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\UtilitiesNetLibrary\DigitalZenWorks.Common.Utilities.csproj">
-			<TargetFramework>net9.0</TargetFramework>
 		</ProjectReference>
 	</ItemGroup>
 
