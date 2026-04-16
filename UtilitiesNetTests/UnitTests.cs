@@ -9,9 +9,7 @@
 namespace DigitalZenWorks.Common.Utilities.Tests;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using DigitalZenWorks.Common.Utilities;
 using DigitalZenWorks.Common.Utilities.Extensions;
 using NUnit.Framework;
