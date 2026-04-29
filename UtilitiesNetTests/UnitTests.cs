@@ -565,6 +565,12 @@ internal static class UnitTests
 		Assert.That(title, Is.EqualTo(expected));
 	}
 
+	/// <summary>
+	/// Creates a temporary file from an embedded XML test resource.
+	/// </summary>
+	/// <param name="resource">The embedded resource name.</param>
+	/// <param name="extension">The file extension to apply.</param>
+	/// <returns>The temporary resource file path.</returns>
 	private static string GetXmlResourceFile(
 		string resource, string extension)
 	{

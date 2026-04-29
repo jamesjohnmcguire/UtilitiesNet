@@ -544,6 +544,12 @@ public static class GeneralUtilities
 		return hexString;
 	}
 
+	/// <summary>
+	/// Converts pairs of hexadecimal characters into bytes.
+	/// </summary>
+	/// <param name="hexData">The ASCII hexadecimal data to convert.</param>
+	/// <param name="retVal">The stream that receives the converted bytes.</param>
+	/// <returns>The bytes written to the stream.</returns>
 	private static byte[] GetHexPair(byte[] hexData, MemoryStream retVal)
 	{
 		// Loop hex value pairs

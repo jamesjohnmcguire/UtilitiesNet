@@ -313,6 +313,15 @@ public static class UnicodeNormalizer
 		return linesChanged;
 	}
 
+	/// <summary>
+	/// Creates a character difference when the original and normalized
+	/// characters differ.
+	/// </summary>
+	/// <param name="index">The zero-based character index.</param>
+	/// <param name="original">The original character.</param>
+	/// <param name="normalized">The normalized character.</param>
+	/// <returns>The character difference, or null when the characters
+	/// match.</returns>
 	private static CharDifference? CheckDifferences(
 		int index, char original, char normalized)
 	{
@@ -334,6 +343,12 @@ public static class UnicodeNormalizer
 		return difference;
 	}
 
+	/// <summary>
+	/// Finds text-element differences between original and normalized strings.
+	/// </summary>
+	/// <param name="original">The original text.</param>
+	/// <param name="normalized">The normalized text.</param>
+	/// <returns>The collection of detected differences.</returns>
 	private static Collection<CharDifference> FindDifferences(
 		string original, string normalized)
 	{

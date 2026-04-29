@@ -305,6 +305,13 @@ public static class TextCase
 		return isSnakeCase;
 	}
 
+	/// <summary>
+	/// Converts underscore-delimited KNR text to camel or Pascal case.
+	/// </summary>
+	/// <param name="knrName">The KNR text to convert.</param>
+	/// <param name="setToCamelCase">A value indicating whether the first
+	/// segment should be lower-cased for camel case.</param>
+	/// <returns>The converted text.</returns>
 	private static string? ConvertFromKnrText(
 		string? knrName, bool setToCamelCase)
 	{

@@ -60,6 +60,12 @@ public static class SourceControl
 		}
 	}
 
+	/// <summary>
+	/// Removes the original project path from SVN dump node paths.
+	/// </summary>
+	/// <param name="originalProject">The project path to remove.</param>
+	/// <param name="output">The SVN dump bytes to update.</param>
+	/// <returns>The updated SVN dump bytes.</returns>
 	private static byte[] RemoveProject(
 		string originalProject, byte[] output)
 	{
@@ -77,6 +83,12 @@ public static class SourceControl
 		return replacedOutput;
 	}
 
+	/// <summary>
+	/// Removes the original project path from SVN copy-from paths.
+	/// </summary>
+	/// <param name="originalProject">The project path to remove.</param>
+	/// <param name="output">The SVN dump bytes to update.</param>
+	/// <returns>The updated SVN dump bytes.</returns>
 	private static byte[] ReplaceProject(
 		string originalProject, byte[] output)
 	{
