@@ -44,7 +44,7 @@ public class EmailUtilities
 		@"@" +
 
 		// no consecutive dots in domain
-		@"(?!.*\.\.)  " +
+		@"(?!.*\.\.)" +
 
 		// domain label can't start with hyphen
 		@"(?!-)" +
