@@ -332,6 +332,8 @@ public static class GeneralUtilities
 	/// <param name="emailAddress">The email address to check.</param>
 	/// <returns>Returns true if the email address is valid,
 	/// otherwise false.</returns>
+	[Obsolete("IsValidEmailAddress is deprecated, " +
+		"please use EmailUtilities.IsValidEmailAddress instead.")]
 	public static bool IsValidEmailAddress(string emailAddress)
 	{
 		bool valid = EmailUtilities.IsValidEmailAddress(emailAddress);
