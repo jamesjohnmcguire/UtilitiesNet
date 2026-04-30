@@ -20,6 +20,16 @@ using NUnit.Framework;
 internal sealed class EmailUtilitiesTests
 {
 	/// <summary>
+	/// Is valid email address full false test.
+	/// </summary>
+	[Test]
+	public void IsValidEmailAddressFullFalise()
+	{
+		bool result = EmailUtilities.IsValidEmailAddress("bad-input");
+		Assert.That(result, Is.False);
+	}
+
+	/// <summary>
 	/// Is valid email address full true test.
 	/// </summary>
 	[Test]
@@ -50,66 +60,13 @@ internal sealed class EmailUtilitiesTests
 	}
 
 	/// <summary>
-	/// Is valid email address full false test.
+	/// Is valid email address partial domain dot false test.
 	/// </summary>
 	[Test]
-	public void IsValidEmailAddressFullFalise()
+	public void IsValidEmailAddressPartialDomainDotFalse()
 	{
-		bool result = EmailUtilities.IsValidEmailAddress("bad-input");
+		bool result = EmailUtilities.IsValidEmailAddress("user@.com", true);
 		Assert.That(result, Is.False);
-	}
-
-	/// <summary>
-	/// Is valid email address partial full true test.
-	/// </summary>
-	[Test]
-	public void IsValidEmailAddressPartialFullTrue()
-	{
-		bool result =
-			EmailUtilities.IsValidEmailAddress("user@example.com", true);
-		Assert.That(result, Is.True);
-	}
-
-	/// <summary>
-	/// Is valid email address partial full spaces true test.
-	/// </summary>
-	[Test]
-	public void IsValidEmailAddressPartialFullSpacesTrue()
-	{
-		bool result =
-			EmailUtilities.IsValidEmailAddress("  user@example.com ", true);
-		Assert.That(result, Is.True);
-	}
-
-	/// <summary>
-	/// Is valid email address partial full multi-part true test.
-	/// </summary>
-	[Test]
-	public void IsValidEmailAddressPartialFullMultiPartTrue()
-	{
-		bool result =
-			EmailUtilities.IsValidEmailAddress("user@example.co.jp", true);
-		Assert.That(result, Is.True);
-	}
-
-	/// <summary>
-	/// Is valid email address partial no local part false test.
-	/// </summary>
-	[Test]
-	public void IsValidEmailAddressPartialNoLocalPartFalse()
-	{
-		bool result = EmailUtilities.IsValidEmailAddress("@example.com", true);
-		Assert.That(result, Is.False);
-	}
-
-	/// <summary>
-	/// Is valid email address partial no TLD true test.
-	/// </summary>
-	[Test]
-	public void IsValidEmailAddressPartialNoTldTrue()
-	{
-		bool result = EmailUtilities.IsValidEmailAddress("user@example", true);
-		Assert.That(result, Is.True);
 	}
 
 	/// <summary>
@@ -134,13 +91,25 @@ internal sealed class EmailUtilitiesTests
 	}
 
 	/// <summary>
-	/// Is valid email address partial domain dot false test.
+	/// Is valid email address partial full multi-part true test.
 	/// </summary>
 	[Test]
-	public void IsValidEmailAddressPartialDomainDotFalse()
+	public void IsValidEmailAddressPartialFullMultiPartTrue()
 	{
-		bool result = EmailUtilities.IsValidEmailAddress("user@.com", true);
-		Assert.That(result, Is.False);
+		bool result =
+			EmailUtilities.IsValidEmailAddress("user@example.co.jp", true);
+		Assert.That(result, Is.True);
+	}
+
+	/// <summary>
+	/// Is valid email address partial full spaces true test.
+	/// </summary>
+	[Test]
+	public void IsValidEmailAddressPartialFullSpacesTrue()
+	{
+		bool result =
+			EmailUtilities.IsValidEmailAddress("  user@example.com ", true);
+		Assert.That(result, Is.True);
 	}
 
 	/// <summary>
@@ -161,6 +130,37 @@ internal sealed class EmailUtilitiesTests
 	{
 		bool result = EmailUtilities.IsValidEmailAddress("missing@", true);
 		Assert.That(result, Is.False);
+	}
+
+	/// <summary>
+	/// Is valid email address partial no local part false test.
+	/// </summary>
+	[Test]
+	public void IsValidEmailAddressPartialNoLocalPartFalse()
+	{
+		bool result = EmailUtilities.IsValidEmailAddress("@example.com", true);
+		Assert.That(result, Is.False);
+	}
+
+	/// <summary>
+	/// Is valid email address partial no TLD true test.
+	/// </summary>
+	[Test]
+	public void IsValidEmailAddressPartialNoTldTrue()
+	{
+		bool result = EmailUtilities.IsValidEmailAddress("user@example", true);
+		Assert.That(result, Is.True);
+	}
+
+	/// <summary>
+	/// Is valid email address partial full true test.
+	/// </summary>
+	[Test]
+	public void IsValidEmailAddressPartialFullTrue()
+	{
+		bool result =
+			EmailUtilities.IsValidEmailAddress("user@example.com", true);
+		Assert.That(result, Is.True);
 	}
 
 	/// <summary>
@@ -189,5 +189,4 @@ internal sealed class EmailUtilitiesTests
 			Assert.That(pass, Is.True, label);
 		}
 	}
-
 }
