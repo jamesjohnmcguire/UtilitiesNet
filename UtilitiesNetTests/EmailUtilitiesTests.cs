@@ -6,12 +6,12 @@
 
 namespace DigitalZenWorks.Common.Utilities.Tests;
 
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
 
 /// <summary>
 /// The email utilities tests class.
