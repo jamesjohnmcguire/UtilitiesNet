@@ -69,6 +69,18 @@ public class EmailUtilities
 		RegexOptions.Compiled | RegexOptions.IgnoreCase
 	);
 
+	// Partial: has @ and at least a domain, but no/incomplete TLD
+	// e.g. "user@domain" or "user@domain.".
+	private static readonly Regex PartialEmailRegex = new Regex(
+		@"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+$",
+		RegexOptions.Compiled | RegexOptions.IgnoreCase
+	);
+
+	private static readonly Regex SimpleEmailRegex = new Regex(
+		 @"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{1,63}$",
+		 RegexOptions.Compiled | RegexOptions.IgnoreCase
+	 );
+
 	/// <summary>
 	/// Determines whether the specified string is a valid email address
 	/// according to standard email address formatting rules.
@@ -79,9 +91,15 @@ public class EmailUtilities
 	/// </remarks>
 	/// <param name="emailAddress">The email address to validate. May not be
 	/// null, empty, or consist only of white-space characters.</param>
+	/// <param name="allowPartialMatch">
+	/// When true, strings like "user@domain" (missing TLD) return
+	/// PartialMatch instead of Invalid.
+	/// </param>
 	/// <returns>true if the specified string is a valid email address;
 	/// otherwise, false.</returns>
-	public static bool IsValidEmailAddress(string emailAddress)
+	public static bool IsValidEmailAddress(
+		string emailAddress,
+		bool allowPartialMatch = false)
 	{
 		bool valid = false;
 
@@ -100,7 +118,16 @@ public class EmailUtilities
 
 					if (addressObject.Address == emailAddress)
 					{
-						valid = EmailRegex.IsMatch(emailAddress);
+						bool fullValid = EmailRegex.IsMatch(emailAddress);
+
+						if (fullValid == true)
+						{
+							valid = true;
+						}
+						else if (allowPartialMatch == true)
+						{
+							valid = PartialEmailRegex.IsMatch(emailAddress);
+						}
 					}
 				}
 				catch (Exception exception) when
