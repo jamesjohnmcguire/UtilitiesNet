@@ -19,7 +19,7 @@ using System.Text.RegularExpressions;
 /// validation performed aims to catch common formatting errors and adheres to
 /// standard email address specifications. All members are static and
 /// thread-safe.</remarks>
-public class EmailUtilities
+public static class EmailUtilities
 {
 	/// <summary>
 	/// Represents the regular expression pattern used to validate email addresses according to common formatting rules and
