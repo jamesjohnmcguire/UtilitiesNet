@@ -66,20 +66,17 @@ public class EmailUtilities
 
 	private static readonly Regex EmailRegex = new Regex(
 		RegexPattern,
-		RegexOptions.Compiled | RegexOptions.IgnoreCase
-	);
+		RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 	// Partial: has @ and at least a domain, but no/incomplete TLD
 	// e.g. "user@domain" or "user@domain.".
 	private static readonly Regex PartialEmailRegex = new Regex(
 		@"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+$",
-		RegexOptions.Compiled | RegexOptions.IgnoreCase
-	);
+		RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 	private static readonly Regex SimpleEmailRegex = new Regex(
 		 @"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{1,63}$",
-		 RegexOptions.Compiled | RegexOptions.IgnoreCase
-	 );
+		 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 	/// <summary>
 	/// Determines whether the specified string is a valid email address
