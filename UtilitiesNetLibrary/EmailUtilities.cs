@@ -74,10 +74,6 @@ public static class EmailUtilities
 		@"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+$",
 		RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-	private static readonly Regex SimpleEmailRegex = new Regex(
-		 @"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{1,63}$",
-		 RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
 	/// <summary>
 	/// Determines whether the specified string is a valid email address
 	/// according to standard email address formatting rules.
