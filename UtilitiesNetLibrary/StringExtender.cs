@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Humanizer;
 
 /// <summary>
 /// String extender class.
@@ -218,41 +219,7 @@ public static class StringExtender
 
 		if (unformattedText != null)
 		{
-			CultureInfo cultureInfo = CultureInfo.CurrentCulture;
-			TextInfo textInfo = cultureInfo.TextInfo;
-
-			string[] exceptions =
-			[
-				"a", "an", "and", "any", "at", "from", "in", "into", "of",
-				"on", "or", "some", "the", "to"
-			];
-
-			// If the text is already all in upper case, no formatting
-			// changes will be applied, so make it lower case first.
-#pragma warning disable CA1308
-			unformattedText = unformattedText.ToLowerInvariant();
-#pragma warning restore CA1308
-
-			char[] space = [' '];
-			string[] words = unformattedText.Split(
-				space, StringSplitOptions.RemoveEmptyEntries);
-
-			List<string> updatedWords = [];
-
-			for (int index = 0; index < words.Length; index++)
-			{
-				string item = words[index];
-
-				// The first word is always capitalized.
-				if (index == 0 || !exceptions.Contains(item))
-				{
-					item = textInfo.ToTitleCase(item);
-				}
-
-				updatedWords.Add(item);
-			}
-
-			titleCaseText = string.Join(" ", updatedWords);
+			titleCaseText = unformattedText.Titleize();
 		}
 
 		return titleCaseText;
