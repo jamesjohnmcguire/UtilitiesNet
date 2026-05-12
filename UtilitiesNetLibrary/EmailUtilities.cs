@@ -7,8 +7,12 @@
 namespace DigitalZenWorks.Common.Utilities;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 /// <summary>
 /// Provides utility methods for validating email addresses according to common
@@ -74,6 +78,15 @@ public static class EmailUtilities
 		@"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+$",
 		RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+	// Known multi-part TLDs — extend as needed
+	private static readonly HashSet<string> KnownMultiPartTlds = new(
+		StringComparer.OrdinalIgnoreCase)
+	{
+		"co.uk", "co.jp", "co.nz", "co.za", "co.in",
+		"com.au", "com.br", "com.mx", "com.sg", "com.hk",
+		"org.uk", "net.au", "gov.uk", "ac.uk", "me.uk"
+	};
+
 	/// <summary>
 	/// Determines whether the specified string is a valid email address
 	/// according to standard email address formatting rules.
@@ -133,4 +146,288 @@ public static class EmailUtilities
 
 		return valid;
 	}
+
+	/// <summary>
+	/// Normalizes an email address for storage and comparison.
+	/// Does NOT modify for delivery — use the original address for that.
+	/// </summary>
+	/// <param name="emailAddress">Raw input email address.</param>
+	/// <param name="stripPlusTag">
+	/// If true, removes plus-addressing tags (user+tag@domain → user@domain).
+	/// Useful for deduplication; do NOT use for actual mail delivery.
+	/// </param>
+	/// <param name="stripGmailDots">
+	/// If true, removes dots from Gmail/Googlemail local parts.
+	/// Useful for deduplication only.
+	/// </param>
+	/// <returns>A normalized version of the email address, with consistent
+	/// casing and optional deduplication adjustments.</returns>
+	public static string Normalize(
+		string emailAddress,
+		bool stripPlusTag = false,
+		bool stripGmailDots = false)
+	{
+		string normalizedEmail = string.Empty;
+
+		if (!string.IsNullOrWhiteSpace(emailAddress))
+		{
+			emailAddress = emailAddress.Trim();
+
+			// Split into local and domain parts
+			int atIndex = emailAddress.LastIndexOf('@');
+
+			if (atIndex < 0)
+			{
+				// not a valid email, return as-is
+				normalizedEmail = emailAddress;
+			}
+			else
+			{
+#if NETCOREAPP1_0_OR_GREATER
+				string local = emailAddress[..atIndex];
+				string domain = emailAddress[(atIndex + 1)..];
+#else
+				string local = emailAddress.Substring(0, atIndex);
+				string domain = emailAddress.Substring(atIndex + 1);
+#endif
+
+				// Lowercase the domain — always safe per RFC
+#pragma warning disable CA1308
+				domain = domain.ToLowerInvariant();
+#pragma warning restore CA1308
+
+				// Normalize googlemail.com → gmail.com
+				if (domain == "googlemail.com")
+				{
+					domain = "gmail.com";
+				}
+
+				// Lowercase the local part — technically optional but safe for
+				// virtually all real-world mail servers
+#pragma warning disable CA1308
+				local = local.ToLowerInvariant();
+#pragma warning restore CA1308
+
+				// Strip plus tag if requested (deduplication only)
+				if (stripPlusTag == true)
+				{
+#if NETCOREAPP1_0_OR_GREATER
+					int plusIndex =
+						local.IndexOf('+', StringComparison.Ordinal);
+
+					if (plusIndex >= 0)
+					{
+						local = local[..plusIndex];
+					}
+#else
+					int plusIndex = local.IndexOf('+');
+
+					if (plusIndex >= 0)
+					{
+						local = local.Substring(0, plusIndex);
+					}
+#endif
+				}
+
+				// Strip Gmail dots if requested (deduplication only)
+				if (stripGmailDots == true && domain == "gmail.com")
+				{
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+					local = local.Replace(
+						".", string.Empty, StringComparison.Ordinal);
+#else
+					local = local.Replace(".", string.Empty);
+#endif
+				}
+
+				normalizedEmail = $"{local}@{domain}";
+			}
+		}
+
+		return normalizedEmail;
+	}
+
+	/// <summary>
+	/// Extracts the second-level domain (SLD) from an email address.
+	/// e.g. "user@mail.example.co.jp" → "example"
+	///      "user@example.com"        → "example".
+	/// </summary>
+	/// <param name="emailAddress">The email address to extract the domain base
+	/// from.</param>
+	/// <returns>The second-level domain (SLD) if extraction is successful;
+	/// otherwise, an empty string.</returns>
+	public static string GetDomainBaseFromEmail(string emailAddress)
+	{
+		string domainBase = string.Empty;
+
+		if (!string.IsNullOrWhiteSpace(emailAddress))
+		{
+			string normalized = Normalize(emailAddress);
+
+			int atIndex = normalized.LastIndexOf('@');
+
+			if (atIndex > 0 && atIndex < normalized.Length - 1)
+			{
+				// "mail.example.co.jp"
+#if NETCOREAPP3_0_OR_GREATER
+				string domain = normalized[(atIndex + 1)..];
+#else
+				string domain = normalized.Substring(atIndex + 1);
+#endif
+
+				string tld = GetTldFromEmail(emailAddress);
+				string[] parts = tld.Split('.');
+				int tldLabelCount = parts.Length;
+
+				// Labels: ["mail", "example", "co", "jp"]
+				// SLD is always second from the right,
+				// regardless of subdomain count
+				string[] labels = domain.Split('.');
+
+				// Minimum 2 labels needed: domain.tld
+				if (labels.Length > 1)
+				{
+					int sldIndex = labels.Length - tldLabelCount - 1;
+
+					if (sldIndex >= 0)
+					{
+#if NETCOREAPP3_0_OR_GREATER
+						domainBase = labels[sldIndex];
+#else
+						domainBase = labels[sldIndex];
+#endif
+					}
+				}
+			}
+		}
+
+		return domainBase;
+	}
+
+	/// <summary>
+	/// Extracts the TLD from an email address.
+	/// e.g. "user@example.co.jp"  → "co.jp"
+	///      "user@example.com"    → "com".
+	/// </summary>
+	/// <param name="emailAddress">The email address to extract the domain base
+	/// from.</param>
+	/// <returns>The TLD if extraction is successful; otherwise, an empty
+	/// string.</returns>
+	public static string GetTldFromEmail(string emailAddress)
+	{
+		string tld = string.Empty;
+
+		if (!string.IsNullOrWhiteSpace(emailAddress))
+		{
+			string normalized = Normalize(emailAddress);
+
+			int atIndex = normalized.LastIndexOf('@');
+
+			if (atIndex > 0 && atIndex < normalized.Length - 1)
+			{
+#if NETCOREAPP3_0_OR_GREATER
+				string domain = normalized[(atIndex + 1)..];
+#else
+				string domain = normalized.Substring(atIndex + 1);
+#endif
+				string[] labels = domain.Split('.');
+
+				if (labels.Length > 1)
+				{
+					// For known multi-part TLDs return the last two labels
+					// For everything else return just the last label
+#if NETCOREAPP3_0_OR_GREATER
+					string[] lastTwoLabels = labels[^2..];
+#else
+					IEnumerable<string> items = labels.Skip(labels.Length - 2);
+					string[] lastTwoLabels = items.ToArray();
+#endif
+
+					string lastTwo = string.Join(".", lastTwoLabels);
+
+					bool multiPart = IsKnownMultiPartTld(lastTwo);
+
+					if (multiPart == true)
+					{
+						// "co.jp", "com.au", "org.uk"
+						tld = lastTwo;
+					}
+					else
+					{
+						// "com", "net", "org"
+#if NETCOREAPP3_0_OR_GREATER
+						tld = labels[^1];
+#else
+						tld = labels[labels.Length - 1];
+#endif
+					}
+				}
+			}
+		}
+
+		return tld;
+	}
+
+	/// <summary>
+	/// Extracts all domain parts from an email as a structured record.
+	/// </summary>
+	/// <param name="emailAddress">The email address to extract the domain base
+	/// from.</param>
+	/// <returns>A tuple containing the local part, subdomain, domain base, and
+	/// TLD.</returns>
+	public static
+		(string Local, string Subdomain, string DomainBase, string Tld)
+		ParseEmailParts(string emailAddress)
+	{
+		string local = string.Empty;
+		string subdomain = string.Empty;
+		string domainBase = string.Empty;
+		string tld = string.Empty;
+
+		if (!string.IsNullOrWhiteSpace(emailAddress))
+		{
+			string normalized = Normalize(emailAddress);
+
+			int atIndex = normalized.LastIndexOf('@');
+
+			if (atIndex > -1)
+			{
+#if NETCOREAPP1_0_OR_GREATER
+				local = normalized[..atIndex];
+				string domain = normalized[(atIndex + 1)..];
+#else
+				local = normalized.Substring(0, atIndex);
+				string domain = normalized.Substring(atIndex + 1);
+#endif
+				string[] labels = domain.Split('.');
+
+				if (labels.Length > 1)
+				{
+					tld = GetTldFromEmail(emailAddress);
+
+					string[] parts = tld.Split('.');
+					int tldLabelCount = parts.Length;
+					int sldIndex = labels.Length - tldLabelCount - 1;
+
+					if (sldIndex >= 0)
+					{
+						domainBase = labels[sldIndex];
+
+#if NETCOREAPP1_0_OR_GREATER
+						string[] subdomainLabels = labels[..sldIndex];
+#else
+						string[] subdomainLabels = new string[sldIndex];
+						Array.Copy(labels, 0, subdomainLabels, 0, sldIndex);
+#endif
+						subdomain = string.Join(".", subdomainLabels);
+					}
+				}
+			}
+		}
+
+		return (local, subdomain, domainBase, tld);
+	}
+
+	private static bool IsKnownMultiPartTld(string candidate) =>
+		KnownMultiPartTlds.Contains(candidate);
 }
