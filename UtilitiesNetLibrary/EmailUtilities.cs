@@ -43,15 +43,21 @@ public static class EmailUtilities
 		// local part cannot start with a dot
 		@"(?!\.)" +
 
+		// local part can't end with dot
+		@"(?!.*\.@)" +
+
 		// local part, max 64 chars (RFC 5321)
 		@"[a-zA-Z0-9._%+\-]{1,64}" +
 		@"@" +
 
-		// no consecutive dots in domain
-		@"(?!.*\.\.)" +
-
 		// domain label can't start with hyphen
 		@"(?!-)" +
+
+		// domain label can't end with hyphen before a dot
+		@"(?!.*-\.)" +
+
+		// domain label can't end with hyphen at end of string
+		@"(?!.*-$)" +
 
 		// domain must start with alphanumeric
 		@"[a-zA-Z0-9]" +
