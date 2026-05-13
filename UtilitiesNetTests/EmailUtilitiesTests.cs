@@ -593,10 +593,10 @@ internal sealed class EmailUtilitiesTests
 	public void GetDomainBaseFromEmailSimpleDomainReturnsDomainBase()
 	{
 		string expected = "example";
-		string email =
+		string domanBase =
 			EmailUtilities.GetDomainBaseFromEmail("user@example.com");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(domanBase, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -606,10 +606,10 @@ internal sealed class EmailUtilitiesTests
 	public void GetDomainBaseFromEmailWithSubdomainReturnsDomainBase()
 	{
 		string expected = "example";
-		string email =
+		string domanBase =
 			EmailUtilities.GetDomainBaseFromEmail("user@mail.example.com");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(domanBase, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -619,10 +619,10 @@ internal sealed class EmailUtilitiesTests
 	public void GetDomainBaseFromEmailMultiPartTldReturnsDomainBase()
 	{
 		string expected = "example";
-		string email =
+		string domanBase =
 			EmailUtilities.GetDomainBaseFromEmail("user@mail.example.co.jp");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(domanBase, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -632,10 +632,10 @@ internal sealed class EmailUtilitiesTests
 	public void GetDomainBaseFromEmailMixedCaseReturnsLowerCase()
 	{
 		string expected = "example";
-		string email =
+		string domainBase =
 			EmailUtilities.GetDomainBaseFromEmail("user@Example.COM");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(domainBase, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -648,10 +648,10 @@ internal sealed class EmailUtilitiesTests
 
 		// Cannot convert null literal to non-nullable reference type.
 #pragma warning disable CS8625
-		string email = EmailUtilities.GetDomainBaseFromEmail(null);
+		string domainBase = EmailUtilities.GetDomainBaseFromEmail(null);
 #pragma warning restore CS8625
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(domainBase, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -661,9 +661,9 @@ internal sealed class EmailUtilitiesTests
 	public void GetDomainBaseFromEmailNoAtSignReturnsEmpty()
 	{
 		string expected = string.Empty;
-		string email = EmailUtilities.GetDomainBaseFromEmail("notanemail");
+		string domainBase = EmailUtilities.GetDomainBaseFromEmail("notanemail");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(domainBase, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -673,10 +673,9 @@ internal sealed class EmailUtilitiesTests
 	public void GetTldFromEmailSimpleTldReturnsTld()
 	{
 		string expected = "com";
-		string email =
-			EmailUtilities.GetTldFromEmail("user@example.com");
+		string tld = EmailUtilities.GetTldFromEmail("user@example.com");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(tld, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -686,10 +685,9 @@ internal sealed class EmailUtilitiesTests
 	public void GetTldFromEmailMultiPartTldReturnsFullTld()
 	{
 		string expected = "co.jp";
-		string email =
-			EmailUtilities.GetTldFromEmail("user@example.co.jp");
+		string tld = EmailUtilities.GetTldFromEmail("user@example.co.jp");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(tld, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -700,10 +698,9 @@ internal sealed class EmailUtilitiesTests
 	public void GetTldFromEmailComAuTldReturnsFullTld()
 	{
 		string expected = "com.au";
-		string email =
-			EmailUtilities.GetTldFromEmail("user@example.com.au");
+		string tld = EmailUtilities.GetTldFromEmail("user@example.com.au");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(tld, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -713,10 +710,9 @@ internal sealed class EmailUtilitiesTests
 	public void GetTldFromEmailMixedCaseReturnsLowerCase()
 	{
 		string expected = "co.jp";
-		string email =
-			EmailUtilities.GetTldFromEmail("user@Example.CO.JP");
+		string tld = EmailUtilities.GetTldFromEmail("user@Example.CO.JP");
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(tld, Is.EqualTo(expected));
 	}
 
 	/// <summary>
@@ -729,10 +725,10 @@ internal sealed class EmailUtilitiesTests
 
 		// Cannot convert null literal to non-nullable reference type.
 #pragma warning disable CS8625
-		string email = EmailUtilities.GetTldFromEmail(null);
+		string tld = EmailUtilities.GetTldFromEmail(null);
 #pragma warning restore CS8625
 
-		Assert.That(email, Is.EqualTo(expected));
+		Assert.That(tld, Is.EqualTo(expected));
 	}
 
 	/// <summary>
