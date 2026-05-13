@@ -565,6 +565,7 @@ internal sealed class EmailUtilitiesTests
 	public void NormalizeNullInputReturnsEmpty()
 	{
 		string expected = string.Empty;
+
 		// Cannot convert null literal to non-nullable reference type.
 #pragma warning disable CS8625
 		string email = EmailUtilities.Normalize(null);
@@ -800,8 +801,11 @@ internal sealed class EmailUtilitiesTests
 	[Test]
 	public void ParseEmailPartsNullInputReturnsAllEmpty()
 	{
+		// Cannot convert null literal to non-nullable reference type.
+#pragma warning disable CS8625
 		var (local, subdomain, domainBase, tld) =
 			EmailUtilities.ParseEmailParts(null);
+#pragma warning restore CS8625
 
 		Assert.That(local, Is.EqualTo(string.Empty));
 		Assert.That(subdomain, Is.EqualTo(string.Empty));
