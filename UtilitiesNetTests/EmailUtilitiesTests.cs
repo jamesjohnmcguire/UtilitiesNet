@@ -15,7 +15,6 @@ using NUnit.Framework;
 [TestFixture]
 internal sealed class EmailUtilitiesTests
 {
-
 	/// <summary>
 	/// Is valid email address edge cases test.
 	/// </summary>
