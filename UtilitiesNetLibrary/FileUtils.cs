@@ -540,7 +540,7 @@ public static class FileUtils
 			using StreamReader reader = new(file);
 			string contents = reader.ReadToEnd();
 
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			string newContents = contents.Replace(
 				oldValue, newValue, StringComparison.Ordinal);
 #else

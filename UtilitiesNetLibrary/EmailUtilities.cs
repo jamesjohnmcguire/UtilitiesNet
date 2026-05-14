@@ -189,7 +189,7 @@ public static class EmailUtilities
 			}
 			else
 			{
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 				string local = emailAddress[..atIndex];
 				string domain = emailAddress[(atIndex + 1)..];
 #else
@@ -217,7 +217,7 @@ public static class EmailUtilities
 				// Strip plus tag if requested (deduplication only)
 				if (stripPlusTag == true)
 				{
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 					int plusIndex =
 						local.IndexOf('+', StringComparison.Ordinal);
 
@@ -238,7 +238,7 @@ public static class EmailUtilities
 				// Strip Gmail dots if requested (deduplication only)
 				if (stripGmailDots == true && domain == "gmail.com")
 				{
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+#if NET5_0_OR_GREATER
 					local = local.Replace(
 						".", string.Empty, StringComparison.Ordinal);
 #else
@@ -275,7 +275,7 @@ public static class EmailUtilities
 			if (atIndex > 0 && atIndex < normalized.Length - 1)
 			{
 				// "mail.example.co.jp"
-#if NETCOREAPP3_0_OR_GREATER
+#if NET5_0_OR_GREATER
 				string domain = normalized[(atIndex + 1)..];
 #else
 				string domain = normalized.Substring(atIndex + 1);
@@ -297,7 +297,7 @@ public static class EmailUtilities
 
 					if (sldIndex >= 0)
 					{
-#if NETCOREAPP3_0_OR_GREATER
+#if NET5_0_OR_GREATER
 						domainBase = labels[sldIndex];
 #else
 						domainBase = labels[sldIndex];
@@ -331,7 +331,7 @@ public static class EmailUtilities
 
 			if (atIndex > 0 && atIndex < normalized.Length - 1)
 			{
-#if NETCOREAPP3_0_OR_GREATER
+#if NET5_0_OR_GREATER
 				string domain = normalized[(atIndex + 1)..];
 #else
 				string domain = normalized.Substring(atIndex + 1);
@@ -342,7 +342,7 @@ public static class EmailUtilities
 				{
 					// For known multi-part TLDs return the last two labels
 					// For everything else return just the last label
-#if NETCOREAPP3_0_OR_GREATER
+#if NET5_0_OR_GREATER
 					string[] lastTwoLabels = labels[^2..];
 #else
 					IEnumerable<string> items = labels.Skip(labels.Length - 2);
@@ -361,7 +361,7 @@ public static class EmailUtilities
 					else
 					{
 						// "com", "net", "org"
-#if NETCOREAPP3_0_OR_GREATER
+#if NET5_0_OR_GREATER
 						tld = labels[^1];
 #else
 						tld = labels[labels.Length - 1];
@@ -398,7 +398,7 @@ public static class EmailUtilities
 
 			if (atIndex > -1)
 			{
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 				local = normalized[..atIndex];
 				string domain = normalized[(atIndex + 1)..];
 #else
@@ -419,7 +419,7 @@ public static class EmailUtilities
 					{
 						domainBase = labels[sldIndex];
 
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 						string[] subdomainLabels = labels[..sldIndex];
 #else
 						string[] subdomainLabels = new string[sldIndex];

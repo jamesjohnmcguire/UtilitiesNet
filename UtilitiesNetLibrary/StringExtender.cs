@@ -88,25 +88,30 @@ public static class StringExtender
 
 		// Combine the words.
 		string beginWord = words[0];
-		beginWord = beginWord.ToLower(CultureInfo.CurrentCulture);
+#pragma warning disable CA1308
+		beginWord = beginWord.ToLowerInvariant();
+#pragma warning restore CA1308
 		result = beginWord;
 
 		for (int i = 1; i < words.Length; i++)
 		{
 			string word = words[i];
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			string subWord = word[..1];
 #else
 			string subWord = word.Substring(0, 1);
 #endif
-			subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
+			subWord = subWord.ToUpper(CultureInfo.InvariantCulture);
 
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			string subWord2 = word[1..];
 #else
 			string subWord2 = word.Substring(1);
 #endif
-			subWord2 = subWord2.ToLower(CultureInfo.CurrentCulture);
+
+#pragma warning disable CA1308
+			subWord2 = subWord2.ToLowerInvariant();
+#pragma warning restore CA1308
 
 			result += subWord + subWord2;
 		}
@@ -143,7 +148,7 @@ public static class StringExtender
 		{
 			if (input.Length < 2)
 			{
-				pascalCase = input.ToUpper(CultureInfo.CurrentCulture);
+				pascalCase = input.ToUpper(CultureInfo.InvariantCulture);
 			}
 			else
 			{
@@ -155,19 +160,22 @@ public static class StringExtender
 				// Combine the words.
 				foreach (string word in words)
 				{
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 					string subWord = word[..1];
 #else
 					string subWord = word.Substring(0, 1);
 #endif
-					subWord = subWord.ToUpper(CultureInfo.CurrentCulture);
+					subWord = subWord.ToUpper(CultureInfo.InvariantCulture);
 
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 					string word2 = word[1..];
 #else
 					string word2 = word.Substring(1);
 #endif
-					word2 = word2.ToLower(CultureInfo.CurrentCulture);
+
+#pragma warning disable CA1308
+					word2 = word2.ToLowerInvariant();
+#pragma warning restore CA1308
 
 					pascalCase += subWord + word2;
 				}
@@ -191,13 +199,15 @@ public static class StringExtender
 
 		if (unformattedText != null)
 		{
-			CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+			CultureInfo cultureInfo = CultureInfo.InvariantCulture;
 			TextInfo textInfo = cultureInfo.TextInfo;
 
 			// If the text is already all in upper case, no formatting
 			// changes will be applied, so make it lower case first.
+#pragma warning disable CA1308
 			unformattedText =
-				unformattedText.ToLower(CultureInfo.CurrentCulture);
+				unformattedText.ToLowerInvariant();
+#pragma warning restore CA1308
 
 			properCaseText = textInfo.ToTitleCase(unformattedText);
 		}

@@ -46,13 +46,13 @@ public static class GeneralUtilities
 		if (methodBase != null)
 		{
 			methodName = methodBase.Name;
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			if (methodBase.Name.StartsWith('<'))
 #else
 			if (methodBase.Name.StartsWith("<", StringComparison.Ordinal))
 #endif
 			{
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 				methodName = methodBase.Name[1..];
 				int index =
 					methodName.IndexOf('>', StringComparison.Ordinal);
@@ -494,9 +494,9 @@ public static class GeneralUtilities
 		if (data != null)
 		{
 			hexString = BitConverter.ToString(data);
-			hexString = hexString.ToLower(CultureInfo.CurrentCulture);
+			hexString = hexString.ToLower(CultureInfo.InvariantCulture);
 
-#if NETCOREAPP1_0_OR_GREATER
+#if NET5_0_OR_GREATER
 			hexString = hexString.Replace(
 				"-", string.Empty, StringComparison.Ordinal);
 #else
