@@ -10,9 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 /// <summary>
 /// Provides utility methods for validating email addresses according to common

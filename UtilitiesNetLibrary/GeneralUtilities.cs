@@ -15,7 +15,6 @@ using System.IO;
 using System.Reflection;
 using System.Resources;
 using System.Text;
-using System.Text.RegularExpressions;
 
 using global::Common.Logging;
 
