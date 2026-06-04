@@ -196,7 +196,7 @@ internal sealed class EmailUtilitiesTests
 			("TLD",                      @"\.[a-zA-Z]{2,}$"),
 		};
 
-		foreach (var (label, pattern) in tests)
+		foreach ((string? label, string? pattern) in tests)
 		{
 			bool pass = Regex.IsMatch(emailAddress, pattern, RegexOptions.IgnoreCase);
 			Assert.That(pass, Is.True, label);
