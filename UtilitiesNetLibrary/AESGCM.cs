@@ -70,7 +70,7 @@ public static class AESGCM
 	/// <returns>A new key.</returns>
 	public static byte[] NewKey()
 	{
-		var key = new byte[KeyBitSize / 8];
+		byte[] key = new byte[KeyBitSize / 8];
 		Random.NextBytes(key);
 		return key;
 	}
@@ -119,8 +119,8 @@ public static class AESGCM
 				"Encrypted Message Required!", nameof(encryptedMessage));
 		}
 
-		var cipherText = Convert.FromBase64String(encryptedMessage);
-		var plainText =
+		byte[] cipherText = Convert.FromBase64String(encryptedMessage);
+		byte[]? plainText =
 			SimpleDecrypt(cipherText, key, nonSecretPayloadLength);
 
 		if (plainText != null)
@@ -154,8 +154,8 @@ public static class AESGCM
 				"Secret Message Required!", nameof(secretMessage));
 		}
 
-		var plainText = Encoding.UTF8.GetBytes(secretMessage);
-		var cipherText = SimpleEncryptWithPassword(
+		byte[] plainText = Encoding.UTF8.GetBytes(secretMessage);
+		byte[] cipherText = SimpleEncryptWithPassword(
 			plainText, password, nonSecretPayload);
 		return Convert.ToBase64String(cipherText);
 	}
@@ -185,8 +185,8 @@ public static class AESGCM
 				"Encrypted Message Required!", nameof(encryptedMessage));
 		}
 
-		var cipherText = Convert.FromBase64String(encryptedMessage);
-		var plainText = SimpleDecryptWithPassword(
+		byte[] cipherText = Convert.FromBase64String(encryptedMessage);
+		byte[]? plainText = SimpleDecryptWithPassword(
 			cipherText, password, nonSecretPayloadLength);
 
 		if (plainText != null)
@@ -225,21 +225,21 @@ public static class AESGCM
 		nonSecretPayload ??= [];
 
 		// Using random nonce large enough not to repeat
-		var nonce = new byte[NonceBitSize / 8];
+		byte[] nonce = new byte[NonceBitSize / 8];
 		Random.NextBytes(nonce, 0, nonce.Length);
 
-		var cipher = new GcmBlockCipher(new AesEngine());
-		var parameters = new AeadParameters(new KeyParameter(key), MacBitSize, nonce, nonSecretPayload);
+		GcmBlockCipher cipher = new GcmBlockCipher(new AesEngine());
+		AeadParameters parameters = new AeadParameters(new KeyParameter(key), MacBitSize, nonce, nonSecretPayload);
 		cipher.Init(true, parameters);
 
 		// Generate Cipher Text With Auth Tag
-		var cipherText = new byte[cipher.GetOutputSize(secretMessage.Length)];
-		var len = cipher.ProcessBytes(secretMessage, 0, secretMessage.Length, cipherText, 0);
+		byte[] cipherText = new byte[cipher.GetOutputSize(secretMessage.Length)];
+		int len = cipher.ProcessBytes(secretMessage, 0, secretMessage.Length, cipherText, 0);
 		cipher.DoFinal(cipherText, len);
 
 		// Assemble Message
-		using var combinedStream = new MemoryStream();
-		using var binaryWriter = new BinaryWriter(combinedStream);
+		using MemoryStream combinedStream = new MemoryStream();
+		using BinaryWriter binaryWriter = new BinaryWriter(combinedStream);
 
 		// Prepend Authenticated Payload
 		binaryWriter.Write(nonSecretPayload);
@@ -280,18 +280,18 @@ public static class AESGCM
 				nameof(encryptedMessage));
 		}
 
-		using var cipherStream = new MemoryStream(encryptedMessage);
-		using var cipherReader = new BinaryReader(cipherStream);
+		using MemoryStream cipherStream = new MemoryStream(encryptedMessage);
+		using BinaryReader cipherReader = new BinaryReader(cipherStream);
 
 		// Grab Payload
-		var nonSecretPayload =
+		byte[] nonSecretPayload =
 			cipherReader.ReadBytes(nonSecretPayloadLength);
 
 		// Grab Nonce
-		var nonce = cipherReader.ReadBytes(NonceBitSize / 8);
+		byte[] nonce = cipherReader.ReadBytes(NonceBitSize / 8);
 
-		var cipher = new GcmBlockCipher(new AesEngine());
-		var parameters = new AeadParameters(
+		GcmBlockCipher cipher = new GcmBlockCipher(new AesEngine());
+		AeadParameters parameters = new AeadParameters(
 			new KeyParameter(key),
 			MacBitSize,
 			nonce,
@@ -299,7 +299,7 @@ public static class AESGCM
 		cipher.Init(false, parameters);
 
 		// Decrypt Cipher Text
-		var cipherText = cipherReader.ReadBytes(
+		byte[] cipherText = cipherReader.ReadBytes(
 			encryptedMessage.Length - nonSecretPayloadLength - nonce.Length);
 		int length = cipher.GetOutputSize(cipherText.Length);
 
@@ -307,7 +307,7 @@ public static class AESGCM
 
 		try
 		{
-			var len = cipher.ProcessBytes(
+			int len = cipher.ProcessBytes(
 				cipherText, 0, cipherText.Length, plainText, 0);
 			cipher.DoFinal(plainText, len);
 		}
@@ -358,10 +358,10 @@ public static class AESGCM
 				"Secret Message Required!", nameof(secretMessage));
 		}
 
-		var generator = new Pkcs5S2ParametersGenerator();
+		Pkcs5S2ParametersGenerator generator = new Pkcs5S2ParametersGenerator();
 
 		// Use Random Salt to minimize pre-generated weak password attacks.
-		var salt = new byte[SaltBitSize / 8];
+		byte[] salt = new byte[SaltBitSize / 8];
 		Random.NextBytes(salt);
 
 		generator.Init(
@@ -370,10 +370,10 @@ public static class AESGCM
 			Iterations);
 
 		// Generate Key
-		var key = (KeyParameter)generator.GenerateDerivedMacParameters(KeyBitSize);
+		KeyParameter key = (KeyParameter)generator.GenerateDerivedMacParameters(KeyBitSize);
 
 		// Create Full Non Secret Payload
-		var payload = new byte[salt.Length + nonSecretPayload.Length];
+		byte[] payload = new byte[salt.Length + nonSecretPayload.Length];
 		Array.Copy(nonSecretPayload, payload, nonSecretPayload.Length);
 		Array.Copy(salt, 0, payload, nonSecretPayload.Length, salt.Length);
 
@@ -414,10 +414,10 @@ public static class AESGCM
 			throw new ArgumentException("Encrypted Message Required!", nameof(encryptedMessage));
 		}
 
-		var generator = new Pkcs5S2ParametersGenerator();
+		Pkcs5S2ParametersGenerator generator = new Pkcs5S2ParametersGenerator();
 
 		// Grab Salt from Payload
-		var salt = new byte[SaltBitSize / 8];
+		byte[] salt = new byte[SaltBitSize / 8];
 		Array.Copy(encryptedMessage, nonSecretPayloadLength, salt, 0, salt.Length);
 
 		generator.Init(
@@ -426,7 +426,7 @@ public static class AESGCM
 			Iterations);
 
 		// Generate Key
-		var key = (KeyParameter)generator.GenerateDerivedMacParameters(KeyBitSize);
+		KeyParameter key = (KeyParameter)generator.GenerateDerivedMacParameters(KeyBitSize);
 
 		int payLoad = salt.Length + nonSecretPayloadLength;
 		byte[]? result =

@@ -184,7 +184,7 @@ internal sealed class EmailUtilitiesTests
 	{
 		string emailAddress = "user@example.com";
 
-		var tests = new (string Label, string Pattern)[]
+		(string Label, string Pattern)[] tests = new (string Label, string Pattern)[]
 		{
 			("No consecutive dots",      @"^(?!.*\.\.)"),
 			("No leading dot",           @"^(?!\.)"),
@@ -196,7 +196,7 @@ internal sealed class EmailUtilitiesTests
 			("TLD",                      @"\.[a-zA-Z]{2,}$"),
 		};
 
-		foreach (var (label, pattern) in tests)
+		foreach ((string? label, string? pattern) in tests)
 		{
 			bool pass = Regex.IsMatch(emailAddress, pattern, RegexOptions.IgnoreCase);
 			Assert.That(pass, Is.True, label);
