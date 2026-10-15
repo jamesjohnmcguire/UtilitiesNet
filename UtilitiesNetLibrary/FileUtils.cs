@@ -342,6 +342,40 @@ public static class FileUtils
 	}
 
 	/// <summary>
+	/// Determines whether the specified directory path is a reparse point
+	/// (for example, a symbolic link).
+	/// </summary>
+	/// <remarks>On .NET 6.0 or later, the check also considers
+	/// DirectoryInfo.LinkTarget when available; on earlier runtimes it relies
+	/// on the FileAttributes.ReparsePoint flag. Accessing the directory
+	/// attributes may throw exceptions (for example,
+	/// DirectoryNotFoundException or UnauthorizedAccessException) if the path
+	/// does not exist or is inaccessible.</remarks>
+	/// <param name="path">The path of the directory to check for a reparse
+	/// point.</param>
+	/// <returns>true if the specified path is a reparse point or symbolic link;
+	/// otherwise, false.</returns>
+	public static bool IsReparsePoint(string path)
+	{
+		bool isSymLink = false;
+		DirectoryInfo directoryInfo = new(path);
+
+		bool hasReparsePoint =
+			directoryInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
+
+#if NET6_0_OR_GREATER
+		if (hasReparsePoint == true || directoryInfo.LinkTarget != null)
+#else
+		if (hasReparsePoint == true)
+#endif
+		{
+			isSymLink = true;
+		}
+
+		return isSymLink;
+	}
+
+	/// <summary>
 	/// RecursiveUtf8WinFiles.
 	/// </summary>
 	/// <param name="initialPath">The initial path to begin
