@@ -24,6 +24,8 @@
 		<PackageTags>Digital Zen Works;Common;Utilities</PackageTags>
 		<RootNamespace>DigitalZenWorks.Common.Utilities</RootNamespace>
 		<SignAssembly>true</SignAssembly>
+		<!-- Reduce Humanizer Generated Warnings Until They Are Resolved -->
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 		<Version>1.5.78</Version>
 	</PropertyGroup>
 
