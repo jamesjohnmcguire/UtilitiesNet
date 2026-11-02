@@ -8,6 +8,9 @@ namespace DigitalZenWorks.Common.Utilities;
 
 using System;
 using System.Collections.Generic;
+#if !NET5_0_OR_GREATER
+using System.Linq;
+#endif
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
