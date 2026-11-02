@@ -15,15 +15,14 @@ end_of_line = crlf
 end_of_line = lf
 
 [*.cs]
-# Renove require space after 'new' keyword
-dotnet_diagnostic.SA1000.severity = warning
+# Control-flow and method-call spacing
+csharp_space_after_cast = false
 csharp_space_after_keywords_in_control_flow_statements = true
 csharp_space_between_method_call_empty_parameter_list_parentheses = false
 csharp_space_between_method_call_parameter_list_parentheses = false
 
 dotnet_diagnostic.max_line_length.severity = warning
 
-csharp_space_after_cast = false
 
 # IDE0017: Simplify object initialization
 dotnet_style_object_initializer = false
@@ -31,6 +30,7 @@ dotnet_style_object_initializer = false
 # IDE0028: Collection initialization can be simplified
 dotnet_style_collection_initializer	= false
 
+# SA1000: Check keyword spacing; target-typed new() has no space.
 dotnet_diagnostic.SA1000.severity = warning
 
 # SA1010: Opening square brackets should be spaced correctly
