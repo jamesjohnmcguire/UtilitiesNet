@@ -12,7 +12,7 @@
 		<Description>This client library provides general functionality.</Description>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<FileVersion>1.5.78.0</FileVersion>
+		<FileVersion>1.6.0.0</FileVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<LangVersion>Latest</LangVersion>
@@ -26,7 +26,7 @@
 		<SignAssembly>true</SignAssembly>
 		<!-- Reduce Humanizer Generated Warnings Until They Are Resolved -->
 		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-		<Version>1.5.78</Version>
+		<Version>1.6.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
