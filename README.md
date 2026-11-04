@@ -1,4 +1,4 @@
-# UtilitiesNet
+# DigitalZenWorks.Common.UtilitiesNet
 
 [![NuGet version][version-badge]][nuget]
 [![NuGet downloads][downloads-badge]][nuget]
