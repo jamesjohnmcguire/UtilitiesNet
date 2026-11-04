@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="UtilitiesNetLibrary/DigitalZenWorks.Common.Utilities.csproj" />
+  <Project Path="UtilitiesNetTests/DigitalZenWorks.Common.Utilities.Tests.csproj" />
+</Solution>

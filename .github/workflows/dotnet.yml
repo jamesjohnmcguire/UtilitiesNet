@@ -25,12 +25,12 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore UtilitiesNet.sln -p:Configuration=Debug
+        run: dotnet restore UtilitiesNet.slnx -p:Configuration=Debug
 
       - name: Build
-        run: dotnet build UtilitiesNet.sln -c Debug --no-restore
+        run: dotnet build UtilitiesNet.slnx -c Debug --no-restore
 
       - name: Test
         run: >-
-          dotnet test UtilitiesNet.sln -c Debug --no-build --no-restore
+          dotnet test UtilitiesNet.slnx -c Debug --no-build --no-restore
           --verbosity normal

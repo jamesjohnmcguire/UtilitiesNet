@@ -82,15 +82,15 @@ cd UtilitiesNet
 From the repository root, build and run the NUnit tests:
 
 ```shell
-dotnet build UtilitiesNet.sln --configuration Debug
-dotnet test UtilitiesNet.sln --configuration Debug
+dotnet build UtilitiesNet.slnx --configuration Debug
+dotnet test UtilitiesNet.slnx --configuration Debug
 ```
 
 Release builds compile all configured library targets and generate a NuGet
 package under `UtilitiesNetLibrary/bin/Release/`:
 
 ```shell
-dotnet build UtilitiesNet.sln --configuration Release
+dotnet build UtilitiesNet.slnx --configuration Release
 ```
 
 ## Contributing
