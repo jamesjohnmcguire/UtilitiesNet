@@ -491,7 +491,9 @@ public static class GeneralUtilities
 		if (data != null)
 		{
 			hexString = BitConverter.ToString(data);
+#pragma warning disable CA1308
 			hexString = hexString.ToLower(CultureInfo.InvariantCulture);
+#pragma warning restore CA1308
 
 #if NET5_0_OR_GREATER
 			hexString = hexString.Replace(
