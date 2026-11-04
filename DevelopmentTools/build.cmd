@@ -12,7 +12,6 @@ GOTO end
 
 :publish
 if "%~2"=="" GOTO error1
-if "%~3"=="" GOTO error2
 
 dotnet pack --configuration Release --output nupkg -p:IncludeSource=true -p:IncludeSymbols=true
 
