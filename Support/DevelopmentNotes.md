@@ -11,14 +11,19 @@ dotnet build UtilitiesNet.slnx --configuration Debug
 dotnet test UtilitiesNet.slnx --configuration Debug
 ```
 
-The existing command script builds the library in Release configuration:
+The command script also builds the library in Debug configuration:
 
 ```shell
 .\DevelopmentTools\build.cmd
 ```
 
-Release builds compile every configured library target and generate a NuGet
-package under `UtilitiesNetLibrary/bin/Release/`.
+For a Release build across every configured library target:
+
+```shell
+dotnet build UtilitiesNet.slnx --configuration Release
+```
+
+This also generates a NuGet package under `UtilitiesNetLibrary/bin/Release/`.
 
 ## Preparing a release
 
@@ -56,13 +61,14 @@ Install GitHub CLI and sign in once with `gh auth login`. To request a
 publication from the current remote `main`:
 
 ```shell
-.\DevelopmentTools\build.cmd publish 1.6.1
+.\DevelopmentTools\build.cmd publish
 ```
 
-The script checks the requested version against the local project and
-dispatches `.github/workflows/dotnet.yml` through GitHub CLI. The workflow
-tests its checkout of `main`, checks the requested version, builds the
-Release package, and publishes it through trusted publishing.
+The script reads `Version` from the local library project and supplies it
+as the expected version when dispatching `.github/workflows/dotnet.yml`
+through GitHub CLI. No version argument is required. The workflow tests its
+checkout of `main`, checks the expected version, builds the Release package,
+and publishes it through trusted publishing.
 Commit and push first: local uncommitted or unpushed changes are not included.
 
 The script returns a nonzero exit code if validation or dispatch fails. A
