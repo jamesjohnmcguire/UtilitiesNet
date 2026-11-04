@@ -14,6 +14,10 @@ on:
         description: Publish the package from main after tests pass
         type: boolean
         default: false
+      version:
+        description: Expected package version (optional)
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -65,15 +69,20 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Check tag matches package version
-        if: github.event_name == 'push'
+      - name: Check requested package version
         working-directory: UtilitiesNetLibrary
         env:
           RELEASE_TAG: ${{ github.ref_name }}
+          EXPECTED_VERSION: ${{ inputs.version }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           version=$(dotnet msbuild -nologo -getProperty:Version)
-          if [ "${RELEASE_TAG#v}" != "$version" ]; then
-            echo "::error::Release tag does not match package version $version."
+          expected="$EXPECTED_VERSION"
+          if [ "$EVENT_NAME" = "push" ]; then
+            expected="${RELEASE_TAG#v}"
+          fi
+          if [ -n "$expected" ] && [ "$expected" != "$version" ]; then
+            echo "::error::Requested version differs from package $version."
             exit 1
           fi
 
