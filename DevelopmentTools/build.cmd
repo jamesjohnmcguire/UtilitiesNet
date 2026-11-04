@@ -18,7 +18,7 @@ dotnet pack --configuration Release --output nupkg -p:IncludeSource=true -p:Incl
 
 CD nupkg
 
-nuget push DigitalZenWorks.Common.Utilities.%2.nupkg %3 -source https://api.nuget.org/v3/index.json
+nuget push DigitalZenWorks.Common.Utilities.%2.nupkg %NuGetKey% -source https://api.nuget.org/v3/index.json
 
 CD ..
 GOTO end
