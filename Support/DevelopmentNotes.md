@@ -40,14 +40,14 @@ Keep `AssemblyVersion` stable for compatible 1.x releases. Update `Version`
 and `FileVersion` for each release. Plan an assembly version change for a
 breaking major release.
 
-## Publishing by version tag
+## Version tags
 
-The workflow tests pushes to `main` and pull requests targeting `main`.
-Pushing a version tag also builds and publishes the Release package after
-tests pass. The tag must match the project's `Version`; an optional `v`
-prefix is accepted.
+Pushes to `main`, pull requests targeting `main`, and version tags trigger
+builds and tests only. Creating or pushing a tag never publishes a package.
+Use a matching version tag to mark the release source, then publish explicitly
+when that version is ready for production.
 
-After committing the release changes on `main`:
+For example, after committing the release changes on `main`:
 
 ```shell
 git push origin main
@@ -85,8 +85,9 @@ required on the development PC.
 
 ## Manual workflow runs
 
-To publish a version whose tag was already pushed, run the `.NET` workflow
-on `main` with **Publish the package from main after tests pass** checked.
+To explicitly publish the version currently committed on `main`, run the
+`.NET` workflow on `main` with **Publish the package from main after tests
+pass** checked. Publishing is disabled by default.
 Optionally enter the expected package version to guard against publishing a
 different version. A manual run without the publishing option only tests.
 
